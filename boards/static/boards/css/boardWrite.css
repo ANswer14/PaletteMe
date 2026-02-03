@@ -18,7 +18,7 @@ body {
 .auth { width: 33%; text-align: right; }
 .auth a { margin-left: 15px; text-decoration: none; color: #333; }
 
-.write-container {
+.board-write-container {
     width: 70%;
     margin: 40px auto;
     background: white;
@@ -26,14 +26,14 @@ body {
     border-radius: 10px;
 }
 
-.write-form label {
+.board-write-container .write-form label {
     display: block;
     margin-top: 15px;
     font-weight: bold;
 }
 
-.write-form input,
-.write-form textarea {
+.board-write-container .write-form input,
+.board-write-container .write-form textarea {
     width: 100%;
     padding: 8px;
     margin-top: 5px;
@@ -42,9 +42,10 @@ body {
     box-sizing: border-box;
     font-size: 16px;
 }
-.write-form input[readonly] {
-    background-color: #f0f0f0;
+.board-write-container .write-form input[readonly] {
+    background-color: #f0f0f0; /* 작성자 수정 불가 */
 }
+.board-write-container .button-group {
 
 .file-label {
     display: inline-block;
@@ -106,7 +107,7 @@ body {
     text-align: center; /* 버튼 중앙정렬 */
 }
 
-.button-group button {
+.board-write-container .button-group button {
     margin-top: 15px;
     padding: 8px 15px;
     border: none;
@@ -116,16 +117,16 @@ body {
     cursor: pointer;
 }
 
-.button-group button:hover {
+.board-write-container .button-group button:hover {
     background-color: #333333;
 }
 
-.button-group button + button {
+.board-write-container .button-group button + button {
     margin-left: 10px;
     background-color: #535252;
 }
 
-.button-group button + button:hover {
+.board-write-container .button-group button + button:hover {
     background-color: #333333;
 }
 

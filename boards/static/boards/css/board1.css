@@ -48,6 +48,10 @@ body {
     border-radius: 10px;
 }
 
+.board-container.free h2 {
+    color: #333;
+}
+
 .title-row {
     display: flex;
     gap: 20px;  /* 글자 사이 간격 */

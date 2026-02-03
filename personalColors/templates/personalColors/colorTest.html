@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>컬러 자가진단</title>
+    <link rel="stylesheet" href="{% static 'personalColors/css/colorTest.css' %}">
+</head>
+<body>
+    <!-- 헤더 공통 -->
+    <header class="header">
+        <div class="header-left"></div>
+        <div class="logo"><a href="index.html">Title</a></div>
+        <div class="auth"><a href="login.html">로그아웃</a></div>
+    </header>
+
+    <!-- 본문 -->
+    <section id="colorTestSection">
+        <h2>컬러 자가진단</h2>
+        <div class="progress-container">
+            <span id="progress-text">Progress: 1/5</span>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 20%;"></div>
+            </div>
+        </div>
+
+        <div class="questions">
+            <div class="question">
+                <p>1. 질문 예시 문항</p>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="1"> 답변 1</label>
+                </div>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="2"> 답변 2</label>
+                </div>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="3"> 답변 3</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>2. 질문 예시 문항</p>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="1"> 답변 1</label>
+                </div>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="2"> 답변 2</label>
+                </div>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="3"> 답변 3</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>3. 질문 예시 문항</p>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="1"> 답변 1</label>
+                </div>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="2"> 답변 2</label>
+                </div>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="3"> 답변 3</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>4. 질문 예시 문항</p>
+                <div class="options">
+                    <label><input type="radio" name="q4" value="1"> 답변 1</label>
+                </div>
+                <div class="options">
+                    <label><input type="radio" name="q4" value="2"> 답변 2</label>
+                </div>
+                <div class="options">
+                    <label><input type="radio" name="q4" value="3"> 답변 3</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>5. 질문 예시 문항</p>
+                <div class="options">
+                    <label><input type="radio" name="q5" value="1"> 답변 1</label>
+                </div>
+                <div class="options">
+                    <label><input type="radio" name="q5" value="2"> 답변 2</label>
+                </div>
+                <div class="options">
+                    <label><input type="radio" name="q5" value="3"> 답변 3</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="next-button">
+            <button id="nextBtn">NEXT</button>
+        </div>
+    </section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    <a href="#">Instagram</a>
+    <a href="#">Twitter</a>
+    <a href="#">Contact</a>
+</footer>
+
+<script src="{% static 'personalColors/js/colorTest.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>퍼스널컬러</title>
+    <link rel="stylesheet" href="{% static 'personalColors/css/InfoColor.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left"></div>
+        <div class="logo"><a href="index.html">Title</a></div>
+        <div class="auth"><a href="login.html">로그아웃</a></div>
+    </header>
+
+    <section id="personalColorSection">
+        <div class="left">
+            <div class="intro-header">
+                <img src="/static/img/main1.png" alt="퍼스널컬러" class="intro-img">
+                <div class="intro-text">
+                    <h1>퍼스널컬러 소개</h1>
+                    <p>
+                    퍼스널컬러란 자신의 피부톤, 눈동자, 머리카락 색 등을 기준으로
+                    어울리는 색상을 찾아주는 컬러 분석 방법입니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="right">
+            <h2>유저 정보</h2>
+            <div id="userColorInfo">
+
+            </div>
+
+            <div class="buttons">
+                <button id="proceedBtn">진행</button>
+                <button id="retryBtn">다시하기</button>
+            </div>
+        </div>
+    </section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    <a href="#">Instagram</a>
+    <a href="#">Twitter</a>
+    <a href="#">Contact</a>
+</footer>
+
+<script src="{% static 'personalColors/js/InfoColor.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>날씨 정보</title>
+    <link rel="stylesheet" href="{% static 'personalColors/css/weatherInfo.css' %}">
+</head>
+<body>
+
+    <!-- 🔷 헤더 -->
+    <header class="header">
+        <div class="logo">Title</div>
+    </header>
+
+    <main class="container">
+
+        <!-- 왼쪽: 지역 검색 -->
+        <div class="left">
+            <h2>지역 검색</h2>
+            <input type="text" id="locationInput" placeholder="지역을 입력하세요">
+            <button id="searchBtn">검색</button>
+        </div>
+
+        <!-- 오른쪽: 날씨 정보 -->
+        <div class="right">
+            <h1>검색하신 <span id="locationName">지역</span>의 날씨 정보입니다.</h1>
+
+            <p>현재온도 : <span id="temp">-</span>
+            <img src="#" alt="온도계" class="weather-icon"></p>
+            <p>체감온도 : <span id="feelsLike">-</span></p>
+            <p class="weather-line">
+                <span id="weatherText">날씨 상태가 여기에 표시됩니다.</span>
+                <img src="#" alt="날씨아이콘" class="weather-icon"></p>
+            <div class="buttons">
+                <button id="nextBtn" class="btn">NEXT</button>
+            </div>
+        </div>
+
+    </main>
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    <a href="#">Instagram</a>
+    <a href="#">Twitter</a>
+    <a href="#">Contact</a>
+</footer>
+
+<script src="{% static 'personalColors/js/weatherInfo.js' %}"></script>
+</body>
+</html>

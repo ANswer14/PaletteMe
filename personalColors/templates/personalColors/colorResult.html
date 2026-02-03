@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>퍼스널컬러 진단 결과</title>
+    <link rel="stylesheet" href="{% static 'personalColors/css/colorResult.css' %}">
+</head>
+<body>
+    <!-- 헤더 공통 -->
+    <header class="header">
+        <div class="header-left"></div>
+        <div class="logo"><a href="index.html">Title</a></div>
+        <div class="auth"><a href="login.html">로그아웃</a></div>
+    </header>
+
+    <section id="resultSection">
+        <div class="left">
+            <img src="main1.png" alt="퍼스널컬러" class="result-img">
+        </div>
+        <div class="right">
+            <h1>당신의 퍼스널컬러는...</h1>
+            <div id="personalColorResult">봄웜</div>
+            <p id="description">설명: 밝고 따뜻한 컬러톤이 잘 어울립니다.</p>
+            <div class="palette-row">
+                <p>컬러팔레트:</p>
+                <div id="palette"></div>
+            </div>
+            <p id="goodColor">잘 어울리는 색: 노랑, 살구, 연핑크</p>
+            <p id="badColor">피해야 할 색: 회색, 블루톤</p>
+
+            <div class="buttons">
+                <button id="retryBtn">다시하기</button>
+                <button id="nextBtn">NEXT</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 팝업 -->
+    <div id="savePopup" class="popup">
+        <div class="popup-content">
+            <p>이 결과를 저장할까요?</p>
+            <button id="yesBtn">예</button>
+            <button id="noBtn">아니오</button>
+        </div>
+    </div>
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    <a href="#">Instagram</a>
+    <a href="#">Twitter</a>
+    <a href="#">Contact</a>
+</footer>
+
+<script src="{% static 'personalColors/js/colorResult.js' %}"></script>
+</body>
+</html>

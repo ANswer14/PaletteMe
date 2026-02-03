@@ -1,0 +1,113 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: white;
+}
+
+/* ===== HEADER ===== */
+.header {
+    display: flex;
+    justify-content: center; /*가로중앙정렬*/
+    align-items: center;
+    padding: 30px 30px;
+    border-bottom: 1px solid #cdcbcb;
+}
+
+.header-left {
+    width: 33%;
+}
+
+.logo {
+    width: 34%;
+    text-align: center;
+    font-size: 70px;
+    font-weight: bold;
+}
+.logo a {
+    color: inherit;        /* .logo 색상 따라감 */
+    text-decoration: none; /* 밑줄 제거 */
+    font-size: inherit;    /* .logo 크기 따라감 */
+    font-weight: inherit;  /* .logo 굵기 따라감 */
+}
+
+.auth {
+    width: 33%;
+    text-align: right;
+}
+
+.auth a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: #333;
+}
+.notice-container {
+    width: 80%;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.notice-container h2 {
+    margin-top: 0;
+}
+
+/* 헤더 행 */
+.notice-header, .notice-row {
+    display: flex;
+    padding: 12px 10px;
+    border-bottom: 1px solid #ddd;
+    align-items: center;
+}
+
+.notice-header {
+    font-weight: bold;
+    background: #fafafa;
+}
+
+/* 열 비율 */
+.col-no {
+    width: 10%;
+    text-align: center;
+}
+
+.col-title {
+    width: 70%;
+}
+
+.col-date {
+    width: 20%;
+    text-align: center;
+}
+.notice-header .col-title {
+    text-align: center;
+}
+
+/* 마우스 올리면 */
+.notice-row:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+/* 페이지네이션 */
+.pagination {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.pagination span {
+    margin: 0 8px;
+    cursor: pointer;
+}
+/* ===== FOOTER ===== */
+.footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.footer a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #333;
+}

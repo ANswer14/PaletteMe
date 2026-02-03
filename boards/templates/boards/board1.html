@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>자유게시판</title>
+    <link rel="stylesheet" href="{% static 'boards/css/board1.css' %}">
+</head>
+<body>
+<!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="header-left">
+            <!-- 필요 시 왼쪽 버튼/메뉴 -->
+        </div>
+        <div class="logo">
+            <a href="index.html">Title</a>
+        </div>
+
+        <div class="auth">
+            <a href="#">회원정보</a>
+            <a href="../login/login.html">로그아웃</a>
+        </div>
+    </header>
+
+    <div class="board-container">
+        <h2>자유게시판</h2>
+        <div class="board-header">
+            <div class="col-no">번호</div>
+            <div class="col-title">제목</div>
+            <div class="col-writer">작성자</div>
+            <div class="col-date">날짜</div>
+            <div class="col-view">조회수</div>
+        </div>
+
+        <div class="board-list">
+            <div class="board-row" onclick="goBoardDetail(3)">
+                <div class="col-no">3</div>
+                <div class="col-title">퍼스널컬러 후기 공유합니다 <span class="comment-count">[2]</span>
+                </div>
+                <div class="col-writer">민수</div>
+                <div class="col-date">2026-02-02</div>
+                <div class="col-view">33</div>
+            </div>
+            <div class="board-row" onclick="goBoardDetail(2)">
+                <div class="col-no">2</div>
+                <div class="col-title">오늘 코디 추천 너무 좋아요 <span class="comment-count">[1]</span></div>
+                <div class="col-writer">홍길동</div>
+                <div class="col-date">2026-02-02</div>
+                <div class="col-view">8</div>
+            </div>
+            <div class="board-row" onclick="goBoardDetail(1)">
+                <div class="col-no">1</div>
+                <div class="col-title">첫 번째 글입니다</div>
+                <div class="col-writer">김주연</div>
+                <div class="col-date">2026-02-02</div>
+                <div class="col-view">12</div>
+            </div>
+        </div>
+        <!-- 구분선 + 글쓰기 버튼 -->
+        <div class="board-footer">
+            <button class="write-btn" onclick="location.href='boardWrite.html'">글쓰기</button>
+        </div>
+
+        <div class="pagination">
+            <span>1</span>
+            <span>2</span>
+            <span>3</span>
+        </div>
+    </div>
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    <a href="#">Instagram</a>
+    <a href="#">Twitter</a>
+    <a href="#">Contact</a>
+</footer>
+
+<script src="{% static 'boards/js/board1.js' %}" defer></script>
+</body>
+</html>

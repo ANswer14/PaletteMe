@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입 약관 동의</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/agreement.css' %}">
+</head>
+<body>
+    <div class="agreement-container">
+        <h2>회원가입 약관 동의</h2>
+
+        <div class="terms">
+            <p>여기에 약관 내용을 넣습니다. 예: 개인정보 수집, 서비스 이용약관 등</p>
+        </div>
+
+        <div class="checkbox-section">
+            <input type="checkbox" id="agreeCheckbox">
+            <label for="agreeCheckbox">약관에 동의합니다.</label>
+        </div>
+
+        <div id="errorMsg" class="error-msg"></div>
+
+        <button id="nextBtn">다음</button>
+    </div>
+    <!-- ===== FOOTER ===== -->
+<footer class="footer">
+    <a href="#">Instagram</a>
+    <a href="#">Twitter</a>
+    <a href="#">Contact</a>
+</footer>
+
+<script src="{% static 'accounts/js/agreement.js' %}" defer></script>
+</body>
+</html>

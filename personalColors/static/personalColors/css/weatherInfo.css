@@ -1,0 +1,130 @@
+.header {
+    display: flex;
+    justify-content: center; /*가로중앙정렬*/
+    align-items: center;
+    padding: 30px 30px;
+    border-bottom: 1px solid #cdcbcb;
+}
+
+.header-left {
+    width: 33%;
+}
+
+.logo {
+    width: 34%;
+    text-align: center;
+    font-size: 70px;
+    font-weight: bold;
+}
+.logo a {
+    color: inherit;        /* .logo 색상 따라감 */
+    text-decoration: none; /* 밑줄 제거 */
+    font-size: inherit;    /* .logo 크기 따라감 */
+    font-weight: inherit;  /* .logo 굵기 따라감 */
+}
+
+.auth {
+    width: 33%;
+    text-align: right;
+}
+
+.auth a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    margin-top: 180px; /* 헤더 높이 고려 */
+    padding: 20px;
+}
+
+/* 왼쪽 30% */
+.left {
+    width: 30%;
+    padding: 30px;
+    border-right: 1px solid #cdcbcb;
+    box-sizing: border-box;
+}
+
+/* 오른쪽 70% */
+.right {
+    width: 70%;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+/* 검색 영역 */
+.left input {
+    width: auto;
+    padding: 10px;
+    margin: 15px 0;
+}
+
+.left button {
+    width: auto;
+    padding: 6px 14px;
+    font-size: 14px;
+    color: white;
+    background-color: #676565;
+    border: none;
+}
+.left button:hover {
+    background-color: #333333;
+}
+
+/* 날씨 정보 */
+.right p {
+    font-size: 16px;
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.weather-line {
+    display: flex;
+    align-items: flex-start;  /* 텍스트 위 기준 */
+    gap: 10px;
+}
+#weatherText {
+    line-height: 1.6;  /* 여러 줄일 때 가독성 */
+}
+.weather-icon {
+    width: 30px;
+    height: auto;
+}
+
+/* 버튼 */
+.buttons {
+    margin-top: 50px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn {
+    width: auto;
+    padding: 6px 14px;
+    font-size: 14px;
+    color: white;
+    background-color: #676565;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #333333;
+}
+/* ===== FOOTER ===== */
+.footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.footer a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #333;
+}

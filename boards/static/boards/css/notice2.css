@@ -1,0 +1,113 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: white;
+}
+
+/* ===== HEADER ===== */
+.header {
+    display: flex;
+    justify-content: center; /*가로중앙정렬*/
+    align-items: center;
+    padding: 30px 30px;
+    border-bottom: 1px solid #cdcbcb;
+}
+
+.header-left {
+    width: 33%;
+}
+
+.logo {
+    width: 34%;
+    text-align: center;
+    font-size: 70px;
+    font-weight: bold;
+}
+.logo a {
+    color: inherit;        /* .logo 색상 따라감 */
+    text-decoration: none; /* 밑줄 제거 */
+    font-size: inherit;    /* .logo 크기 따라감 */
+    font-weight: inherit;  /* .logo 굵기 따라감 */
+}
+
+.auth {
+    width: 33%;
+    text-align: right;
+}
+
+.auth a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: #333;
+}
+
+.detail-container {
+    width: 70%;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+/* 제목줄 헤더 */
+.title-header, .title-row {
+    display: flex;
+    justify-content: center; /* 전체 중앙 정렬 */
+    align-items: center;
+    gap: 10px;
+}
+.title-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.title-row {
+    font-weight: normal;
+    margin-bottom: 20px;
+}
+
+
+/* 열 비율 */
+.title-header span, .title-row span {
+    display: inline-block;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* 각 열 폭 지정 */
+.title-header span:nth-child(1),
+.title-row span:nth-child(1) { width: 10%; }   /* No */
+.title-header span:nth-child(2),
+.title-row span:nth-child(2) { width: 70%; }  /* 제목 */
+.title-header span:nth-child(3),
+.title-row span:nth-child(3) { width: 20%; }  /* 작성일 */
+
+.detail-content {
+    line-height: 1.8;
+    min-height: 200px;
+}
+
+.detail-nav {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.detail-nav span:hover {
+    text-decoration: underline;
+}
+/* ===== FOOTER ===== */
+.footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.footer a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #333;
+}

@@ -1,0 +1,64 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f9f9f9;
+}
+
+.agreement-container {
+    width: 50%;
+    margin: 100px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+    text-align: center;
+}
+
+.terms {
+    border: 1px solid #ddd;
+    padding: 20px;
+    height: 200px;
+    overflow-y: scroll;
+    margin-bottom: 20px;
+}
+
+.checkbox-section {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.error-msg {
+    color: #333333;
+    margin-bottom: 15px;
+    height: 20px; /* 공간 확보 */
+}
+
+#nextBtn {
+    width: 100%;
+    padding: 12px;
+    background-color: #535252;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#nextBtn:hover {
+    background-color: #333333;
+}
+/* ===== FOOTER ===== */
+.footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.footer a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #333;
+}

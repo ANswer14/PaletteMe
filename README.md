@@ -19,3 +19,11 @@
   - 앱(ex: accounts) 내에 있는 templates는 해당 앱에 관한 HTML만 들어가있음
 - static: 정적 파일들을 모아놓는 장소
   - 앱(ex: blogs) 내에 있는 static은 해당 앱에 관한 정적 파일들(ex: 이미지, JS, CSS 등)만 들어가있음
+
+# Branch 네이밍 컨벤션 / Git Commit Message 컨벤션
+- Branch
+  - refactor: 리팩토링 용도
+  - feat: 기능 구현 용도
+  - EX) feat-login
+- Git Commit Message
+  - 

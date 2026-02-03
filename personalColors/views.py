@@ -4,3 +4,4 @@ from django.shortcuts import render
 
 def getColorInfo(request):
     return render(request, 'personalColors/infoColor.html')
+

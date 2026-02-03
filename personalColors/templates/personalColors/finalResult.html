@@ -7,21 +7,7 @@
     <link rel="stylesheet" href="{% static 'personalColors/css/finalResult.css' %}">
 </head>
 <body>
-    <!-- ===== HEADER ===== -->
-    <header class="header">
-        <div class="header-left">
-        <!-- 필요 시 왼쪽 버튼/메뉴 -->
-        </div>
-        <div class="logo">
-            <a href="index.html">Title</a>
-        </div>
-
-        <div class="auth">
-            <a href="#">회원정보</a>
-            <a href="../login/login.html">로그아웃</a>
-        </div>
-    </header>
-
+    {% include 'personalColors/includes/header.html' %}
     <!-- 메인 컨텐츠 -->
     <div class="container">
 

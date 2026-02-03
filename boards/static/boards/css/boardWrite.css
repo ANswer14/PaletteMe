@@ -45,6 +45,62 @@ body {
 .write-form input[readonly] {
     background-color: #f0f0f0;
 }
+
+.file-label {
+    display: inline-block;
+    width: 120px;              /* 버튼 크기 고정 */
+    text-align: center;
+
+    margin-top: 15px;
+    padding: 8px 15px;
+
+    background-color: #535252;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.file-label:hover {
+    background-color: #333333;
+}
+.preview-area {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.preview-box {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.preview-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* X 버튼 */
+.remove-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 22px;
+    height: 22px;
+    background: #ffffff;
+    color: #302f2f;
+    border-radius: 50%;
+    font-size: 14px;
+    text-align: center;
+    line-height: 22px;
+    cursor: pointer;
+}
+
 .button-group {
     margin-top: 20px;
     text-align: center; /* 버튼 중앙정렬 */

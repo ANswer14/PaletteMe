@@ -1,4 +1,4 @@
-# 환경 설정
+# 환경 설정(git pull 이후 가장 먼저 해야하는 설정)
 - 파이썬 버전: 3.10.11
 1. 가상 환경 활성화
   - 터미널에서 cd .venv/Scripts
@@ -13,6 +13,7 @@
   - 터미널에 copy .env.example .env 입력
     - .env 파일을 만드는 명령어
   - 자신의 로컬 설정에 맞게 .env 설정
+  - EX) GEMINI_API_KEY,ADMIN_ID 등등
  
 # templates / static
 - templates: HTML 파일들을 모아놓는 장소
@@ -26,4 +27,12 @@
   - feat: 기능 구현 용도
   - EX) feat-login
 - Git Commit Message
-  - 
+  - **FEAT : 새로운 기능 추가**
+  - **FIX : 버그 수정**
+  - **DOCS : 문서 수정**
+  - **STYLE : 스타일 관련 기능(코드 포맷팅, 세미콜론 누락, 코드 자체의 변경이 없는 경우)**
+  - **REFACTOR : 코드 리팩토링**
+  - **TEST : 테스트 코드 추가**
+  - **CHORE : 빌드 업무 수정, 패키지 매니저 수정(ex .gitignore 수정 같은 경우)**
+  - **RENEW : 브랜치 최신사항 반영 등등(MERGE 에서 바꿈)
+  ⇒ MERGE 시 자동으로 작성되는 커밋 메세지로 맡기기로 함**

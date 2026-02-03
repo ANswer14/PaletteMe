@@ -1,0 +1,87 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: white;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 30px;
+    border-bottom: 1px solid #cdcbcb;
+}
+
+.header-left { width: 33%; }
+.logo { width: 34%; text-align: center; font-size: 70px; font-weight: bold; }
+.logo a { color: inherit; text-decoration: none; font-size: inherit; font-weight: inherit; }
+.auth { width: 33%; text-align: right; }
+.auth a { margin-left: 15px; text-decoration: none; color: #333; }
+
+.board-write-container {
+    width: 70%;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.board-write-container .write-form label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.board-write-container .write-form input,
+.board-write-container .write-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+.board-write-container .write-form input[readonly] {
+    background-color: #f0f0f0;
+}
+.board-write-container .button-group {
+    margin-top: 20px;
+    text-align: center; /* 버튼 중앙정렬 */
+}
+
+.board-write-container .button-group button {
+    margin-top: 15px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #535252;
+    color: white;
+    cursor: pointer;
+}
+
+.board-write-container .button-group button:hover {
+    background-color: #333333;
+}
+
+.board-write-container .button-group button + button {
+    margin-left: 10px;
+    background-color: #535252;
+}
+
+.board-write-container .button-group button + button:hover {
+    background-color: #333333;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.footer a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #333;
+}

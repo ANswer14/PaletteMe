@@ -45,6 +45,7 @@ document.getElementById("detailDate").innerText = posts[no].date;
 document.getElementById("detailView").innerText = posts[no].views;
 document.getElementById("detailContent").innerText = posts[no].content;
 
+
 // ✅ 댓글 출력
 const commentList = document.getElementById("commentList");
 posts[no].comments.forEach(c => {
@@ -53,34 +54,6 @@ posts[no].comments.forEach(c => {
     div.innerHTML = `<b>${c.writer}:</b> ${c.text}`;
     commentList.appendChild(div);
 });
-
-// 좋아요
-document.addEventListener("DOMContentLoaded", function () {
-    const likeBtn = document.getElementById("likeBtn");
-    const likeCount = document.getElementById("likeCount");
-
-    // 처음 좋아요 개수
-    let count = 0;
-    let liked = false;
-
-    // 화면에 처음 숫자 표시
-    likeCount.textContent = count;
-    // 버튼 클릭
-    likeBtn.addEventListener("click", function () {
-        if (!liked) {
-            count++;
-            liked = true;
-            likeBtn.classList.add("liked");
-        }
-        else {
-            count--;
-            liked = false;
-            likeBtn.classList.remove("liked");
-        }
-        likeCount.textContent = count;
-    });
-});
-
 // 댓글등록
 window.addComment = function() {
     const text = document.getElementById("commentText").value;

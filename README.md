@@ -14,6 +14,7 @@
     - .env 파일을 만드는 명령어
   - 자신의 로컬 설정에 맞게 .env 설정
   - EX) GEMINI_API_KEY,ADMIN_ID 등등
+    - 필요한 상황이 아니라면 안 해도 됨
  
 # templates / static
 - templates: HTML 파일들을 모아놓는 장소

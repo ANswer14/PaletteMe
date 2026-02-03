@@ -37,6 +37,7 @@
   - **CHORE : 빌드 업무 수정, 패키지 매니저 수정(ex .gitignore 수정 같은 경우)**
   - **RENEW : 브랜치 최신사항 반영 등등(MERGE 에서 바꿈)
   ⇒ MERGE 시 자동으로 작성되는 커밋 메세지로 맡기기로 함**
+  - EX) FEAT: 로그인 기능 구현
 
 ### 주의할 점
 - develop 브런치에 push 할 때는 compare & pull request를 통해 할 것

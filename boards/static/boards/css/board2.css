@@ -40,7 +40,7 @@ body {
     text-decoration: none;
     color: #333;
 }
-.detail-container {
+.board-detail-container {
     width: 80%;
     margin: 40px auto;
     background: white;
@@ -49,25 +49,27 @@ body {
 }
 
 /* 제목줄 헤더 */
-.title-header, .title-row {
+.board-detail-container .title-header,
+.board-detail-container .title-row {
     display: flex;
     justify-content: center; /* 전체 중앙 정렬 */
     align-items: center;
     gap: 10px;
 }
-.title-header {
+.board-detail-container .title-header {
     font-weight: bold;
     margin-bottom: 5px;
 }
 
-.title-row {
+.board-detail-container .title-row {
     font-weight: normal;
     margin-bottom: 20px;
 }
 
 
 /* 열 비율 */
-.title-header span, .title-row span {
+.board-detail-container .title-header span,
+.board-detail-container .title-row span {
     display: inline-block;
     text-align: center;
     overflow: hidden;
@@ -76,36 +78,36 @@ body {
 }
 
 /* 각 열 폭 지정 */
-.title-header span:nth-child(1),
-.title-row span:nth-child(1) { width: 5%; }   /* No */
-.title-header span:nth-child(2),
-.title-row span:nth-child(2) { width: 50%; }  /* 제목 */
-.title-header span:nth-child(3),
-.title-row span:nth-child(3) { width: 15%; }  /* 작성자 */
-.title-header span:nth-child(4),
-.title-row span:nth-child(4) { width: 15%; }  /* 작성일 */
-.title-header span:nth-child(5),
-.title-row span:nth-child(5) { width: 15%; }  /* 조회수 */
+.board-detail-container .title-header span:nth-child(1),
+.board-detail-container .title-row span:nth-child(1) { width: 5%; }   /* No */
+.board-detail-container .title-header span:nth-child(2),
+.board-detail-container .title-row span:nth-child(2) { width: 50%; }  /* 제목 */
+.board-detail-container .title-header span:nth-child(3),
+.board-detail-container .title-row span:nth-child(3) { width: 15%; }  /* 작성자 */
+.board-detail-container .title-header span:nth-child(4),
+.board-detail-container .title-row span:nth-child(4) { width: 15%; }  /* 작성일 */
+.board-detail-container .title-header span:nth-child(5),
+.board-detail-container .title-row span:nth-child(5) { width: 15%; }  /* 조회수 */
 
 /* 글 내용 */
-.detail-content {
+.board-detail-container .detail-content {
     line-height: 1.8;
     min-height: 200px;
     margin-bottom: 30px;
 }
 /* 댓글 */
-.comment-section h3 {
+.board-detail-container .comment-section h3 {
     margin-bottom: 10px;
 }
-.comment-input {
+.board-detail-container .comment-input {
     margin-top: 10px;
 }
-.comment-input input {
+.board-detail-container .comment-input input {
     width: 70%;
     padding: 5px;
     margin-right: 5px;
 }
-.comment-input button {
+.board-detail-container .comment-input button {
     padding: 5px 10px;
 }
 

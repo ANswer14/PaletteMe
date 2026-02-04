@@ -7,12 +7,7 @@
     <link rel="stylesheet" href="{% static 'personalColors/css/InfoColor.css' %}">
 </head>
 <body>
-    <header class="header">
-        <div class="header-left"></div>
-        <div class="logo"><a href="index.html">Title</a></div>
-        <div class="auth"><a href="login.html">로그아웃</a></div>
-    </header>
-
+    {% include 'personalColors/includes/header.html' %}
     <section id="personalColorSection">
         <div class="left">
             <div class="intro-header">
@@ -30,7 +25,6 @@
         <div class="right">
             <h2>유저 정보</h2>
             <div id="userColorInfo">
-
             </div>
 
             <div class="buttons">

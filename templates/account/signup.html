@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/signup.css' %}">
+</head>
+<body>
+<header class="header">
+    <div class="header-left"></div>
+    <div class="logo">
+        <a href="#">Title</a>
+    </div>
+    <div class="auth">
+        <a href="{% url 'account_login' %}">로그인</a>
+        <a href="{% url 'accounts:agreement' %}">회원가입</a>
+    </div>
+</header>
+
+<div id="signup">
+    <h1>회원가입</h1>
+
+    <!-- 🔹 중요: allauth에 맞게 POST + csrf_token 추가 -->
+    <form id="signupForm" method="post" action="{% url 'account_signup' %}">
+        {% csrf_token %}
+
+        <!-- ===== 1️⃣ 계정 정보 ===== -->
+        <label for="id_username">아이디:</label>
+        <input type="text" id="id_username" name="username" placeholder="아이디 입력" required>
+        <button type="button" id="checkIDBtn">중복확인</button><br><br>
+
+        <label for="id_password1">비밀번호:</label>
+        <input type="password" id="id_password1" name="password1" placeholder="비밀번호 입력" required><br><br>
+
+        <label for="id_password2">비밀번호 확인:</label>
+        <input type="password" id="id_password2" name="password2" placeholder="비밀번호 확인" required><br><br>
+
+        <!-- ===== 2️⃣ 프로필 정보 ===== -->
+        <label for="id_nickname">닉네임:</label>
+        <input type="text" id="id_nickname" name="nickname" placeholder="닉네임 입력" required><br><br>
+
+        <label for="id_email">이메일:</label>
+        <input type="email" id="id_email" name="email" placeholder="이메일 입력" required><br><br>
+
+        <!-- ===== 3️⃣ 추가 정보 ===== -->
+        <label for="id_phone">연락처:</label>
+        <input type="text" id="id_phone" name="phone_number" placeholder="연락처 입력"><br><br>
+
+        <label>성별:</label>
+        <div class="gender-options">
+            <input type="radio" id="male" name="gender" value="M" required>
+            <label for="male">남</label>
+
+            <input type="radio" id="female" name="gender" value="F">
+            <label for="female">여</label><br><br>
+        </div>
+
+        <button type="submit">회원가입</button>
+    </form>
+</div>
+
+<footer class="footer">
+    <a href="#">Instagram</a>
+    <a href="#">Twitter</a>
+    <a href="#">Contact</a>
+</footer>
+
+<script src="{% static 'accounts/js/signup.js' %}"></script>
+</body>
+</html>

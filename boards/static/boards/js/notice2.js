@@ -1,8 +1,15 @@
-// 주소에서 ?no=1 이런 값 가져오기
-const params = new URLSearchParams(window.location.search);
-const no = parseInt(params.get("no"));
+/*
+  Django URL 기준:
+  /boards/notice/detail/1/
+  /boards/notice/detail/2/
+*/
 
-// 임시 공지 데이터 (나중에 DB로 바뀜)
+// 1️⃣ 현재 URL에서 번호(no) 추출
+const pathParts = window.location.pathname.split("/").filter(Boolean);
+// ["boards", "notice", "detail", "1"]
+const no = parseInt(pathParts[pathParts.length - 1]);
+
+// 2️⃣ 임시 공지 데이터 (나중에 DB로 대체)
 const notices = {
     1: {
         title: "서비스 오픈 안내드립니다.",
@@ -21,29 +28,38 @@ const notices = {
     }
 };
 
-// 화면에 넣기
+// 3️⃣ 유효성 체크
+if (!notices[no]) {
+    alert("존재하지 않는 공지입니다.");
+    window.location.href = "/boards/notice/";
+}
+
+// 4️⃣ 화면에 데이터 출력
 document.getElementById("detailNo").innerText = no;
 document.getElementById("detailTitle").innerText = notices[no].title;
 document.getElementById("detailDate").innerText = notices[no].date;
 document.getElementById("detailContent").innerText = notices[no].content;
 
-// 목록으로 버튼
+// 5️⃣ 버튼 동작 (전부 Django URL 기준)
+
+// 목록으로
 function goList() {
-    window.location.href = "notice1.html";
+    window.location.href = "/boards/notice/";
 }
+
+// 이전글
 function goPrev() {
-    if (no > 1) {
-        window.location.href = "notice2.html?no=" + (parseInt(no) - 1);
+    if (notices[no - 1]) {
+        window.location.href = `/boards/notice/detail/${no - 1}/`;
     } else {
         alert("이전 글이 없습니다.");
     }
 }
 
+// 다음글
 function goNext() {
-    const maxNo = Object.keys(notices).length;
-
-    if (no < maxNo) {
-        window.location.href = "notice2.html?no=" + (parseInt(no) + 1);
+    if (notices[no + 1]) {
+        window.location.href = `/boards/notice/detail/${no + 1}/`;
     } else {
         alert("다음 글이 없습니다.");
     }

@@ -116,3 +116,18 @@ body {
     text-decoration: none;
     color: #333;
 }
+/* ===== detail-nav (HTML과 클래스명 맞추기) ===== */
+.detail-nav {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.detail-nav span {
+    cursor: pointer;
+    margin: 0 5px;
+    color: #333;
+}
+
+.detail-nav span:hover {
+    text-decoration: underline;
+}

@@ -8,67 +8,64 @@
 </head>
 <body>
 <!-- ===== HEADER ===== -->
-    <header class="header">
-        <div class="header-left">
-            <!-- 필요 시 왼쪽 버튼/메뉴 -->
-        </div>
-        <div class="logo">
-            <a href="index.html">Title</a>
-        </div>
+<header class="header">
+    <div class="header-left"></div>
 
-        <div class="auth">
-            <a href="#">회원정보</a>
-            <a href="../login/login.html">로그아웃</a>
-        </div>
-    </header>
+    <div class="logo">
+        <!-- ✅ index.html → Django URL -->
+        <a href="{% url 'board_main' %}">Title</a>
+    </div>
 
+    <div class="auth">
+        <a href="#">회원정보</a>
+        <a href="#">로그아웃</a>
+    </div>
+</header>
 
-    <div class="board-container notice">
-        <h2>공지사항</h2>
+<div class="board-container notice">
+    <h2>공지사항</h2>
 
-        <!-- 목록 헤더 -->
-        <div class="board-header">
-            <div class="col-no">번 호</div>
-            <div class="col-title">제  목</div>
-            <div class="col-date">날 짜</div>
-        </div>
+    <div class="board-header">
+        <div class="col-no">번 호</div>
+        <div class="col-title">제  목</div>
+        <div class="col-date">날 짜</div>
+    </div>
 
-        <!-- 공지 목록 -->
-        <div class="board-list">
-            <div class="notice-row" onclick="goNoticeDetail(3)">
-                <div class="col-no">3</div>
-                <div class="col-title">날씨 기반 코디 추천 기능 추가</div>
-                <div class="col-date">2026-01-30</div>
-            </div>
-            <div class="board-row" onclick="goNoticeDetail(2)">
-                <div class="col-no">2</div>
-                <div class="col-title">퍼스널컬러 진단 기능 업데이트</div>
-                <div class="col-date">2026-02-01</div>
-            </div>
-            <div class="board-row" onclick="goNoticeDetail(1)">
-                <div class="col-no">1</div>
-                <div class="col-title">서비스 오픈 안내드립니다.</div>
-                <div class="col-date">2026-02-02</div>
-            </div>
-
+    <div class="board-list">
+        <div class="notice-row" onclick="goNoticeDetail(3)">
+            <div class="col-no">3</div>
+            <div class="col-title">날씨 기반 코디 추천 기능 추가</div>
+            <div class="col-date">2026-01-30</div>
         </div>
 
-        <!-- 페이지 번호 -->
-        <div class="pagination">
-            <span>1</span>
-            <span>2</span>
-            <span>3</span>
-            <span>4</span>
+        <div class="board-row" onclick="goNoticeDetail(2)">
+            <div class="col-no">2</div>
+            <div class="col-title">퍼스널컬러 진단 기능 업데이트</div>
+            <div class="col-date">2026-02-01</div>
+        </div>
+
+        <div class="board-row" onclick="goNoticeDetail(1)">
+            <div class="col-no">1</div>
+            <div class="col-title">서비스 오픈 안내드립니다.</div>
+            <div class="col-date">2026-02-02</div>
         </div>
     </div>
 
-<!-- ===== FOOTER ===== -->
+    <div class="pagination">
+        <span>1</span>
+        <span>2</span>
+        <span>3</span>
+        <span>4</span>
+    </div>
+</div>
+
 <footer class="footer">
     <a href="#">Instagram</a>
     <a href="#">Twitter</a>
     <a href="#">Contact</a>
 </footer>
 
+<!-- ✅ JS는 static + defer -->
 <script src="{% static 'boards/js/notice1.js' %}" defer></script>
 </body>
 </html>

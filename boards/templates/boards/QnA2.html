@@ -1,10 +1,9 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>글 상세보기</title>
-    <link rel="stylesheet" href="{% static 'boards/css/board2.css' %}">
+    <link rel="stylesheet" href="QnA2.css">
 </head>
 <body>
 <!-- ===== HEADER ===== -->
@@ -21,7 +20,7 @@
             <a href="../login/login.html">로그아웃</a>
         </div>
     </header>
-    <div class="board-detail-container free">
+    <div class="board-detail-container QnA">
         <!-- 제목줄: 헤더 -->
         <div class="title-header">
             <span class="col-header">No.</span>
@@ -51,16 +50,9 @@
             <h3>댓글</h3>
             <div id="commentList"></div>
             <div class="comment-input">
-                <!-- 좋아요 -->
-                <div class="like-area">
-                    <button class="like-btn" id="likeBtn">❤️ 좋아요</button>
-                    <!--임시-->
-                    <span class="like-count" id="likeCount">0</span>
-                </div>
-                <div class="comment-write">
-                    <input type="text" id="commentText" placeholder="댓글을 입력하세요">
-                    <button onclick="addComment()">등록</button>
-                </div>
+                <input type="text" id="commentText" placeholder="댓글을 입력하세요">
+                <button onclick="addComment()">등록</button>
+            </div>
         </div>
 
         <div class="nav-buttons">
@@ -77,6 +69,6 @@
     <a href="#">Contact</a>
 </footer>
 
-<script src="{% static 'boards/js/board2.js' %}" defer></script>
+<script src="QnA2.js" defer></script>
 </body>
 </html>

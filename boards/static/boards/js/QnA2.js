@@ -4,36 +4,32 @@ const no = parseInt(params.get("no"));
 // 게시글 데이터 (목록과 동일한 번호 사용)
 const posts = {
     1: {
-        title: "첫 번째 글입니다",
-        writer: "김주연",
+        title: "첫 번째 질문입니다",
+        writer: "익명",
         date: "2026-02-02",
         views: 12,
-        content: "자유게시판 첫 글입니다. 반갑습니다 :)",
+        content: "회원가입 되나요?",
          comments: [
-            {writer: "민수", text: "환영합니다!"},
-            {writer: "홍길동", text: "첫 글 축하드려요!"}
+            {writer: "관리자", text: "가능합니다!"},
         ]
     },
     2: {
-        title: "오늘 코디 추천 너무 좋아요",
+        title: "질문있어요",
         writer: "홍길동",
         date: "2026-02-02",
         views: 8,
-        content: "오늘 추천받은 코디 그대로 입고 나갔는데 칭찬 많이 받았어요.",
+        content: "자가진단 다시 할 수 있나요",
          comments: [
-            {writer: "민수", text: "저도 써봐야겠어요!"}
+            {writer: "관리자", text: "가능합니다!"}
         ]
     },
     3: {
-        title: "퍼스널컬러 후기 공유합니다",
+        title: "이런거 질문해도 되나요?",
         writer: "민수",
         date: "2026-02-02",
         views: 33,
-        content: "퍼스널컬러 진단 받고 옷장 정리했습니다. 삶의 질 상승!!",
-        comments: [
-            {writer: "홍길동", text: "오 저도 해보고 싶네요!"},
-            {writer: "김주연", text: "정리 꿀팁 좀 알려주세요"}
-            ]
+        content: "유료결제 페이지는 있나요?",
+        comments: []
     }
 };
 
@@ -54,32 +50,6 @@ posts[no].comments.forEach(c => {
     div.innerHTML = `<b>${c.writer}:</b> ${c.text}`;
     commentList.appendChild(div);
 });
-// 좋아요
-document.addEventListener("DOMContentLoaded", function () {
-    const likeBtn = document.getElementById("likeBtn");
-    const likeCount = document.getElementById("likeCount");
-
-    // 처음 좋아요 개수
-    let count = 0;
-    let liked = false;
-
-    // 화면에 처음 숫자 표시
-    likeCount.textContent = count;
-    // 버튼 클릭
-    likeBtn.addEventListener("click", function () {
-        if (!liked) {
-            count++;
-            liked = true;
-            likeBtn.classList.add("liked");
-        }
-        else {
-            count--;
-            liked = false;
-            likeBtn.classList.remove("liked");
-        }
-        likeCount.textContent = count;
-    });
-});
 // 댓글등록
 window.addComment = function() {
     const text = document.getElementById("commentText").value;
@@ -95,11 +65,11 @@ window.addComment = function() {
 
 // 목록으로 버튼
 function goList() {
-    window.location.href = "board1.html";
+    window.location.href = "QnA1.html";
 }
 function goPrev() {
     if (no > 1) {
-        window.location.href = "board2.html?no=" + (parseInt(no) - 1);
+        window.location.href = "QnA2.html?no=" + (parseInt(no) - 1);
     } else {
         alert("이전 글이 없습니다.");
     }
@@ -108,7 +78,7 @@ function goNext() {
     const maxNo = Object.keys(posts).length;
 
     if (no < maxNo) {
-        window.location.href = "board2.html?no=" + (parseInt(no) + 1);
+        window.location.href = "QnA2.html?no=" + (parseInt(no) + 1);
     } else {
         alert("다음 글이 없습니다.");
     }

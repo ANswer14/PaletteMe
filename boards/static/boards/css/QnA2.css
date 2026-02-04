@@ -100,49 +100,14 @@ body {
     margin-bottom: 10px;
 }
 .board-detail-container .comment-input {
-    display: flex;
-    align-items: center;
     margin-top: 10px;
-    gap: 10px;          /* 요소 사이 간격 */
 }
-/* 좋아요 */
-.like-area {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.like-btn {
-    padding: 6px 12px;
-    border: 1px solid #f39898;
-    border-radius: 5px;
-    background: #ffffff;
-    color: #333333;
-    cursor: pointer;
-}
-
-.like-btn:hover {
-    background: #f6bdbd;
-}
-.like-btn.liked {
-    background: #f1a2a2;
-    border: 1px solid #f39898;
-}
-
-/* 댓글 입력 */
-.comment-write {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    flex: 1;
-}
-
-.board-detail-container .comment-write input {
-    flex: 1;
+.board-detail-container .comment-input input {
+    width: 70%;
     padding: 5px;
+    margin-right: 5px;
 }
-
-.board-detail-container .comment-write button {
+.board-detail-container .comment-input button {
     padding: 5px 10px;
 }
 

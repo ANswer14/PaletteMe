@@ -1,65 +1,89 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>회원가입</title>
+
+{% block title %} 회원가입 - PaletteMe {% endblock %}
+
+{% block content %}
     <link rel="stylesheet" href="{% static 'accounts/css/signup.css' %}">
-</head>
-<body>
-    <header class="header">
-        <div class="header-left">
-        <!-- 필요 시 왼쪽 버튼/메뉴 -->
-        </div>
-        <div class="logo">
-            <a href="#">Title</a>
-        </div>
-        <div class="auth">
-            <a href="#">로그인</a>
-            <a href="#">회원가입</a>
-        </div>
-    </header>
 
-    <div id="signup">
+    <div class="signup-container">
         <h1>회원가입</h1>
-        <form id="signupForm">
-            <label for="userID">아이디:</label>
-            <input type="text" id="userID" name="userID" placeholder="아이디 입력">
-            <button type="button" id="checkIDBtn">중복확인</button><br><br>
+        <form id="signupForm" method="POST" action="{% url 'signup' %}" enctype="multipart/form-data">
+        {% csrf_token %}
 
-            <label for="passwd">비밀번호:</label>
-            <input type="password" id="passwd" name="passwd" placeholder="비밀번호 입력"><br><br>
+        <div class="form-group profile-section">
+            <label>프로필 사진</label>
+            <div class="profile-main">
+                <img id="profilePreview" src="{% static 'img/default-profile.png' %}" alt="프로필" class="profile-circle large">
+                <button type="button" class="custom-file-btn" onclick="document.getElementById('profileUpload').click()">
+                    내 PC에서 사진 선택
+                </button>
+            </div>
+            <input type="file" id="profileUpload" name="profile_image" accept="image/*" onchange="previewFile()" style="display:none;">
 
-            <label for="passwdConfirm">비밀번호 확인:</label>
-            <input type="password" id="passwdConfirm" name="passwdConfirm" placeholder="비밀번호 확인"><br><br>
+            <div class="default-images">
+                <p>기본 이미지 선택</p>
+                <div class="img-list">
+                    <img src="{% static 'img/logo4.png' %}" class="selectable-img" onclick="selectImage('logo4.png')">
+                    <img src="{% static 'img/logo2.png' %}" class="selectable-img" onclick="selectImage('logo2.png')">
+                    <img src="{% static 'img/logo3.png' %}" class="selectable-img" onclick="selectImage('logo3.png')">
+                </div>
+            </div>
+            <input type="hidden" id="selectedDefaultImage" name="default_image_name">
+        </div>
 
-            <label for="name">이름:</label>
-            <input type="text" id="name" name="name" placeholder="이름 입력"><br><br>
+        <hr>
 
-            <label for="phone">연락처:</label>
-            <input type="text" id="phone" name="phone" placeholder="연락처 입력"><br><br>
+        <div class="form-group">
+            <label for="userID">아이디</label>
+            <div class="input-group">
+                <input type="text" id="userID" name="userID" placeholder="아이디 입력" required>
+                <button type="button" id="checkIDBtn" data-url="{% url 'check_id' %}">중복확인</button>
+            </div>
+        </div>
 
-            <label for="email">이메일:</label>
-            <input type="email" id="email" name="email" placeholder="이메일 입력"><br><br>
+        <div class="form-group">
+            <label for="passwd">비밀번호</label>
+            <input type="password" id="passwd" name="passwd" placeholder="비밀번호 입력" required>
+        </div>
 
-            <label>성별:</label>
+        <div class="form-group">
+            <label for="passwdConfirm">비밀번호 확인</label>
+            <input type="password" id="passwdConfirm" name="passwdConfirm" placeholder="비밀번호 확인" required>
+        </div>
+
+        <div class="form-group">
+            <label for="nickname">닉네임</label> <div class="input-group">
+                <input type="text" id="nickname" name="nickname" placeholder="닉네임 입력" required>
+                <button type="button" id="checkNicknameBtn" data-url="{% url 'check_nickname' %}">중복확인</button>
+        </div>
+    <span id="nicknameStatus" class="status"></span>
+</div>
+
+        <div class="form-group">
+            <label for="phone">연락처</label>
+            <input type="text" id="phone" name="phone" placeholder="연락처 입력">
+        </div>
+
+        <div class="form-group">
+            <label for="email">이메일</label>
+            <input type="email" id="email" name="email" placeholder="이메일 입력" required>
+        </div>
+
+        <div class="form-group">
+            <label>성별</label>
             <div class="gender-options">
                 <input type="radio" id="male" name="gender" value="male">
                 <label for="male">남</label>
                 <input type="radio" id="female" name="gender" value="female">
-                <label for="female">여</label><br><br>
+                <label for="female">여</label>
             </div>
+        </div>
 
-            <button type="submit">회원가입</button>
+        <button type="submit" class="signup-submit-btn">회원가입 완료</button>
         </form>
     </div>
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
 
 <script src="{% static 'accounts/js/signup.js' %}"></script>
-</body>
-</html>
+
+{% endblock %}

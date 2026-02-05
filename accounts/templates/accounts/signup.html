@@ -5,61 +5,114 @@
     <meta charset="UTF-8">
     <title>회원가입</title>
     <link rel="stylesheet" href="{% static 'accounts/css/signup.css' %}">
+
+    <script>
+        // 페이지 로드 즉시 실행
+        (function() {
+            const ref = document.referrer;
+            const current = window.location.href;
+
+            // 로그를 찍어보면 확실히 알 수 있습니다 (F12 누르면 보임)
+            console.log("현재 리퍼러:", ref);
+
+            // 1. 리퍼러가 아예 없는 경우 (주소창 직접 입력, 엔터)
+            // 2. 리퍼러가 있지만 내가 허용한 단어(agreement, signup)가 없는 경우
+            if (!ref || (!ref.includes("agreement") && !ref.includes("signup"))) {
+
+                // 브라우저가 이동하기 전에 자바스크립트를 강제로 멈추고 알림을 띄웁니다.
+                window.stop(); // 🛑 페이지 로딩 중지
+                alert("잘못된 접근입니다. 약관 동의를 먼저 진행해주세요.");
+
+                // 확인 누르면 이동
+                window.location.replace("{% url 'agreement' %}");
+            }
+        })();
+    </script>
 </head>
 <body>
-    <header class="header">
-        <div class="header-left">
-        <!-- 필요 시 왼쪽 버튼/메뉴 -->
-        </div>
-        <div class="logo">
-            <a href="#">Title</a>
-        </div>
-        <div class="auth">
-            <a href="#">로그인</a>
-            <a href="#">회원가입</a>
-        </div>
-    </header>
-
-    <div id="signup">
-        <h1>회원가입</h1>
-        <form id="signupForm">
-            <label for="userID">아이디:</label>
-            <input type="text" id="userID" name="userID" placeholder="아이디 입력">
-            <button type="button" id="checkIDBtn">중복확인</button><br><br>
-
-            <label for="passwd">비밀번호:</label>
-            <input type="password" id="passwd" name="passwd" placeholder="비밀번호 입력"><br><br>
-
-            <label for="passwdConfirm">비밀번호 확인:</label>
-            <input type="password" id="passwdConfirm" name="passwdConfirm" placeholder="비밀번호 확인"><br><br>
-
-            <label for="name">이름:</label>
-            <input type="text" id="name" name="name" placeholder="이름 입력"><br><br>
-
-            <label for="phone">연락처:</label>
-            <input type="text" id="phone" name="phone" placeholder="연락처 입력"><br><br>
-
-            <label for="email">이메일:</label>
-            <input type="email" id="email" name="email" placeholder="이메일 입력"><br><br>
-
-            <label>성별:</label>
-            <div class="gender-options">
-                <input type="radio" id="male" name="gender" value="male">
-                <label for="male">남</label>
-                <input type="radio" id="female" name="gender" value="female">
-                <label for="female">여</label><br><br>
-            </div>
-
-            <button type="submit">회원가입</button>
-        </form>
+<header class="header">
+    <div class="header-left"></div>
+    <div class="logo">
+        <a href="{% url 'core:index' %}">Title</a>
     </div>
-<!-- ===== FOOTER ===== -->
+    <div class="auth">
+        <a href="{% url 'account_login' %}">로그인</a>
+        <a href="{% url 'agreement' %}">회원가입</a>
+    </div>
+</header>
+
+<div id="signup">
+    <h1>회원가입</h1>
+
+    <!-- 🔹 중요: allauth에 맞게 POST + csrf_token 추가 -->
+    <form id="signupForm" method="post" action="{% url 'account_signup' %}">
+        {% csrf_token %}
+
+        <!-- ===== 1️⃣ 계정 정보 ===== -->
+        <label for="id_username">아이디:</label>
+        <input type="text" id="id_username" name="username" placeholder="아이디 입력" required>
+        <button type="button" id="checkIDBtn">중복확인</button><br><br>
+
+        <label for="id_password1">비밀번호:</label>
+        <input type="password" id="id_password1" name="password1" maxlength="30" minlength="8" placeholder="비밀번호 입력 (최소 8자)" required><br><br>
+
+        <label for="id_password2">비밀번호 확인:</label>
+        <input type="password" id="id_password2" name="password2" maxlength="30" minlength="8" placeholder="비밀번호 확인 (최소 8자)" required><br><br>
+
+        <!-- ===== 2️⃣ 프로필 정보 ===== -->
+        <label for="id_nickname">닉네임:</label>
+        <input type="text" id="id_nickname" name="nickname" maxlength="10" minlength="2" placeholder="닉네임 입력" required><br><br>
+
+        <label for="id_email">이메일:</label>
+        <input type="email" id="id_email" name="email" placeholder="이메일 입력" required><br><br>
+
+        <!-- ===== 3️⃣ 추가 정보 ===== -->
+        <label for="id_phone">연락처:</label>
+        <input type="text" id="id_phone" name="phone_number" maxlength="20" minlength="9" placeholder="연락처 입력 (- 제외)"><br><br>
+
+        <label>성별:</label>
+        <div class="gender-options">
+            <input type="radio" id="male" name="gender" value="M" required>
+            <label for="male">남</label>
+
+            <input type="radio" id="female" name="gender" value="F">
+            <label for="female">여</label><br><br>
+        </div>
+
+        <button type="submit">회원가입</button>
+    </form>
+</div>
+
 <footer class="footer">
     <a href="#">Instagram</a>
     <a href="#">Twitter</a>
     <a href="#">Contact</a>
 </footer>
+{% if form.errors %}
+<script>
+    (function() {
+        let errorMsg = "";
 
+        /* 1. 필드별 에러 (닉네임 중복, 연락처 중복 등) */
+        {% for field in form %}
+            {% for error in field.errors %}
+                // 예: "닉네임: 이미 사용 중인 닉네임입니다."
+                errorMsg += "{{ field.label|escapejs }}: {{ error|escapejs }}\n";
+            {% endfor %}
+        {% endfor %}
+
+        /* 2. 공통 에러 (비밀번호 불일치 등) */
+        {% for error in form.non_field_errors %}
+            errorMsg += "{{ error|escapejs }}\n";
+        {% endfor %}
+
+        // 메시지가 있으면 팝업 띄우기
+        if (errorMsg.trim() !== "") {
+            alert(errorMsg);
+        }
+    })();
+</script>
+{% endif %}
 <script src="{% static 'accounts/js/signup.js' %}"></script>
 </body>
 </html>

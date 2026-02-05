@@ -13,15 +13,27 @@
             <p>여기에 약관 내용을 넣습니다. 예: 개인정보 수집, 서비스 이용약관 등</p>
         </div>
 
+        <form id="agreementForm">
+        {% csrf_token %}  <!-- 있어도 문제는 없지만, 실제로 POST는 안 함 -->
+
         <div class="checkbox-section">
-            <input type="checkbox" id="agreeCheckbox">
+            <input type="checkbox" id="agreeCheckbox" name="agree">
             <label for="agreeCheckbox">약관에 동의합니다.</label>
         </div>
 
         <div id="errorMsg" class="error-msg"></div>
 
-        <button id="nextBtn" data-url="{% url 'signup' %}">다음</button>
-    </div>
+        <!-- 핵심: type="button" (submit 아님!) -->
+        <button id="nextBtn" data-url="{% url 'signup' %}" type="button">다음</button>
+    </form>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    <a href="#">Instagram</a>
+    <a href="#">Twitter</a>
+    <a href="#">Contact</a>
+</footer>
 
     <script src="{% static 'accounts/js/agreement.js' %}" defer></script>
 {% endblock %}

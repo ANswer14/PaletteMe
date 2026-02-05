@@ -1,28 +1,36 @@
-// login.js
+document.addEventListener("DOMContentLoaded", function() {
+    const idInput = document.getElementById("userID");
+    const pwInput = document.getElementById("passwd");
+    const loginBtn = document.getElementById("loginBtn");
+    //const loginForm = document.querySelector("form"); // ✅ 폼 잡기
 
-const loginBtn = document.getElementById('loginBtn');
+    function validateAndSubmit(e) {
+        const username = idInput.value.trim();
+        const password = pwInput.value.trim();
 
-loginBtn.addEventListener('click', () => {
-    const userID = document.getElementById('userID').value;
-    const passwd = document.getElementById('passwd').value;
+        if (!username || !password) {
+            e.preventDefault();  // 🔥 폼 제출 막기
+            alert("아이디와 비밀번호를 입력하세요.");
+            return;
+        }
 
-    // 빈칸일 때 서버 요청 방지
-    if (!userID || !passwd) {
-        alert("아이디와 비밀번호를 모두 입력해주세요.");
-        return;
+        // 여기까지 오면 → 그냥 allauth가 알아서 로그인 처리함
+        console.log("로그인 요청 전송");
     }
 
-    const isSuccess = true; // 서버에서 받아온 결과가 성공이라면
-
-    if (isSuccess) {
-        // 부모 창(index.html)이 살아있는지 확인 후 새로고침
+    // 버튼 클릭 시 검사 → 문제 없으면 allauth로 제출
+    loginBtn.addEventListener("click", event => {
+        validateAndSubmit(event)
         if (window.opener && !window.opener.closed) {
             window.opener.location.reload();
         }
-
-        // 현재 팝업창을 닫음
         window.close();
-    } else {
-        alert("아이디 또는 비밀번호가 틀렸습니다.");
-    }
+    });
+
+    // 엔터키 처리
+    pwInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+            validateAndSubmit(e);
+        }
+    });
 });

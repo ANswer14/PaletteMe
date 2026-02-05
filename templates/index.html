@@ -13,20 +13,21 @@
         <!-- 필요 시 왼쪽 버튼/메뉴 -->
     </div>
     <div class="logo">
-        <a href="{% url 'index' %}"><img src="{% static 'img/logo.png' %}" alt="로고" class="header-logo-img"></a>
+        <a href="{% url 'core:index' %}"><img src="{% static 'img/logo.png' %}" alt="로고" class="header-logo-img"></a>
     </div>
 
     <div class="auth">
         {% if user.is_authenticated %}
             <!-- 이미지 클릭하면 새창으로 이미지가 더 크게 보이게 함 -->
+            <span class="user-nickname">{{ user.nickname }}님</span>
             <a href="{{ user.profile_image.url|default:'/static/img/default-profile.png' }}" target="_blank">
                 <img src="{{ user.profile_image.url|default:'/static/img/default-profile.png' }}"
                  alt="프로필" class="header-profile-img">
-        </a>
-            <a href="{% url 'logout' %}">로그아웃</a>
+            </a>
             <a href="{% url 'mypage' %}">회원정보</a>
+            <a href="{% url 'account_logout' %}">로그아웃</a>
         {% else %}
-            <a href="javascript:void(0);" onclick="openLoginPopup('{% url 'login' %}')">로그인</a>
+            <a href="javascript:void(0);" onclick="openLoginPopup('{% url 'account_login' %}')">로그인</a>
             <a href="{% url 'agreement' %}">회원가입</a>
         {% endif %}
     </div>

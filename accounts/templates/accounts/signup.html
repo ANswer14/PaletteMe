@@ -5,85 +5,129 @@
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'accounts/css/signup.css' %}">
+    <script>
+        // 페이지 로드 즉시 실행
+        (function() {
+            const ref = document.referrer;
+            const current = window.location.href;
 
+            // 로그를 찍어보면 확실히 알 수 있습니다 (F12 누르면 보임)
+            console.log("현재 리퍼러:", ref);
+
+            // 1. 리퍼러가 아예 없는 경우 (주소창 직접 입력, 엔터)
+            // 2. 리퍼러가 있지만 내가 허용한 단어(agreement, signup)가 없는 경우
+            if (!ref || (!ref.includes("agreement") && !ref.includes("signup"))) {
+
+                // 브라우저가 이동하기 전에 자바스크립트를 강제로 멈추고 알림을 띄웁니다.
+                window.stop(); // 🛑 페이지 로딩 중지
+                alert("잘못된 접근입니다. 약관 동의를 먼저 진행해주세요.");
+
+                // 확인 누르면 이동
+                window.location.replace("{% url 'agreement' %}");
+            }
+        })();
+    </script>
     <div class="signup-container">
-        <h1>회원가입</h1>
-        <form id="signupForm" method="POST" action="{% url 'signup' %}" enctype="multipart/form-data">
-        {% csrf_token %}
+<!--        <h1>회원가입</h1>-->
+        <form id="signupForm" method="POST" action="{% url 'signup' %}">
+<!--        {% csrf_token %}-->
 
-        <div class="form-group profile-section">
-            <label>프로필 사진</label>
-            <div class="profile-main">
-                <img id="profilePreview" src="{% static 'img/default-profile.png' %}" alt="프로필" class="profile-circle large">
-                <button type="button" class="custom-file-btn" onclick="document.getElementById('profileUpload').click()">
-                    내 PC에서 사진 선택
-                </button>
-            </div>
-            <input type="file" id="profileUpload" name="profile_image" accept="image/*" onchange="previewFile()" style="display:none;">
+<!--        <div class="form-group profile-section">-->
+<!--            <label>프로필 사진</label>-->
+<!--            <div class="profile-main">-->
+<!--                <img id="profilePreview" src="{% static 'img/default-profile.png' %}" alt="프로필" class="profile-circle large">-->
+<!--                <button type="button" class="custom-file-btn" onclick="document.getElementById('profileUpload').click()">-->
+<!--                    내 PC에서 사진 선택-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <input type="file" id="profileUpload" name="profile_image" accept="image/*" onchange="previewFile()" style="display:none;">-->
 
-            <div class="default-images">
-                <p>기본 이미지 선택</p>
-                <div class="img-list">
-                    <img src="{% static 'img/logo4.png' %}" class="selectable-img" onclick="selectImage('logo4.png')">
-                    <img src="{% static 'img/logo2.png' %}" class="selectable-img" onclick="selectImage('logo2.png')">
-                    <img src="{% static 'img/logo3.png' %}" class="selectable-img" onclick="selectImage('logo3.png')">
+<!--            <div class="default-images">-->
+<!--                <p>기본 이미지 선택</p>-->
+<!--                <div class="img-list">-->
+<!--                    <img src="{% static 'img/logo4.png' %}" class="selectable-img" onclick="selectImage('logo4.png')">-->
+<!--                    <img src="{% static 'img/logo2.png' %}" class="selectable-img" onclick="selectImage('logo2.png')">-->
+<!--                    <img src="{% static 'img/logo3.png' %}" class="selectable-img" onclick="selectImage('logo3.png')">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <input type="hidden" id="selectedDefaultImage" name="default_image_name">-->
+<!--        </div>-->
+        <hr>
+            <div class="form-group">
+                <label for="userID">아이디</label>
+                <div class="input-group">
+                    <input type="text" id="userID" name="username" placeholder="아이디 입력" required>
+                    <button type="button" id="checkIDBtn">중복확인</button>
                 </div>
             </div>
-            <input type="hidden" id="selectedDefaultImage" name="default_image_name">
-        </div>
 
-        <hr>
-
-        <div class="form-group">
-            <label for="userID">아이디</label>
-            <div class="input-group">
-                <input type="text" id="userID" name="userID" placeholder="아이디 입력" required>
-                <button type="button" id="checkIDBtn" data-url="{% url 'check_id' %}">중복확인</button>
+            <div class="form-group">
+                <label for="passwd">비밀번호</label>
+                <input type="password" id="passwd" name="password1" maxlength="30" minlength="8" placeholder="비밀번호 입력" required>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="passwd">비밀번호</label>
-            <input type="password" id="passwd" name="passwd" placeholder="비밀번호 입력" required>
-        </div>
-
-        <div class="form-group">
-            <label for="passwdConfirm">비밀번호 확인</label>
-            <input type="password" id="passwdConfirm" name="passwdConfirm" placeholder="비밀번호 확인" required>
-        </div>
-
-        <div class="form-group">
-            <label for="nickname">닉네임</label> <div class="input-group">
-                <input type="text" id="nickname" name="nickname" placeholder="닉네임 입력" required>
-                <button type="button" id="checkNicknameBtn" data-url="{% url 'check_nickname' %}">중복확인</button>
-        </div>
-    <span id="nicknameStatus" class="status"></span>
-</div>
-
-        <div class="form-group">
-            <label for="phone">연락처</label>
-            <input type="text" id="phone" name="phone" placeholder="연락처 입력">
-        </div>
-
-        <div class="form-group">
-            <label for="email">이메일</label>
-            <input type="email" id="email" name="email" placeholder="이메일 입력" required>
-        </div>
-
-        <div class="form-group">
-            <label>성별</label>
-            <div class="gender-options">
-                <input type="radio" id="male" name="gender" value="male">
-                <label for="male">남</label>
-                <input type="radio" id="female" name="gender" value="female">
-                <label for="female">여</label>
+            <div class="form-group">
+                <label for="passwdConfirm">비밀번호 확인</label>
+                <input type="password" id="passwdConfirm" name="password2" maxlength="30" minlength="8" placeholder="비밀번호 확인" required>
             </div>
-        </div>
 
-        <button type="submit" class="signup-submit-btn">회원가입 완료</button>
+            <div class="form-group">
+                <label for="nickname">닉네임</label>
+                    <div class="input-group">
+                        <input type="text" id="nickname" name="nickname" placeholder="닉네임 입력" required>
+                        <button type="button" id="checkNicknameBtn">중복확인</button>
+                    </div>
+                <span id="nicknameStatus" class="status"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">연락처</label>
+                <input type="text" id="phone" name="phone_number" placeholder="연락처 입력">
+            </div>
+
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" placeholder="이메일 입력" required>
+            </div>
+
+            <div class="form-group">
+                <label>성별</label>
+                <div class="gender-options">
+                    <input type="radio" id="male" name="gender" value="male" required>
+                    <label for="male">남</label>
+                    <input type="radio" id="female" name="gender" value="female">
+                    <label for="female">여</label>
+                </div>
+            </div>
+
+            <button type="submit" class="signup-submit-btn">회원가입 완료</button>
         </form>
     </div>
+{% if form.errors %}
+<script>
+    (function() {
+        let errorMsg = "";
 
+        /* 1. 필드별 에러 (닉네임 중복, 연락처 중복 등) */
+        {% for field in form %}
+            {% for error in field.errors %}
+                // 예: "닉네임: 이미 사용 중인 닉네임입니다."
+                errorMsg += "{{ field.label|escapejs }}: {{ error|escapejs }}\n";
+            {% endfor %}
+        {% endfor %}
+
+        /* 2. 공통 에러 (비밀번호 불일치 등) */
+        {% for error in form.non_field_errors %}
+            errorMsg += "{{ error|escapejs }}\n";
+        {% endfor %}
+
+        // 메시지가 있으면 팝업 띄우기
+        if (errorMsg.trim() !== "") {
+            alert(errorMsg);
+        }
+    })();
+</script>
+{% endif %}
 <script src="{% static 'accounts/js/signup.js' %}"></script>
 
 {% endblock %}

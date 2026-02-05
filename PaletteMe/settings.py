@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+SITE_ID = 1
 
 # Application definition
 
@@ -37,6 +38,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'accounts',
     'boards',
     'personalColors'
@@ -50,6 +55,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
+    'allauth.account.middleware.AccountMiddleware',  # 로그인 상태 확인을 request와 동기화
 ]
 
 ROOT_URLCONF = "PaletteMe.urls"
@@ -57,8 +64,7 @@ ROOT_URLCONF = "PaletteMe.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'templates']
-        ,
+        "DIRS": [BASE_DIR / 'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -137,3 +143,29 @@ STATICFILES_FINDERS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username'  # 로그인 할때 사용할 필드: 아이디
+ACCOUNT_USERNAME_REQUIRED = True  # 회원가입 할때 아이디를 꼭 입력받겠다
+ACCOUNT_EMAIL_REQUIRED = True  # 회원가입 할때 이메일을 꼭 입력받겠다
+ACCOUNT_EMAIL_VERIFICATION = 'none' # 가입 후 이메일 보내겠다 (이메일 인증 필요 X)
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+ACCOUNT_FORMS = {  # 회원가입 할때 allauth 대신 CustomSignupForm 사용
+    'signup': 'accounts.forms.CustomSignupForm',
+}
+
+AUTH_USER_MODEL = 'accounts.CustomUser'  # 기본 auth.User 대신 auth.CustomUser 사용
+
+LOGIN_REDIRECT_URL = "/"  # 내 커스텀 로그인 페이지를 써야할때
+ACCOUNT_LOGIN_REDIRECT_URL = "/"  # allauth 기본 탬플릿으로 로그인 후 리다이렉트 > 메인페이지로 감
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"  # allauth 기본 탬플릿으로 로그아웃 후 리다이렉트 > 메인페이지로 감
+
+# 회원가입 성공 후 이동할 페이지 -> 메인페이지 (allauth는 회원가입 성공하면 자동 로그인함.)
+ACCOUNT_SIGNUP_REDIRECT_URL = "/"

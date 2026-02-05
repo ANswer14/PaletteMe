@@ -13,12 +13,20 @@
         <!-- 필요 시 왼쪽 버튼/메뉴 -->
     </div>
     <div class="logo">
-        <a href="index.html">Title</a>
+        <a href="{% url 'core:index' %}">Title</a>
     </div>
 
     <div class="auth">
-        <a href="#">로그인</a>
-        <a href="#">회원가입</a>
+        {% if user.is_authenticated %}
+        <!-- 로그인 상태일 때 -->
+            <span class="user-nickname">{{ user.nickname }}님</span>
+            <a href="{% url 'profile' %}">프로필</a>
+            <a href="{% url 'account_logout' %}">로그아웃</a>
+        {% else %}
+            <!-- 로그아웃 상태일 때 -->
+            <a href="{% url 'account_login' %}">로그인</a>
+            <a href="{% url 'agreement' %}">회원가입</a>
+        {% endif %}
     </div>
 </header>
 

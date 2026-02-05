@@ -10,9 +10,14 @@
 <body>
     <div id="login">
         <h1>Sign In</h1>
-        <input type="text" id="userID" placeholder="아이디"><br>
-        <input type="password" id="passwd" placeholder="비밀번호"><br>
-        <button id="loginBtn">LOGIN</button>
+        <form method="post" action="{% url 'account_login' %}">
+            {% csrf_token %}
+
+            <input type="text" name="login" id="userID" placeholder="아이디"><br>
+            <input type="password" name="password" id="passwd" placeholder="비밀번호"><br>
+
+            <button type="submit" id="loginBtn">LOGIN</button>
+        </form>
 
     </div>
 

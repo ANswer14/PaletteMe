@@ -26,7 +26,7 @@
             <a href="{% url 'logout' %}">로그아웃</a>
             <a href="{% url 'mypage' %}">회원정보</a>
         {% else %}
-            <a href="{% url 'login' %}">로그인</a>
+            <a href="javascript:void(0);" onclick="openLoginPopup('{% url 'login' %}')">로그인</a>
             <a href="{% url 'agreement' %}">회원가입</a>
         {% endif %}
     </div>

@@ -1,31 +1,28 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const idInput = document.getElementById("userID");
-    const pwInput = document.getElementById("passwd");
-    const loginBtn = document.getElementById("loginBtn");
+// login.js
 
-    function login()
-    {
-        const id=idInput.value;
-        const pw=pwInput.value;
-        if(id==="admin" && pw==="1234")
-        {
-            //document.getElementById("login").style.display="none";
-            //document.getElementById("main").style.display="block";
-            localStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
-            localStorage.setItem("userID", id);         // 아이디 저장
-            alert("로그인 성공!");
-        }
-        else
-        {
-            alert("아이디 혹은 비밀번호가 틀렸습니다.");
-        }
+const loginBtn = document.getElementById('loginBtn');
 
+loginBtn.addEventListener('click', () => {
+    const userID = document.getElementById('userID').value;
+    const passwd = document.getElementById('passwd').value;
+
+    // 빈칸일 때 서버 요청 방지
+    if (!userID || !passwd) {
+        alert("아이디와 비밀번호를 모두 입력해주세요.");
+        return;
     }
-    loginBtn.addEventListener("click", login);
-    pwInput.addEventListener("keydown", function(e) {
-        if (e.key === "Enter") {
-            login();
-        }
-    });
 
+    const isSuccess = true; // 서버에서 받아온 결과가 성공이라면
+
+    if (isSuccess) {
+        // 부모 창(index.html)이 살아있는지 확인 후 새로고침
+        if (window.opener && !window.opener.closed) {
+            window.opener.location.reload();
+        }
+
+        // 현재 팝업창을 닫음
+        window.close();
+    } else {
+        alert("아이디 또는 비밀번호가 틀렸습니다.");
+    }
 });

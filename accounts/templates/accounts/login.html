@@ -1,21 +1,26 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>LOGIN</title>
+
+{% block title %} 로그인 - PaletteMe {% endblock %}
+
+{% block content %}
     <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
 
-</head>
-<body>
-    <div id="login">
-        <h1>Sign In</h1>
-        <input type="text" id="userID" placeholder="아이디"><br>
-        <input type="password" id="passwd" placeholder="비밀번호"><br>
-        <button id="loginBtn">LOGIN</button>
+    <div class="login-container">
+        <div id="login-box">
+            <h1>Sign In</h1>
+            <div class="login-inputs">
+                <input type="text" id="userID" placeholder="아이디">
+                <input type="password" id="passwd" placeholder="비밀번호">
+            </div>
+            <button id="loginBtn" class="signup-submit-btn">LOGIN</button>
 
+            <p class="login-helper">
+                아직 계정이 없으신가요? <a href="{% url 'agreement' %}">회원가입</a>
+            </p>
+        </div>
     </div>
 
     <script src="{% static 'accounts/js/login.js' %}"></script>
-</body>
-</html>
+
+{% endblock %}

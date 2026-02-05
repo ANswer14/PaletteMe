@@ -103,7 +103,6 @@
                 <tr>
                     <th>날짜</th>
                     <th>결과</th>
-                    <th>상세</th>
                 </tr>
             </thead>
             <tbody>
@@ -111,11 +110,10 @@
                 <tr>
                     <td>{{ record.created_at|date:"Y-m-d" }}</td>
                     <td>{{ record.result_name }}</td>
-                    <td><a href="{% url 'diagnosis_detail' record.id %}">보기</a></td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="3">기록이 없습니다.</td>
+                    <td colspan="2" class="no-data">기록이 없습니다.</td>
                 </tr>
                 {% endfor %}
             </tbody>

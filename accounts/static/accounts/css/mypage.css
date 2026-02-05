@@ -176,16 +176,70 @@ button {
     border: 1px solid #eee;
 }
 /* 테이블 스타일 */
-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
-th { background-color: #fafafa; font-size: 14px; color: #777; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background-color: transparent; /* 배경은 투명하게 */
+}
+/* 제목 행 (thead) */
+th {
+    padding: 12px 16px;
+    text-align: center; /* 부트스트랩 특유의 정렬 방식 */
+    font-weight: 600;
+    font-size: 14px;
+    color: #212529; /* 부트스트랩 기본 텍스트 색상 */
+    border-bottom: 2px solid #dee2e6; /* 제목 아래는 조금 더 진한 선 */
+}
+/* 데이터 행 (tbody td) */
+td {
+    padding: 12px 16px;
+    text-align: center;
+    color: #212529;
+    border-bottom: 1px solid #dee2e6; /* 기본 구분선 */
+    vertical-align: middle;
+}
+tbody {
+    border-top: 2px solid #adb5bd; /* <body> 바로 위에 진한 선 추가 */
+}
+/* 마우스를 올렸을 때의 효과 (부트스트랩의 table-hover) */
+tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05); /* 아주 연한 회색 */
+    transition: background-color 0.2s ease;
+}
+.no-data {
+    padding: 50px 0; /* 위아래 여백을 넉넉히 줘서 기록 없음을 강조 */
+    color: #999;     /* 글자색을 흐리게 */
+    font-size: 15px;
+    text-align: center;
+}
 
 /* 활동 버튼 */
-.link-buttons { display: flex; gap: 15px; }
-.activity-btn { flex: 1; height: 45px; background: white; border: 1px solid #ddd; }
-.activity-btn:hover { background: #f1f1f1; }
+.link-buttons {
+    display: flex;
+    gap: 15px;
+}
+.activity-btn {
+    flex: 1;
+    height: 45px;
+    background: white;
+    border: 1px solid #ddd;
+}
+.activity-btn:hover {
+    background: #f1f1f1;
+}
 
 /* 탈퇴 섹션 */
-.withdraw-section { border: 1px solid #ffcccc; background-color: #fffafa; }
-.danger-btn { color: #d9534f; border: 1px solid #d9534f; background: white; padding: 10px 20px; }
-.danger-btn:hover { background: #d9534f; color: white; }
+.withdraw-section {
+    border: 1px solid #ffcccc;
+    background-color: #fffafa;
+}
+.danger-btn {
+    color: #d9534f;
+    border: 1px solid #d9534f;
+    background: white;
+    padding: 10px 20px; }
+.danger-btn:hover {
+    background: #d9534f;
+    color: white;
+}

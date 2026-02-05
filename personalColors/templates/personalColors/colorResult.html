@@ -16,14 +16,14 @@
         </div>
         <div class="right">
             <h1>당신의 퍼스널컬러는...</h1>
-            <div id="personalColorResult">봄웜</div>
-            <p id="description">설명: 밝고 따뜻한 컬러톤이 잘 어울립니다.</p>
+            <div id="personalColorResult">{{ tone }}</div>
+            <p id="description">{{ mood }}</p>
             <div class="palette-row">
                 <p>컬러팔레트:</p>
                 <div id="palette"></div>
             </div>
-            <p id="goodColor">잘 어울리는 색: 노랑, 살구, 연핑크</p>
-            <p id="badColor">피해야 할 색: 회색, 블루톤</p>
+            <p id="goodColor">{{ goodColor }}</p>
+            <p id="badColor">{{ badColor }}</p>
 
             <div class="buttons">
                 <button id="retryBtn">다시하기</button>

@@ -31,6 +31,6 @@ document.addEventListener("DOMContentLoaded", function() {
     // 다시하기 버튼 클릭
     retryBtn.addEventListener("click", function() {
         // 퍼스널컬러 재측정 페이지로 이동
-        window.location.href = "colorTest.html";
+        window.location.href = "check/";
     });
 });

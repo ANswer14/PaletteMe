@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+{% load static %} <!DOCTYPE html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="/static/css/index.css">
+    <title>{% block title %} PaletteMe {% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
 </head>
 <body>
 
@@ -13,26 +13,29 @@
         <!-- 필요 시 왼쪽 버튼/메뉴 -->
     </div>
     <div class="logo">
-        <a href="index.html">Title</a>
+        <a href="{% url 'index' %}"><img src="{% static 'img/logo.png' %}" alt="로고" class="header-logo-img"></a>
     </div>
 
     <div class="auth">
-        <a href="#">로그인</a>
-        <a href="#">회원가입</a>
+        {% if user.is_authenticated %}
+            <!-- 이미지 클릭하면 새창으로 이미지가 더 크게 보이게 함 -->
+            <a href="{{ user.profile_image.url|default:'/static/img/default-profile.png' }}" target="_blank">
+                <img src="{{ user.profile_image.url|default:'/static/img/default-profile.png' }}"
+                 alt="프로필" class="header-profile-img">
+        </a>
+            <a href="{% url 'logout' %}">로그아웃</a>
+            <a href="{% url 'mypage' %}">회원정보</a>
+        {% else %}
+            <a href="{% url 'login' %}">로그인</a>
+            <a href="{% url 'agreement' %}">회원가입</a>
+        {% endif %}
     </div>
 </header>
 
 <!-- ===== MAIN ===== -->
 <main class="main">
-    <div class="main-left">
-        <!-- 나중에 이미지로 교체 -->
-        <img src="/static/img/main1.png" alt="메인 왼쪽화면 이미지">
-    </div>
-
-    <div class="main-right">
-        <h1>날씨와 퍼스널컬러로<br>오늘의 옷을 추천해드려요</h1>
-        <button class="start-btn fade-delay">시작하기</button>
-    </div>
+    {% block content %}
+    {% endblock %}
 </main>
 
 <!-- ===== BOARD ===== -->
@@ -40,9 +43,21 @@
     <div class="board-line"></div>
 
     <div class="board-nav">
-        <a href="#">Notice</a>
+        <a href="{% url 'notice' %}">Notice</a>
         <span class="divider">|</span>
-        <a href="#">자유게시판</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'board1' %}">자유게시판</a>
+        {% else %}
+            <a href="javascript:void(0);" onclick="loginRequired()">자유게시판</a>
+        {% endif %}
+
+        <span class="divider">|</span>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'QnA1' %}">QnA</a>
+        {% else %}
+            <a href="javascript:void(0);" onclick="loginRequired()">QnA</a>
+        {% endif %}
     </div>
 
     <div class="board-line"></div>
@@ -50,11 +65,13 @@
 
 <!-- ===== FOOTER ===== -->
 <footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
+    {% block footer %}
+        <a href="#">Instagram</a>
+        <a href="#">Twitter</a>
+        <a href="#">Contact</a>
+    {% endblock %}
 </footer>
 
-<script src="/static/js/index.js"></script>
+<script src="{% static 'accounts/js/index.js' %}"></script>
 </body>
 </html>

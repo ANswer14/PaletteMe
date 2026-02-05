@@ -1,12 +1,11 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>회원가입 약관 동의</title>
+
+{% block title %} 약관 동의 - PaletteMe {% endblock %}
+
+{% block content %}
     <link rel="stylesheet" href="{% static 'accounts/css/agreement.css' %}">
-</head>
-<body>
+
     <div class="agreement-container">
         <h2>회원가입 약관 동의</h2>
 
@@ -21,15 +20,8 @@
 
         <div id="errorMsg" class="error-msg"></div>
 
-        <button id="nextBtn">다음</button>
+        <button id="nextBtn" data-url="{% url 'signup' %}">다음</button>
     </div>
-    <!-- ===== FOOTER ===== -->
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
 
-<script src="{% static 'accounts/js/agreement.js' %}" defer></script>
-</body>
-</html>
+    <script src="{% static 'accounts/js/agreement.js' %}" defer></script>
+{% endblock %}

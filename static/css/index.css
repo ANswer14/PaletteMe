@@ -30,16 +30,33 @@
     font-size: inherit;    /* .logo 크기 따라감 */
     font-weight: inherit;  /* .logo 굵기 따라감 */
 }
+/* 프로필 이미지 스타일 */
+.header-profile-img {
+    width: 38px;         /* 헤더 높이에 맞게 조절 */
+    height: 38px;
+    border-radius: 50%;  /* 동그랗게 */
+    object-fit: cover;   /* 이미지 비율 유지 */
+    border: 1px solid #dbdbdb; /* 배경이 밝을 때 이미지를 돋보이게 함 */
+    transition: transform 0.2s; /* 살짝 커지는 효과 */
+}
+.header-profile-img:hover {
+    transform: scale(1.1);
+}
 
 .auth {
     width: 33%;
-    text-align: right;
+    display: flex;
+    align-items: center; /* 이미지와 텍스트를 한 줄에 중앙 정렬 */
+    justify-content: flex-end;
+    gap: 15px;
 }
 
 .auth a {
-    margin-left: 15px;
+    margin-left: 0;
     text-decoration: none;
     color: #333;
+    font-size: 14px; /* 로그인/회원가입 글자는 조금 작게 하는 것이 추세입니다 */
+    display: inline-flex;
 }
 
 /* ===== MAIN ===== */
@@ -70,11 +87,12 @@
 }
 
 .main-right h1 {
-    font-size: 50px;
-    line-height: 1.5;
-    margin-bottom: 30px;
-    color: #675f5f;
-    animation: floatUp 1.3s ease-out forwards;
+    font-size: clamp(30px, 5vw, 50px); /* 화면 크기에 따라 30px~50px 사이로 조절됨 */
+    line-height: 1.5; /* 줄간격 */
+    margin-bottom: 30px; /* 시작하기 버튼과의 간격을 벌려줌 */
+    color: #675f5f; /* 제목 색상 */
+    animation: floatUp 1.3s ease-out forwards; /* 글자 스르륵 효과 */
+    word-break: keep-all; /* 한글 단어가 중간에 끊기지 않게 함 */
 }
 
 @keyframes floatUp {

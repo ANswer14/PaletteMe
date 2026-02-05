@@ -10,11 +10,11 @@
 <header class="header">
     <div class="header-left"></div>
     <div class="logo">
-        <a href="#">Title</a>
+        <a href="{% url 'core:index' %}">Title</a>
     </div>
     <div class="auth">
         <a href="{% url 'account_login' %}">로그인</a>
-        <a href="{% url 'accounts:agreement' %}">회원가입</a>
+        <a href="{% url 'agreement' %}">회원가입</a>
     </div>
 </header>
 

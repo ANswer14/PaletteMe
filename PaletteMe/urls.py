@@ -17,13 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-# from allauth.account.views import SignupView, LoginView, LogoutView
+from allauth.account.views import SignupView, LoginView, LogoutView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     # path("signup/", include('account.urls'), name='account'),
     path('', include('core.urls'), name='core'),
-    path('accounts/custom/', include(('accounts.urls', 'accounts'), namespace='accounts')),  # 약관, 프로필 등 커스텀 페이지는 account 앱이 담당
-    path('accounts/', include('allauth.urls')),  # 인증 관련 기본 기능은 allauth가 담당
-    # path('accounts/signup/', SignupView.as_view(template_name="accounts/signup.html"), name='signup'),
+    path('accounts/', include('accounts.urls')),  # 약관, 프로필 등 커스텀 페이지는 account 앱이 담당
 ]

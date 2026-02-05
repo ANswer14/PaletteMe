@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
+        // url을 "/accounts/signup/" 으로 바꿈
         window.location.href = "/accounts/signup/";
     });
 });

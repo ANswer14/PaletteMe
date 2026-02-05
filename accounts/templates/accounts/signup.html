@@ -5,6 +5,21 @@
     <meta charset="UTF-8">
     <title>회원가입</title>
     <link rel="stylesheet" href="{% static 'accounts/css/signup.css' %}">
+
+    <script>
+    (function() {
+        // 이전 페이지 주소를 가져옵니다.
+        const referer = document.referrer;
+
+        // 이전 페이지 주소에 'agreement'가 포함되어 있는지 확인합니다.
+        // 직접 주소창에 입력해서 들어오면 referer는 빈 값('')입니다.
+        if (!referer || !referer.includes("agreement")) {
+            alert("잘못된 접근입니다. 약관 동의를 먼저 진행해주세요.");
+            // 약관 동의 페이지로 강제 소환 (URL name이 agreement일 경우)
+            window.location.href = "{% url 'agreement' %}";
+        }
+    })();
+    </script>
 </head>
 <body>
 <header class="header">

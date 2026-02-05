@@ -7,18 +7,26 @@
     <link rel="stylesheet" href="{% static 'accounts/css/signup.css' %}">
 
     <script>
-    (function() {
-        // 이전 페이지 주소를 가져옵니다.
-        const referer = document.referrer;
+        // 페이지 로드 즉시 실행
+        (function() {
+            const ref = document.referrer;
+            const current = window.location.href;
 
-        // 이전 페이지 주소에 'agreement'가 포함되어 있는지 확인합니다.
-        // 직접 주소창에 입력해서 들어오면 referer는 빈 값('')입니다.
-        if (!referer || !referer.includes("agreement")) {
-            alert("잘못된 접근입니다. 약관 동의를 먼저 진행해주세요.");
-            // 약관 동의 페이지로 강제 소환 (URL name이 agreement일 경우)
-            window.location.href = "{% url 'agreement' %}";
-        }
-    })();
+            // 로그를 찍어보면 확실히 알 수 있습니다 (F12 누르면 보임)
+            console.log("현재 리퍼러:", ref);
+
+            // 1. 리퍼러가 아예 없는 경우 (주소창 직접 입력, 엔터)
+            // 2. 리퍼러가 있지만 내가 허용한 단어(agreement, signup)가 없는 경우
+            if (!ref || (!ref.includes("agreement") && !ref.includes("signup"))) {
+
+                // 브라우저가 이동하기 전에 자바스크립트를 강제로 멈추고 알림을 띄웁니다.
+                window.stop(); // 🛑 페이지 로딩 중지
+                alert("잘못된 접근입니다. 약관 동의를 먼저 진행해주세요.");
+
+                // 확인 누르면 이동
+                window.location.replace("{% url 'agreement' %}");
+            }
+        })();
     </script>
 </head>
 <body>

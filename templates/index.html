@@ -1,4 +1,5 @@
-{% load static %} <!DOCTYPE html>
+{% load static %}
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -20,11 +21,11 @@
         {% if user.is_authenticated %}
             <!-- 이미지 클릭하면 새창으로 이미지가 더 크게 보이게 함 -->
             <span class="user-nickname">{{ user.nickname }}님</span>
-            <a href="{{ user.profile_image.url|default:'/static/img/default-profile.png' }}" target="_blank">
-                <img src="{{ user.profile_image.url|default:'/static/img/default-profile.png' }}"
-                 alt="프로필" class="header-profile-img">
+            <a href="javascript:void(0);"
+                onclick="openImagePopup('{{ user.profile_image.url|default:'/static/img/main1.png' }}')">
+            <img src="{{ user.profile_image.url|default:'/static/img/main1.png' }}" alt="프로필" class="header-profile-img">
             </a>
-            <a href="{% url 'mypage' %}">회원정보</a>
+            <a href="#">회원정보</a>
             <a href="{% url 'account_logout' %}">로그아웃</a>
         {% else %}
             <a href="javascript:void(0);" onclick="openLoginPopup('{% url 'account_login' %}')">로그인</a>
@@ -44,10 +45,10 @@
     <div class="board-line"></div>
 
     <div class="board-nav">
-        <a href="{% url 'notice' %}">Notice</a>
+        <a href="#">Notice</a>
         <span class="divider">|</span>
         {% if user.is_authenticated %}
-            <a href="{% url 'board1' %}">자유게시판</a>
+            <a href="#">자유게시판</a>
         {% else %}
             <a href="javascript:void(0);" onclick="loginRequired()">자유게시판</a>
         {% endif %}
@@ -55,7 +56,7 @@
         <span class="divider">|</span>
 
         {% if user.is_authenticated %}
-            <a href="{% url 'QnA1' %}">QnA</a>
+            <a href="#">QnA</a>
         {% else %}
             <a href="javascript:void(0);" onclick="loginRequired()">QnA</a>
         {% endif %}
@@ -73,6 +74,6 @@
     {% endblock %}
 </footer>
 
-<script src="{% static 'accounts/js/index.js' %}"></script>
+<script src="{% static '/js/index.js' %}"></script>
 </body>
 </html>

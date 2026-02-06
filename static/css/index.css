@@ -30,6 +30,11 @@
     font-size: inherit;    /* .logo 크기 따라감 */
     font-weight: inherit;  /* .logo 굵기 따라감 */
 }
+.header-logo-img {
+    max-height: 50px; /* 로고 높이를 헤더에 맞춰 제한 */
+    width: auto;
+}
+
 /* 프로필 이미지 스타일 */
 .header-profile-img {
     width: 38px;         /* 헤더 높이에 맞게 조절 */
@@ -41,6 +46,11 @@
 }
 .header-profile-img:hover {
     transform: scale(1.1);
+}
+.user-nickname {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
 }
 
 .auth {

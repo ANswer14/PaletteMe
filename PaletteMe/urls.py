@@ -17,9 +17,9 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from allauth.account.views import SignupView, LoginView, LogoutView
 
 urlpatterns = [
+    path('personalColors/', include('personalColors.urls'), name='personalColors'),
     path("admin/", admin.site.urls), # 장고 관리자 화면으로 이동
     # path("signup/", include('account.urls'), name='account'),
     path('', include('core.urls'), name='core'), # 메인페이지로 이동

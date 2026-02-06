@@ -13,15 +13,22 @@
         <!-- 필요 시 왼쪽 버튼/메뉴 -->
     </div>
     <div class="logo">
-        <a href="index.html">Title</a>
+        <a href="{% url 'core:index' %}">Title</a>
     </div>
 
-<!--클릭하면 로그인 창과 회원가입 창이 뜰 수 있음-->
     <div class="auth">
-        <a href="{% url 'accounts:login' %}">로그인</a>
-        <a href="{% url 'accounts:signup' %}">회원가입</a>
+        {% if user.is_authenticated %}
+        <!-- 로그인 상태일 때 -->
+            <span class="user-nickname">{{ user.nickname }}님</span>
+            <a href="{% url 'profile' %}">프로필</a>
+            <a href="{% url 'account_logout' %}">로그아웃</a>
+        {% else %}
+            <!--클릭하면 로그인 창과 회원가입 창이 뜰 수 있음-->
+            <!-- 로그아웃 상태일 때 -->
+            <a href="{% url 'account_login' %}">로그인</a>
+            <a href="{% url 'agreement' %}">회원가입</a>
+        {% endif %}
     </div>
-
 </header>
 
 <!-- ===== MAIN ===== -->
@@ -46,7 +53,6 @@
     <a class="board-btn" href="{% url 'boards:notice_main' %}">Notice</a>
     <a class="board-btn" href="{% url 'boards:board_main' %}">자유게시판</a>
     </div>
-
 
     <div class="board-line"></div>
 </section>

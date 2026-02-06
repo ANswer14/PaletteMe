@@ -1,11 +1,12 @@
-{% extends "index.html" %}
 {% load static %}
-
-{% block title %} 로그인 - PaletteMe {% endblock %}
-
-{% block content %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 - PaletteMe</title>
     <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
-
+</head>
+<body>
     <div class="login-container">
         <div id="login-box">
             <h1>Sign In</h1>
@@ -17,11 +18,12 @@
                 </div>
                 <button type='submit' id="loginBtn" class="signup-submit-btn">LOGIN</button>
             </form>
+            <p class="login-helper">
+                아직 계정이 없으신가요? <a href="{% url 'agreement' %}">회원가입</a>
+            </p>
         </div>
-        <p class="login-helper">
-            아직 계정이 없으신가요? <a href="{% url 'agreement' %}">회원가입</a>
-        </p>
     </div>
 
     <script src="{% static 'accounts/js/login.js' %}"></script>
-{% endblock %}
+</body>
+</html>

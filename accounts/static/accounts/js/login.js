@@ -4,9 +4,21 @@ document.addEventListener("DOMContentLoaded", function() {
     const loginForm = document.getElementById('loginForm');
 
     loginForm.addEventListener('submit', function(e) {
-        // e.preventDefault(); // 폼의 기본 제출(페이지 이동)을 막음
-        validateAndSubmit(e);
+        // 1. 일단 브라우저의 기본 제출(페이지 새로고침)을 무조건 막습니다.
+        e.preventDefault();
 
+        const username = idInput.value.trim();
+        const password = pwInput.value.trim();
+
+        // 2. 유효성 검사
+        if (!username || !password) {
+            alert("아이디와 비밀번호를 입력하세요.");
+            return;
+        }
+
+        console.log("로그인 요청 전송 시작");
+
+        // 3. 데이터 준비 및 전송
         const formData = new FormData(this);
 
         fetch(this.action, {
@@ -19,43 +31,19 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         })
         .then(response => {
-            // response.url을 확인하여 로그인 성공 후 리다이렉트 되었는지 체크
-            // 혹은 allauth의 응답 상태(200 OK)를 확인
-            alert('response.ok' + response.ok)
             if (response.ok) {
+                // 로그인 성공 시 부모 창 새로고침 후 팝업 닫기
                 if (window.opener && !window.opener.closed) {
                     window.opener.location.reload();
                 }
                 window.close();
-            } else {
-                // alert("로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
-                console.log('login 실패')
+            }
+            else {
+                alert("로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
             }
         })
         .catch(error => {
             console.error('Error:', error);
         });
-    });
-
-    function validateAndSubmit(e) {
-        const username = idInput.value.trim();
-        const password = pwInput.value.trim();
-
-        if (!username || !password) {
-            e.preventDefault();  // 🔥 폼 제출 막기
-            alert("아이디와 비밀번호를 입력하세요.");
-            return;
-        }
-
-        // 여기까지 오면 → 그냥 allauth가 알아서 로그인 처리함
-        console.log("로그인 요청 전송");
-    }
-
-
-    // 엔터키 처리
-    pwInput.addEventListener("keydown", function(e) {
-        if (e.key === "Enter") {
-            validateAndSubmit(e);
-        }
     });
 });

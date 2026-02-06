@@ -1,6 +1,6 @@
 /* 전체 배경 */
 body {
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     margin: 0;
     font-family: 'Arial', sans-serif;
 }
@@ -74,88 +74,38 @@ button {
 }
 
 /* 중복확인 등 일반 버튼 (마이페이지 스타일) */
-#checkIDBtn, .custom-file-btn {
+#checkIDBtn, #checkNicknameBtn, .custom-file-btn {
     padding: 0 15px;
     height: 45px;
-    background-color: #f8f9fa;
-    border: 1px solid #ccc;
-    color: #333;
-    font-size: 13px;
+    background-color: #535252;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
 }
 
-#checkIDBtn:hover, .custom-file-btn:hover {
-    background-color: #eee;
-}
-
-/* 프로필 사진 섹션 */
-.profile-section {
-    align-items: center;
-    padding: 20px;
-    background-color: #fafafa;
-    border-radius: 8px;
-    margin-bottom: 30px;
-}
-
-.profile-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.profile-circle.large {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #ddd;
-    background-color: white;
-}
-
-.default-images {
-    text-align: center;
-}
-
-.default-images p {
-    font-size: 13px;
-    color: #888;
-    margin-bottom: 10px;
-}
-
-.img-list {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.selectable-img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: transform 0.2s, border 0.2s;
-    border: 2px solid transparent;
-}
-
-.selectable-img:hover {
-    transform: scale(1.1);
-    border-color: #535252;
+#checkIDBtn:hover, #checkNicknameBtn:hover, .custom-file-btn:hover {
+    background-color: #333;
 }
 
 /* 성별 선택 옵션 */
 .gender-options {
     display: flex;
-    gap: 30px;
-    padding: 10px 0;
+    gap: 15px;
+    padding: 5px 0;
 }
-
+.gender-options input[type="radio"] {
+    width: 18px;
+    height: 20px;
+    cursor: pointer;
+    margin: 0;
+}
 .gender-options label {
     font-weight: normal;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0;
     cursor: pointer;
+    margin-right: 20px;
 }
 
 /* 가입 완료 버튼 */

@@ -29,13 +29,13 @@ document.addEventListener("DOMContentLoaded", function() {
         const userID = document.getElementById("userID").value;
         const passwd = document.getElementById("passwd").value;
         const passwdConfirm = document.getElementById("passwdConfirm").value;
-        const name = document.getElementById("name").value;
+        const nickname = document.getElementById("nickname").value;
         const phone = document.getElementById("phone").value;
         const email = document.getElementById("email").value;
         const gender = document.querySelector('input[name="gender"]:checked');
 
         //  필수 입력 확인
-        if(!userID || !passwd || !passwdConfirm || !name || !phone || !email || !gender){
+        if(!userID || !passwd || !passwdConfirm || !nickname || !phone || !email || !gender){
             alert("모든 항목을 입력해주세요.");
             e.preventDefault(); // 폼 제출 기본 동작 막기
         }

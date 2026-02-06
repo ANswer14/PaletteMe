@@ -29,8 +29,8 @@
     </script>
     <div class="signup-container">
 <!--        <h1>회원가입</h1>-->
-        <form id="signupForm" method="POST" action="{% url 'signup' %}">
-<!--        {% csrf_token %}-->
+        <form id="signupForm" method="POST" action="{% url 'account_signup' %}">
+        {% csrf_token %}
 
 <!--        <div class="form-group profile-section">-->
 <!--            <label>프로필 사진</label>-->
@@ -93,9 +93,9 @@
             <div class="form-group">
                 <label>성별</label>
                 <div class="gender-options">
-                    <input type="radio" id="male" name="gender" value="male" required>
+                    <input type="radio" id="male" name="gender" value="M" required>
                     <label for="male">남</label>
-                    <input type="radio" id="female" name="gender" value="female">
+                    <input type="radio" id="female" name="gender" value="F">
                     <label for="female">여</label>
                 </div>
             </div>

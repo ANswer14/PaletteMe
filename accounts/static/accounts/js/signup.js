@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("signupForm");
     const checkIDBtn = document.getElementById("checkIDBtn");
-    const usernameInput = document.getElementById("id_username");
+    const usernameInput = document.getElementById("userID");
 
     // === 아이디 중복확인 (서버에 요청) ===
     checkIDBtn.addEventListener("click", function () {

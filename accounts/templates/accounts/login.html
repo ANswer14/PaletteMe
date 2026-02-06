@@ -9,11 +9,11 @@
     <div class="login-container">
         <div id="login-box">
             <h1>Sign In</h1>
-            <form method="post" action="{% url 'account_login' %}">
+            <form method="post" action="{% url 'account_login' %}" id="loginForm">
                 <div class="login-inputs">
                     {% csrf_token %}
-                    <input type="text" id="userID" placeholder="아이디"><br>
-                    <input type="password" id="passwd" placeholder="비밀번호"><br>
+                    <input type="text" id="userID" name="login" placeholder="아이디"><br>
+                    <input type="password" id="passwd" name="password"  placeholder="비밀번호"><br>
                 </div>
                 <button type='submit' id="loginBtn" class="signup-submit-btn">LOGIN</button>
             </form>
@@ -24,5 +24,4 @@
     </div>
 
     <script src="{% static 'accounts/js/login.js' %}"></script>
-
 {% endblock %}

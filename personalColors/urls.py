@@ -8,4 +8,6 @@ urlpatterns = [
     path('', views.getColorInfo, name='personalColors'), # colrInfo 렌더링 용 path
     path('check/', views.testColor, name='testColor'),
     path('result/', views.getResultColor, name='getResultColor'),
+    path('weather/', views.getWeather, name='getWeather'),
+    path('saveInfo/', views.saveInfo, name='saveInfo'),
 ]

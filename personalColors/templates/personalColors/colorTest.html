@@ -353,76 +353,80 @@
             </div>
         {% endif %}
         {% if page == 7 %}
-            <h2>성별 특화 및 보정</h2>
-            <!-- 여성 -->
-            <div class="questions">
-                <div class="question">
-                    <p>1. 블러셔 반응: 어떤 블러셔 색이 더 생기있나요?</p>
-                    <div class="options">
-                        <label><input type="radio" name="q1" value="W"> 피치색이 생기 있음</label>
+            {% if gender == 'F' %}
+                <h2>성별 특화 및 보정</h2>
+                <!-- 여성 -->
+                <div class="questions">
+                    <div class="question">
+                        <p>1. 블러셔 반응: 어떤 블러셔 색이 더 생기있나요?</p>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="W"> 피치색이 생기 있음</label>
+                        </div>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="C"> 핑크색이 생기 있음</label>
+                        </div>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="IDK"> 잘 모르겠음</label>
+                        </div>
                     </div>
-                    <div class="options">
-                        <label><input type="radio" name="q1" value="C"> 핑크색이 생기 있음</label>
-                    </div>
-                    <div class="options">
-                        <label><input type="radio" name="q1" value="IDK"> 잘 모르겠음</label>
-                    </div>
-                </div>
 
-                <div class="question">
-                    <p>2. 아이라인 느낌: 어떤 종류의 아이라인이 더 낫나요?</p>
-                    <div class="options">
-                        <label><input type="radio" name="q2" value="V"> 블랙 젤 아이라인</label>
-                    </div>
-                    <div class="options">
-                        <label><input type="radio" name="q2" value="M"> 브라운 섀도 음영</label>
-                    </div>
-                    <div class="options">
-                        <label><input type="radio" name="q2" value="IDK"> 잘 모르겠음</label>
+                    <div class="question">
+                        <p>2. 아이라인 느낌: 어떤 종류의 아이라인이 더 낫나요?</p>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="V"> 블랙 젤 아이라인</label>
+                        </div>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="M"> 브라운 섀도 음영</label>
+                        </div>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="IDK"> 잘 모르겠음</label>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
             <!-- 남성 -->
-{#            <div class="questions">#}
-{#                <div class="question">#}
-{#                    <p>1. 면도 자국 느낌: 면도 후 자국의 색이 어떤색인가요?</p>#}
-{#                    <div class="options">#}
-{#                        <label><input type="radio" name="q1" value="W"> 회갈색</label>#}
-{#                    </div>#}
-{#                    <div class="options">#}
-{#                        <label><input type="radio" name="q1" value="C"> 푸른색</label>#}
-{#                    </div>#}
-{#                    <div class="options">#}
-{#                        <label><input type="radio" name="q1" value="IDK"> 잘 모르겠음</label>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <div class="question">#}
-{#                    <p>2. 정장 조화: 어떤 색이 더 잘어울리나요?</p>#}
-{#                    <div class="options">#}
-{#                        <label><input type="radio" name="q2" value="W"> 브라운·카키</label>#}
-{#                    </div>#}
-{#                    <div class="options">#}
-{#                        <label><input type="radio" name="q2" value="C"> 네이비·그레이</label>#}
-{#                    </div>#}
-{#                    <div class="options">#}
-{#                        <label><input type="radio" name="q2" value="IDK"> 잘 모르겠음</label>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <div class="question">#}
-{#                    <p>3. 넥타이 무늬: 어떤 무늬를 선호하시나요?</p>#}
-{#                    <div class="options">#}
-{#                        <label><input type="radio" name="q3" value="V"> 선명한 스트라이프</label>#}
-{#                    </div>#}
-{#                    <div class="options">#}
-{#                        <label><input type="radio" name="q3" value="M"> 은은한 도트나 단색</label>#}
-{#                    </div>#}
-{#                    <div class="options">#}
-{#                        <label><input type="radio" name="q3" value="IDK"> 잘 모르겠음</label>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
+            {% if gender == 'M' %}
+                <div class="questions">
+                    <div class="question">
+                        <p>1. 면도 자국 느낌: 면도 후 자국의 색이 어떤색인가요?</p>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="W"> 회갈색</label>
+                        </div>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="C"> 푸른색</label>
+                        </div>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="IDK"> 잘 모르겠음</label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <p>2. 정장 조화: 어떤 색이 더 잘어울리나요?</p>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="W"> 브라운·카키</label>
+                        </div>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="C"> 네이비·그레이</label>
+                        </div>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="IDK"> 잘 모르겠음</label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <p>3. 넥타이 무늬: 어떤 무늬를 선호하시나요?</p>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="V"> 선명한 스트라이프</label>
+                        </div>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="M"> 은은한 도트나 단색</label>
+                        </div>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="IDK"> 잘 모르겠음</label>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         {% endif %}
         <div class="next-button">
             <button id="nextBtn">NEXT</button>

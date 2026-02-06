@@ -11,7 +11,7 @@ def calcColor(request):
         mood = ''
         goodColor = ''
         badColor = ''
-    if worm > cool:
+    elif worm > cool:
         if light >= dark:
             if vivid >= mute:
                 result = '봄 웜 브라이트'

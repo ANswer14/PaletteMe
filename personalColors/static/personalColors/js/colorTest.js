@@ -109,16 +109,6 @@ document.addEventListener("DOMContentLoaded", function() {
             idk = Number(document.getElementById('idk')?.value || 0);
             alert("모든 항목에 답변해 주세요!");
         } else {
-            // 성공 시 로직 (예: form.submit() 또는 페이지 이동)
-            // document.getElementById('worm').value = worm;
-            // document.getElementById('cool').value = cool;
-            // document.getElementById('light').value = light;
-            // document.getElementById('dark').value = dark;
-            // document.getElementById('mute').value = mute;
-            // document.getElementById('vivid').value = vivid;
-            // document.getElementById('idk').value = idk;
-            console.log('later IDK', idk)
-            // console.log('반영된 idk 값', document.getElementById('idk').value)
             if(currentPage < totalPages) {
                 const data = {
                     page: currentPage + 1,

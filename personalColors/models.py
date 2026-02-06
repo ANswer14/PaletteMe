@@ -1,3 +1,23 @@
 from django.db import models
+from django.conf import settings  # AUTH_USER_MODEL 참조를 위해 필요
 
-# Create your models here.
+
+class ColorHistory(models.Model):
+    history_id = models.AutoField(primary_key=True)
+
+    # CustomUser의 기본키를 외래키로 설정
+    user_id = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='personal_colors'
+    )
+
+    # 퍼스널 컬러 관련 필드 예시
+    executed_at = models.DateTimeField(auto_now_add=True)
+    color_type = models.CharField(max_length=30)  # 예: '봄 웜'
+    mood = models.CharField(max_length=50) # 분위기
+    good_color = models.CharField(max_length=100) # 어울리는 색감
+    bad_color = models.CharField(max_length=100) # 어울리지 않는 색감
+
+    def __str__(self):
+        return f"History #{self.history_id}: {self.user.username}'s {self.color_type}"

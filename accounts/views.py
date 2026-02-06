@@ -22,7 +22,7 @@ def check_username(request):
 
 # 프로필 페이지 로드 함수
 def profile_view(request):
-    return render(request, "accounts/profile.html")
+    return render(request, "accounts/mypage.html")
 
 
 # 약관 동의 없이 회원가입 페이지 강제이동 방지

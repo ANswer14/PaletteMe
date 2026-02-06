@@ -25,5 +25,11 @@
     </div>
 
     <script src="{% static 'accounts/js/login.js' %}"></script>
+    {% if form.errors %}
+        <script>
+            // 폼에 에러가 있다면 (로그인 실패 시)
+            alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+        </script>
+        {% endif %}
 </body>
 </html>

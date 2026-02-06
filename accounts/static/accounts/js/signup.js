@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
+        // 아이디 중복확인 버튼 alert 로직
         fetch(`/accounts/check-username?username=${username}`)
             .then(res => res.json())
             .then(data => {

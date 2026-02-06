@@ -19,7 +19,8 @@
                 <button type='submit' id="loginBtn" class="signup-submit-btn">LOGIN</button>
             </form>
             <p class="login-helper">
-                아직 계정이 없으신가요? <a href="{% url 'agreement' %}">회원가입</a>
+                아직 계정이 없으신가요?
+                <a href="javascript:void(0);" onclick="goToSignup('{% url 'agreement' %}')">회원가입</a>
             </p>
         </div>
     </div>

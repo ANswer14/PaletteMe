@@ -32,26 +32,6 @@
         <form id="signupForm" method="POST" action="{% url 'account_signup' %}">
         {% csrf_token %}
 
-<!--        <div class="form-group profile-section">-->
-<!--            <label>프로필 사진</label>-->
-<!--            <div class="profile-main">-->
-<!--                <img id="profilePreview" src="{% static 'img/default-profile.png' %}" alt="프로필" class="profile-circle large">-->
-<!--                <button type="button" class="custom-file-btn" onclick="document.getElementById('profileUpload').click()">-->
-<!--                    내 PC에서 사진 선택-->
-<!--                </button>-->
-<!--            </div>-->
-<!--            <input type="file" id="profileUpload" name="profile_image" accept="image/*" onchange="previewFile()" style="display:none;">-->
-
-<!--            <div class="default-images">-->
-<!--                <p>기본 이미지 선택</p>-->
-<!--                <div class="img-list">-->
-<!--                    <img src="{% static 'img/logo4.png' %}" class="selectable-img" onclick="selectImage('logo4.png')">-->
-<!--                    <img src="{% static 'img/logo2.png' %}" class="selectable-img" onclick="selectImage('logo2.png')">-->
-<!--                    <img src="{% static 'img/logo3.png' %}" class="selectable-img" onclick="selectImage('logo3.png')">-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <input type="hidden" id="selectedDefaultImage" name="default_image_name">-->
-<!--        </div>-->
         <hr>
             <div class="form-group">
                 <label for="userID">아이디</label>

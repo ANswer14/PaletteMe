@@ -47,3 +47,16 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+// 계정 없어서 "회원가입" 글자 눌렀을떄
+function goToSignup(signupUrl) {
+    // 부모 창(메인 창) 열기
+    if (window.opener && !window.opener.closed) {
+        window.opener.location.href = signupUrl;
+        // 팝업창은 닫기
+        window.close();
+    } else {
+        // 혹시 부모 창을 실수로 껐다면, 그냥 현재 팝업창에서 이동
+        location.href = signupUrl;
+    }
+}

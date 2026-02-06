@@ -16,10 +16,12 @@
         <a href="index.html">Title</a>
     </div>
 
+<!--클릭하면 로그인 창과 회원가입 창이 뜰 수 있음-->
     <div class="auth">
-        <a href="#">로그인</a>
-        <a href="#">회원가입</a>
+        <a href="{% url 'accounts:login' %}">로그인</a>
+        <a href="{% url 'accounts:signup' %}">회원가입</a>
     </div>
+
 </header>
 
 <!-- ===== MAIN ===== -->
@@ -39,11 +41,12 @@
 <section class="board">
     <div class="board-line"></div>
 
+<!--클릭하면 해당 사이트로 들어가짐-->
     <div class="board-nav">
-        <a href="#">Notice</a>
-        <span class="divider">|</span>
-        <a href="#">자유게시판</a>
+    <a class="board-btn" href="{% url 'boards:notice_main' %}">Notice</a>
+    <a class="board-btn" href="{% url 'boards:board_main' %}">자유게시판</a>
     </div>
+
 
     <div class="board-line"></div>
 </section>

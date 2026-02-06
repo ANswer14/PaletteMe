@@ -1,67 +1,77 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>글 상세보기</title>
-    <link rel="stylesheet" href="QnA2.css">
+
+    <!-- ✅ static 경로로 CSS 연결 -->
+    <link rel="stylesheet" href="{% static 'boards/css/QnA2.css' %}">
 </head>
 <body>
+
 <!-- ===== HEADER ===== -->
-    <header class="header">
-        <div class="header-left">
-            <!-- 필요 시 왼쪽 버튼/메뉴 -->
-        </div>
-        <div class="logo">
-            <a href="index.html">Title</a>
-        </div>
+<header class="header">
+    <div class="header-left"></div>
 
-        <div class="auth">
-            <a href="#">회원정보</a>
-            <a href="../login/login.html">로그아웃</a>
-        </div>
-    </header>
-    <div class="board-detail-container QnA">
-        <!-- 제목줄: 헤더 -->
-        <div class="title-header">
-            <span class="col-header">No.</span>
-            <span class="col-header">제목</span>
-            <span class="col-header">작성자</span>
-            <span class="col-header">작성일</span>
-            <span class="col-header">조회수</span>
-        </div>
-
-        <!-- 데이터줄: 실제 게시글 -->
-        <div class="title-row">
-            <span id="detailNo"></span>
-            <span id="detailTitle"></span>
-            <span id="detailWriter"></span>
-            <span id="detailDate"></span>
-            <span id="detailView"></span>
-        </div>
-        <hr class="section-divider">
-
-        <div class="detail-content" id="detailContent">
-            내용 자리
-        </div>
-        <hr class="section-divider">
-
-        <!-- 댓글 영역 -->
-        <div class="comment-section">
-            <h3>댓글</h3>
-            <div id="commentList"></div>
-            <div class="comment-input">
-                <input type="text" id="commentText" placeholder="댓글을 입력하세요">
-                <button onclick="addComment()">등록</button>
-            </div>
-        </div>
-
-        <div class="nav-buttons">
-            <span id="prevBtn" onclick="goPrev()">이전글</span> |
-            <span onclick="goList()">글목록</span> |
-            <span id="nextBtn" onclick="goNext()">다음글</span>
-        </div>
-
+    <div class="logo">
+        <a href="{% url 'boards:board_main' %}">Title</a>
     </div>
+
+    <div class="auth">
+        <a href="#">회원정보</a>
+        <a href="#">로그아웃</a>
+    </div>
+</header>
+
+<div class="board-detail-container QnA">
+
+    <!-- 제목줄: 헤더 -->
+    <div class="title-header">
+        <span class="col-header">No.</span>
+        <span class="col-header">제목</span>
+        <span class="col-header">작성자</span>
+        <span class="col-header">작성일</span>
+        <span class="col-header">조회수</span>
+    </div>
+
+    <!-- ✅ 정적/JS용 데이터줄 (id로 JS가 채움) -->
+    <div class="title-row">
+        <span id="detailNo">1</span>
+        <span id="detailTitle">첫 번째 질문입니다</span>
+        <span id="detailWriter">익명</span>
+        <span id="detailDate">2026-02-02</span>
+        <span id="detailView">12</span>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ✅ 정적/JS용 내용 -->
+    <div class="detail-content" id="detailContent">
+        내용 자리입니다.
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- 댓글 영역 (UI 유지, JS로 처리 가능) -->
+    <div class="comment-section">
+        <h3>댓글</h3>
+        <div id="commentList"></div>
+        <div class="comment-input">
+            <input type="text" id="commentText" placeholder="댓글을 입력하세요">
+            <button onclick="addComment()">등록</button>
+        </div>
+    </div>
+
+    <!-- 하단 네비게이션 -->
+    <div class="nav-buttons">
+        <span onclick="goList()">글목록</span>
+    </div>
+</div>
+
+<!-- ✅ JS 연결 -->
+<script src="{% static 'boards/js/QnA2.js' %}" defer></script>
+
 <!-- ===== FOOTER ===== -->
 <footer class="footer">
     <a href="#">Instagram</a>
@@ -69,6 +79,5 @@
     <a href="#">Contact</a>
 </footer>
 
-<script src="QnA2.js" defer></script>
 </body>
 </html>

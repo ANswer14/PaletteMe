@@ -1,11 +1,13 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from . import views
 
-from accounts import views
+app_name = "accounts"
 
-
-app_name = 'accounts'
 urlpatterns = [
-    # path("", views.signup, name='signup'),
-
+    # 약관 동의 페이지
+    path("agreement/", views.agreement_view, name="agreement"),
+    # 로그인 페이지
+    path("login/", views.login_view, name="login"),
+    # 회원가입
+    path("signup/", views.signup_view, name="signup"),
 ]

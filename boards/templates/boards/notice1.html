@@ -12,8 +12,7 @@
     <div class="header-left"></div>
 
     <div class="logo">
-        <!-- ✅ index.html → Django URL -->
-        <a href="{% url 'board_main' %}">Title</a>
+        <a href="{% url 'boards:board_main' %}">Title</a>
     </div>
 
     <div class="auth">
@@ -65,7 +64,7 @@
     <a href="#">Contact</a>
 </footer>
 
-<!-- ✅ JS는 static + defer -->
+
 <script src="{% static 'boards/js/notice1.js' %}" defer></script>
 </body>
 </html>

@@ -13,9 +13,9 @@
         <!-- 필요 시 왼쪽 버튼/메뉴 -->
     </div>
 
-    <!-- 🔧 index.html → Django URL로만 수정 -->
+    <!-- ✅ boards 네임스페이스 적용 -->
     <div class="logo">
-        <a href="{% url 'board_main' %}">Title</a>
+        <a href="{% url 'boards:board_main' %}">Title</a>
     </div>
 
     <div class="auth">
@@ -61,10 +61,10 @@
         </div>
     </div>
 
-    <!-- 🔧 여기만 수정 (글쓰기 버튼) -->
+    <!-- ✅ 글쓰기 버튼도 네임스페이스 적용 -->
     <div class="board-footer">
         <button class="write-btn"
-                onclick="location.href='{% url 'board_write' %}'">
+                onclick="location.href='{% url 'boards:board_write' %}'">
             글쓰기
         </button>
     </div>

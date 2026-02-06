@@ -8,6 +8,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let isIdChecked = false;  // 중복 확인 상태
 
+    // ✅ 만약 서버에서 에러가 나서 돌아온 경우, 아이디 값이 이미 있다면 체크 표시를 유지
+    if (usernameInput.value.trim() !== "") {
+        isIdChecked = true;
+        idCheckMark.innerText = "사용가능 ✔";
+    }
+
     // 아이디 입력값이 바뀌면 무조건 체크 표시 지우고 상태 초기화
     usernameInput.addEventListener("input", function() {
         isIdChecked = false;

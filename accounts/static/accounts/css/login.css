@@ -3,7 +3,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 70vh; /* 화면 높이에 맞춰 중앙 배치 */
+    min-height: 100vh; /* 화면 높이에 맞춰 중앙 배치 */
     background-color: #fff;
 }
 

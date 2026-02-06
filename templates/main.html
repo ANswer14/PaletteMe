@@ -1,0 +1,16 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+<main class="main">
+    <div class="main-left">
+        <img src="{% static 'img/main1.png' %}" alt="메인 왼쪽화면 이미지">
+    </div>
+
+    <div class="main-right">
+        <h1>날씨와 퍼스널컬러로<br>오늘의 옷을 추천해드려요</h1>
+        <button class="start-btn fade-delay" onclick="location.href='/personalColors/check/'">시작하기</button>
+    </div>
+</main>
+{% endblock %}

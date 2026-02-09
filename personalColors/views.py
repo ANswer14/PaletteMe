@@ -1,10 +1,17 @@
+from datetime import datetime, timedelta
+from numbers import Number
+
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .service.personalColorCalc import *
 from .models import ColorHistory
 import json
+import os
+import requests
+from dotenv import load_dotenv
+from .service.dfs_xy_converter import mapToGrid
 
-# Create your views here.
+load_dotenv()
 
 # colorInfo 렌더링 함수
 def getColorInfo(request):
@@ -57,9 +64,6 @@ def getResultColor(request):
         return render(request, 'personalColors/colorResult.html', {'tone': tone, 'mood': mood, 'goodColor': goodColor, 'badColor': badColor})
     return redirect(request, 'personalColors/infoColor.html')
 
-def getWeather(request):
-    return render(request, 'personalColors/weatherInfo.html')
-
 def saveInfo(request):
     if request.method == 'POST':
         userHistory = request.user.personal_colors.all() # 유저의 기존 퍼스널 컬러 모두 가져오기
@@ -88,3 +92,91 @@ def saveInfo(request):
         new_history.save()
         return JsonResponse({'status': 'success', 'message': f'{colorType} 저장 완료!'})
     return JsonResponse({'status': 'fail', 'message': '저장 실패'})
+
+def getMap(request):
+    KAKAO_MAP_API_KEY = os.getenv('KAKAO_MAP_API_KEY')
+    return render(request, 'personalColors/weatherInfo.html', {'KAKAO_MAP_API_KEY': KAKAO_MAP_API_KEY})
+
+def getWeather(request):
+    # print('도착 완료!')
+    if request.method == 'POST':
+        # print('정상적인 POST 요청!')
+        data = json.loads(request.body)
+        x, y = data['latitude'], data['longitude']
+        # print('x좌표, y좌표', x, y)
+        x, y = float(x), float(y)
+        nx, ny = mapToGrid(x, y)
+
+        now = datetime.now()
+        base_times = [2, 5, 8, 11, 14, 17, 20, 23]
+        # 안전하게 데이터가 올라오는 15분을 뺀 시각으로 계산
+        check_time = now - timedelta(minutes=15)
+        last_base_hour = [bt for bt in base_times if bt <= check_time.hour]
+
+        if not last_base_hour:  # 만약 02시 이전이라면 어제 23시 데이터를 가져옴
+            base_date = (now - timedelta(days=1)).strftime('%Y%m%d')
+            base_time = "2300"
+        else:
+            base_date = now.strftime('%Y%m%d')
+            # base_time = f"{max(last_base_hour):02d}00"
+            base_time = '0200'
+        print(base_time)
+
+        url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'
+        params = {
+            'serviceKey': os.getenv('FCST_API_KEY'),
+            'pageNo': '1',
+            'numOfRows': '1000',  # 3일치를 다 받으려면 넉넉히 설정
+            'dataType': 'JSON',
+            'base_date': base_date,
+            'base_time': base_time,
+            'nx': nx,
+            'ny': ny
+        }
+
+
+        response = requests.get(url, params=params)
+        cond_time = f"{max(last_base_hour):02d}00"
+
+        if response.status_code == 200:
+            res_json = response.json()
+            # 응답 구조가 정상인지 확인 (header의 resultCode가 00인 경우)
+            if res_json.get('response').get('header').get('resultCode') == '00':
+                items = res_json.get('response').get('body').get('items').get('item')
+                forecast_dict = {}
+                TMNTMX_dict = {}
+                for item in items:
+                    # 날짜와 시간을 합쳐서 키로 사용 (예: "202405201500")
+                    key1 = item['fcstDate'] + item['fcstTime']
+                    key2 = item['fcstDate']
+                    # if int(key1) >= int(base_date + cond_time):
+                    if key1 not in forecast_dict:
+                        forecast_dict[key1] = {
+                            'date': item['fcstDate'],
+                            'time': item['fcstTime'],
+                        }
+                    if key2 not in TMNTMX_dict:
+                        TMNTMX_dict[key2] = {}
+
+                    if item['fcstTime'] == '0600':
+                        if item['category'] == 'TMN':
+                            TMNTMX_dict[key2]['TMN'] = item['fcstValue']
+                    if item['fcstTime'] == '1500':
+                        if item['category'] == 'TMX':
+                            TMNTMX_dict[key2]['TMX'] = item['fcstValue']
+
+                    forecast_dict[key1][item['category']] = item['fcstValue']
+                    # print(TMNTMX_dict)
+
+                sorted_forecast = sorted(forecast_dict.values(), key=lambda a: (a['date'], a['time']))
+            else:
+                print("API 응답 에러:", res_json.get('response').get('header').get('resultMsg'))
+        jsonRes = {
+            'status': 'success',
+            'forecast_list': sorted_forecast,
+            'TMNTMX_dict': TMNTMX_dict,
+            'condition': base_date + cond_time,
+        }
+        # print(sorted_forecast)
+
+        return JsonResponse(jsonRes, safe=False)

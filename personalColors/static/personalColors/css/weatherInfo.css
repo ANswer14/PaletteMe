@@ -10,6 +10,13 @@
     width: 33%;
 }
 
+#map {
+    width: 100%;
+    height: 500px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+}
+
 .logo {
     width: 34%;
     text-align: center;

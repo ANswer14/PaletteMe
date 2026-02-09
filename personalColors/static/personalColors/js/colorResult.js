@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     alert(result.message);
                 }
             });
-        window.location.href = "/personalColors/weather/"; // 다음 페이지 (날씨) 이동
+        window.location.href = "/personalColors/map/"; // 다음 페이지 (날씨) 이동
     });
 
     // 아니오 버튼 클릭 → 팝업 닫기, 화면 그대로

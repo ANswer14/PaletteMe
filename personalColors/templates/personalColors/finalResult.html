@@ -1,64 +1,51 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>오늘의 추천 코디</title>
+
+{% block title %} 오늘의 추천 코디 - PaletteMe {% endblock %}
+
+{% block content %}
     <link rel="stylesheet" href="{% static 'personalColors/css/finalResult.css' %}">
-</head>
-<body>
-    {% include 'personalColors/includes/header.html' %}
+
     <!-- 메인 컨텐츠 -->
     <div class="container">
 
         <!-- 왼쪽 이미지 영역 -->
         <div class="image-section">
-            <img src="main1.png" alt="생성 이미지">
+            <img src="{% static 'img/main1.png' %}" alt="생성 이미지">
         </div>
 
         <!-- 오른쪽 추천 영역 -->
         <div class="recommend-section">
              <!-- 퍼스널컬러 + 날씨 요약 -->
-        <div class="summary">
-            <div class="summary-text">
-                <p>당신의 퍼스널컬러는
-                    <span class="highlight" id="colorType">봄웜</span>,</p>
-                <p>현재
-                    <span class="highlight" id="region">서울</span>
-                    지역의 날씨는</p>
-                <p><span class="highlight" id="weather">흐림</span>,
-                    <span class="highlight" id="temp">17도</span> 입니다.
-                </p>
+            <div class="summary">
+                <div class="summary-text">
+                    <p>당신의 퍼스널컬러는
+                        <span class="highlight" id="colorType">봄웜</span>,</p>
+                    <p>현재
+                        <span class="highlight" id="region">서울</span>
+                        지역의 날씨는</p>
+                    <p><span class="highlight" id="weather">흐림</span>,
+                        <span class="highlight" id="temp">17도</span> 입니다.
+                    </p>
+                </div>
+                <img id="weatherIcon" src="{% static 'img/main1.png' %}" alt="날씨 그림">
             </div>
-            <img id="weatherIcon" src="main1.png" alt="날씨 그림">
-        </div>
 
-        <!-- 이미지 설명 -->
-        <div class="image-desc">
-            <p>왼쪽에 생성된 이미지는 오늘의 조건에 맞는 코디 예시입니다.</p>
-        </div>
+            <!-- 이미지 설명 -->
+            <div class="image-desc">
+                <p>왼쪽에 생성된 이미지는 오늘의 조건에 맞는 코디 예시입니다.</p>
+            </div>
 
-        <h2>오늘의 추천 코디</h2>
-        <p><strong>상의:</strong> <span id="topItem">베이지 니트 스웨터</span></p>
-        <p><strong>하의:</strong> <span id="bottomItem">블랙 슬림 슬랙스</span></p>
-        <p><strong>아우터:</strong> <span id="outerItem">아이보리 롱 코트</span></p>
-        <p><strong>색상 이유:</strong> <span id="colorReason">
-        봄웜톤에 어울리는 부드러운 웜계열 색상이며,
-        흐린 날씨에 너무 무겁지 않으면서 차분한 분위기를 연출합니다.</p>
-
-
+            <h2>오늘의 추천 코디</h2>
+            <p><strong>상의:</strong> <span id="topItem">베이지 니트 스웨터</span></p>
+            <p><strong>하의:</strong> <span id="bottomItem">블랙 슬림 슬랙스</span></p>
+            <p><strong>아우터:</strong> <span id="outerItem">아이보리 롱 코트</span></p>
+            <p><strong>색상 이유:</strong> <span id="colorReason">
+                봄웜톤에 어울리는 부드러운 웜계열 색상이며,
+                흐린 날씨에 너무 무겁지 않으면서 차분한 분위기를 연출합니다.</span></p>
             <button id="homeBtn">처음으로</button>
         </div>
-
     </div>
 
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
-
-<script src="{% static 'personalColors/js/finalResult.js' %}"></script>
-</body>
-</html>
+    <script src="{% static 'personalColors/js/finalResult.js' %}"></script>
+{% endblock %}

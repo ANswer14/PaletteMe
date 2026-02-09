@@ -1,23 +1,3 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #ffffff;
-}
-
-/* 헤더 공통 */
-.header {
-    display: flex;
-    align-items: center;
-    padding: 30px 30px;
-    border-bottom: 1px solid #dddddd;
-}
-
-.header-left { width: 33%; }
-.logo { width: 34%; text-align: center; font-size: 70px; font-weight: bold; }
-.logo a { color: inherit; text-decoration: none; font-size: inherit; font-weight: inherit; }
-.auth { width: 33%; text-align: right; }
-.auth a { margin-left: 15px; text-decoration: none; color: #333; }
-
 /* 결과 화면 섹션 */
 #resultSection {
     display: flex;
@@ -105,9 +85,9 @@ body {
     background-color: #333333;
 }
 
-/* 팝업 */
+/* 팝업 전체 배경 (어둡게 처리) */
 .popup {
-    display: none; /* 기본 숨김 */
+    display: none; /* JS로 띄우기 전까지 숨김 */
     position: fixed;
     top: 0;
     left: 0;
@@ -116,29 +96,67 @@ body {
     background-color: rgba(0,0,0,0.5);
     justify-content: center;
     align-items: center;
+    z-index: 1000; /* 다른 요소보다 위에 보이게 */
 }
 
+/* 팝업 흰색 박스 */
 .popup-content {
     background-color: #fff;
     padding: 30px;
     border-radius: 10px;
     text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
+/* 팝업 내 버튼 정렬 레이아웃 */
+.popup-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* 팝업 버튼 공통 스타일 */
 .popup-content button {
-    margin: 10px;
+    min-width: 80px;
     padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #535252;
+    color: white;
+    font-weight: bold;
     cursor: pointer;
-}
-/* ===== FOOTER ===== */
-.footer {
-    text-align: center;
-    padding: 20px;
-    border-top: 1px solid #ddd;
+    transition: background 0.2s;
 }
 
-.footer a {
-    margin: 0 10px;
-    text-decoration: none;
+.popup-content button:hover {
+    background-color: #333;
+}
+
+/* '아니오' 버튼 커스텀 (구분하기 쉽게 회색으로) */
+#noBtn {
+    background-color: #ccc;
     color: #333;
+}
+
+#noBtn:hover {
+    background-color: #bbb;
+}
+
+/* 1. 진단 실패 시 (응답 부족) 스타일 */
+#failedResult {
+    font-size: 30px;
+    color: #888;
+}
+
+/* 진단 실패 시의 결과 텍스트 (기존 #personalColorResult와 구분) */
+.failed-text {
+    font-size: 1.2rem !important;
+    color: #666 !important;
+    margin-bottom: 20px;
+}
+
+/* 진단 실패 시 버튼 상단 여백 */
+.mt-20 {
+    margin-top: 20px !important;
 }

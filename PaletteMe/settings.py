@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',  # 소셜 로그인 구글 공급자
     'accounts',
     'boards',
     'personalColors'
@@ -171,3 +172,30 @@ ACCOUNT_LOGOUT_REDIRECT_URL = "/"  # allauth 기본 탬플릿으로 로그아웃
 
 # 회원가입 성공 후 이동할 페이지 -> 메인페이지 (allauth는 회원가입 성공하면 자동 로그인함.)
 ACCOUNT_SIGNUP_REDIRECT_URL = "/"
+
+# 구글 로그인 설정
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '948683674559-7tgdldjaurk9noi1p3gth7pb873cm2oa.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+# 소셜 로그인 버튼 클릭 시 중간 확인 페이지 없이 바로 구글 로그인 페이지로 이동
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# adapter.py 커스텀 어댑터 연결
+SOCIALACCOUNT_ADAPTER = 'accounts.adapter.MySocialAccountAdapter'
+
+# 구글로그인 할때 회원가입 폼을 띄우지 않고 바로 이동하게 설정
+SOCIALACCOUNT_AUTO_SIGNUP = True

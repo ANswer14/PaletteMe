@@ -8,7 +8,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True,
                               error_messages={'unique': "이미 등록된 이메일입니다."}
     )
-    nickname = models.CharField(max_length=10, unique=True, null=True, blank=True,
+    nickname = models.CharField(max_length=30, unique=True, null=True, blank=True,
                                 error_messages={'unique': "이미 사용 중인 닉네임입니다."}
     )
     phone_number = models.CharField(max_length=20, unique=True, null=True, blank=True,

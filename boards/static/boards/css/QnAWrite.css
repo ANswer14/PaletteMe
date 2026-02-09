@@ -4,84 +4,118 @@ body {
     background: white;
 }
 
+/* ===== HEADER ===== */
 .header {
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 30px 30px;
-    border-bottom: 1px solid #cdcbcb;
+    padding: 20px 30px;
+    border-bottom: 1px solid #ddd;
 }
-
 .header-left { width: 33%; }
-.logo { width: 34%; text-align: center; font-size: 70px; font-weight: bold; }
-.logo a { color: inherit; text-decoration: none; font-size: inherit; font-weight: inherit; }
+.logo {
+    width: 34%;
+    text-align: center;
+    font-size: 48px;
+    font-weight: bold;
+}
+.logo a {
+    color: inherit;
+    text-decoration: none;
+}
 .auth { width: 33%; text-align: right; }
-.auth a { margin-left: 15px; text-decoration: none; color: #333; }
-
-.board-write-container {
-    width: 70%;
-    margin: 40px auto;
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
+.auth a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: #333;
 }
 
-.board-write-container .write-form label {
+/* ===== WRITE ===== */
+.board-write-container {
+    width: 900px;
+    max-width: 95%;
+    margin: 40px auto;
+}
+
+.write-form label {
     display: block;
-    margin-top: 15px;
+    margin-top: 18px;
     font-weight: bold;
 }
 
-.board-write-container .write-form input,
-.board-write-container .write-form textarea {
+.write-form input {
     width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 5px;
+    padding: 12px;
+    margin-top: 6px;
     border: 1px solid #ccc;
-    box-sizing: border-box;
-    font-size: 16px;
-}
-.board-write-container .write-form input[readonly] {
-    background-color: #f0f0f0;
-}
-.board-write-container .button-group {
-    margin-top: 20px;
-    text-align: center; /* 버튼 중앙정렬 */
+    border-radius: 6px;
 }
 
-.board-write-container .button-group button {
-    margin-top: 15px;
-    padding: 8px 15px;
+.write-form input[readonly] {
+    background: #f2f2f2;
+}
+
+/* ✅ Quill 에디터 크기만 조절 */
+#editor {
+    margin-top: 10px;
+    height: 350px;
+}
+
+/* 버튼 */
+.button-group {
+    margin-top: 25px;
+    text-align: center;
+}
+.btn {
+    padding: 10px 18px;
     border: none;
-    border-radius: 5px;
-    background-color: #535252;
-    color: white;
+    border-radius: 6px;
+    background: #555;
+    color: #fff;
     cursor: pointer;
 }
-
-.board-write-container .button-group button:hover {
-    background-color: #333333;
+.btn.primary {
+    background: #333;
 }
-
-.board-write-container .button-group button + button {
+.btn + .btn {
     margin-left: 10px;
-    background-color: #535252;
 }
 
-.board-write-container .button-group button + button:hover {
-    background-color: #333333;
-}
-
-/* ===== FOOTER ===== */
+/* FOOTER */
 .footer {
     text-align: center;
     padding: 20px;
     border-top: 1px solid #ddd;
 }
-
 .footer a {
     margin: 0 10px;
-    text-decoration: none;
     color: #333;
+    text-decoration: none;
+}
+/* ✅ Quill 에디터가 확실히 보이도록 최소 스타일 */
+#editor {
+    margin-top: 10px;
+}
+
+/* Quill이 생성하는 툴바/에디터 테두리 */
+.ql-toolbar.ql-snow {
+    border-radius: 8px 8px 0 0;
+}
+
+.ql-container.ql-snow {
+    border-radius: 0 0 8px 8px;
+    min-height: 320px;
+    font-size: 16px;
+}
+
+.ql-editor {
+    min-height: 320px;
+    line-height: 1.7;
+}
+
+.ql-editor img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px 0;
+    border-radius: 8px;
 }

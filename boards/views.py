@@ -25,13 +25,13 @@ def notice2(request):
     return render(request, "boards/notice2.html")
 
 # ======================
-# QnA (HTML 버전)
+# QnA
 # ======================
+def qna_main(request):
+    return render(request, "boards/QnA1.html")   # ✅ 메인
+
 def qna_write(request):
     return render(request, "boards/QnAWrite.html")
 
-def qna1(request):
-    return render(request, "boards/QnA1.html")
-
-def qna2(request):
-    return render(request, "boards/QnA2.html")
+def qna_detail(request, no):
+    return render(request, "boards/QnA2.html", {"no": no})  # ✅ 상세

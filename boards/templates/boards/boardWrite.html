@@ -2,50 +2,177 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>글쓰기</title>
-    <link rel="stylesheet" href="{% static 'boards/css/boardWrite.css' %}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>자유게시판 글쓰기</title>
+
+  <!-- ✅ 게시판 전용 CSS -->
+  <link
+    rel="stylesheet"
+    href="{% static 'boards/css/boardWrite.css' %}?v=20260209"
+  >
+
+  <!-- ✅ Quill CSS (로컬 static) -->
+  <link
+    rel="stylesheet"
+    href="{% static 'boards/vendor/quill/quill.snow.css' %}"
+  >
 </head>
 <body>
-<!-- ===== HEADER ===== -->
+
 <header class="header">
-    <div class="header-left"></div>
-    <div class="logo">
-        <a href="index.html">Title</a>
-    </div>
-    <div class="auth">
-        <a href="#">회원정보</a>
-        <a href="../login/login.html">로그아웃</a>
-    </div>
+  <div class="header-left"></div>
+  <div class="logo"><a href="/">Title</a></div>
+  <div class="auth">
+    <a href="#">회원정보</a>
+    <a href="#">로그아웃</a>
+  </div>
 </header>
 
-<div class="board-write-container free">
-    <h2>자유게시판 글쓰기</h2>
+<main class="page">
+  <div class="board-write-card">
+    <div class="card-head">
+      <h2>자유게시판 글쓰기</h2>
 
-    <div class="write-form">
+      <div class="meta-options">
+        <label class="check-chip">
+          <input type="checkbox" id="isSecret">
+          <span class="box"></span>
+          <span class="txt">비밀글</span>
+        </label>
+
+        <label class="check-chip">
+          <input type="checkbox" id="isAnonymous">
+          <span class="box"></span>
+          <span class="txt">익명</span>
+        </label>
+      </div>
+    </div>
+
+    <form class="write-form" onsubmit="submitPost(); return false;">
+      <div class="field">
         <label for="postTitle">제목</label>
-        <input type="text" id="postTitle" placeholder="글 제목을 입력하세요">
+        <input
+          type="text"
+          id="postTitle"
+          placeholder="글 제목을 입력하세요"
+          maxlength="80"
+          autocomplete="off"
+        >
+      </div>
 
+      <div class="field">
         <label for="postWriter">작성자</label>
         <input type="text" id="postWriter" value="김주연" readonly>
+      </div>
 
-        <label for="postContent">내용</label>
-        <textarea id="postContent" rows="10" placeholder="내용을 입력하세요"></textarea>
+      <div class="field">
+        <label>내용</label>
 
-        <div class="button-group">
-            <button onclick="submitPost()">등록</button>
-            <button onclick="cancelPost()">취소</button>
-        </div>
-    </div>
-</div>
+        <!-- ===== 에디터 ===== -->
+        <section id="editorWrap" class="editor-section">
+          <div id="toolbar" class="toolbar">
+            <div class="tool-group">
+              <button type="button" class="ql-bold"></button>
+              <button type="button" class="ql-italic"></button>
+              <button type="button" class="ql-underline"></button>
+              <button type="button" class="ql-strike"></button>
+            </div>
 
-<!-- ===== FOOTER ===== -->
+            <div class="tool-group">
+              <select class="ql-size">
+                <option value="14px">14</option>
+                <option value="16px" selected>16</option>
+                <option value="18px">18</option>
+                <option value="20px">20</option>
+                <option value="24px">24</option>
+                <option value="28px">28</option>
+                <option value="32px">32</option>
+              </select>
+
+              <select class="ql-align">
+                <option selected></option>
+                <option value="center"></option>
+                <option value="right"></option>
+                <option value="justify"></option>
+              </select>
+            </div>
+
+            <div class="tool-group">
+              <label class="color-pick">
+                <span class="dot"></span>
+                <input id="colorPicker" type="color" value="#111111">
+              </label>
+
+              <button type="button" class="tool-btn" id="clearFormatBtn">
+                서식삭제
+              </button>
+            </div>
+
+            <div class="tool-group">
+              <button type="button" class="ql-image"></button>
+            </div>
+          </div>
+
+          <div id="editor" class="editor"></div>
+
+          <div class="editor-foot">
+            <div id="dropZone" class="drop-zone" tabindex="0">
+              <div class="dz-title">이미지 첨부</div>
+              <div class="dz-desc">
+                드래그&드롭 · 클릭 · Ctrl+V 가능
+              </div>
+            </div>
+            <small class="hint">※ 이미지는 글 중간에 삽입됩니다</small>
+          </div>
+        </section>
+
+        <!-- ===== fallback ===== -->
+        <section id="fallbackWrap" class="fallback-section">
+          <textarea
+            id="postContentFallback"
+            rows="12"
+            placeholder="내용을 입력하세요"
+          ></textarea>
+          <small class="hint">
+            ※ 에디터 로드 실패 시 표시됩니다
+          </small>
+        </section>
+      </div>
+
+      <input type="hidden" id="postContentHtml" name="postContentHtml">
+      <input type="hidden" id="postIsSecret" name="postIsSecret" value="0">
+      <input type="hidden" id="postIsAnonymous" name="postIsAnonymous" value="0">
+
+      <input type="file" id="imageInput" accept="image/*" hidden>
+
+      <div class="button-group">
+        <button type="submit" class="btn primary">등록</button>
+        <button type="button" class="btn ghost" onclick="cancelPost()">취소</button>
+      </div>
+    </form>
+  </div>
+</main>
+
 <footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
+  <a href="#">Instagram</a>
+  <a href="#">Twitter</a>
+  <a href="#">Contact</a>
 </footer>
 
-<script src="{% static 'boards/js/boardWrite.js' %}" defer></script>
+<div id="toast" class="toast"></div>
+
+<!-- ✅ Quill JS (로컬 static) -->
+<script
+  src="{% static 'boards/vendor/quill/quill.min.js' %}"
+  defer
+></script>
+
+<!-- ✅ 게시판 JS -->
+<script
+  src="{% static 'boards/js/boardWrite.js' %}?v=20260209"
+  defer
+></script>
+
 </body>
 </html>

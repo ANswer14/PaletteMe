@@ -3,8 +3,8 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>QnA</title>
-    <link rel="stylesheet" href="{% static 'boards/css/QnA1.css' %}">
+    <title>QnA 글쓰기</title>
+    <link rel="stylesheet" href="{% static 'boards/css/QnAWrite.css' %}">
 </head>
 <body>
 
@@ -19,55 +19,144 @@
     </div>
 </header>
 
-<div class="board-container QnA">
-    <h2>QnA</h2>
+<div class="board-write-container QnA">
+    <h2>QnA 글쓰기</h2>
 
-    <div class="board-header">
-        <div class="col-no">번호</div>
-        <div class="col-title">제목</div>
-        <div class="col-writer">작성자</div>
-        <div class="col-date">날짜</div>
-        <div class="col-view">조회수</div>
-    </div>
+    <div class="write-form">
+        <!-- 옵션들 -->
+        <div class="options-row">
+            <label class="checkbox">
+                <input type="checkbox" id="isPrivate">
+                <span>비밀글</span>
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" id="isAnonymous">
+                <span>익명</span>
+            </label>
 
-    <!-- ✅ 정적 목록 (DB 사용 X) -->
-    <div class="board-list">
-        <div class="board-row" onclick="goQnADetail(3)">
-            <div class="col-no">3</div>
-            <div class="col-title">이런거 질문해도 되나요?</div>
-            <div class="col-writer">민수</div>
-            <div class="col-date">2026-02-02</div>
-            <div class="col-view">33</div>
+            <div class="category-wrap">
+                <label for="category" class="sr-only">카테고리</label>
+                <select id="category">
+                    <option value="question" selected>질문</option>
+                    <option value="bug">버그</option>
+                    <option value="feature">기능요청</option>
+                    <option value="etc">기타</option>
+                </select>
+            </div>
         </div>
 
-        <div class="board-row" onclick="goQnADetail(2)">
-            <div class="col-no">2</div>
-            <div class="col-title">질문있어요 <span class="comment-count">[1]</span></div>
-            <div class="col-writer">홍길동</div>
-            <div class="col-date">2026-02-02</div>
-            <div class="col-view">8</div>
+        <!-- 제목 -->
+        <div class="field">
+            <label for="postTitle">제목</label>
+            <input type="text" id="postTitle" placeholder="글 제목을 입력하세요" maxlength="50">
+            <div class="meta-row">
+                <span class="hint">2~50자</span>
+                <span class="counter"><span id="titleCount">0</span>/50</span>
+            </div>
+            <p class="error" id="titleError"></p>
         </div>
 
-        <div class="board-row" onclick="goQnADetail(1)">
-            <div class="col-no">1</div>
-            <div class="col-title">첫 번째 질문입니다 <span class="comment-count">[1]</span></div>
-            <div class="col-writer">익명</div>
-            <div class="col-date">2026-02-02</div>
-            <div class="col-view">12</div>
+        <!-- 작성자 -->
+        <div class="field">
+            <label for="postWriter">작성자</label>
+            <input type="text" id="postWriter" value="김주연" readonly>
+            <div class="meta-row">
+                <span class="hint" id="writerHint">익명 체크 시 작성자가 숨겨집니다</span>
+            </div>
         </div>
-    </div>
 
-    <!-- ✅ 글쓰기 버튼 (정적 버전: qna_write로 이동) -->
-    <div class="board-footer">
-        <button class="write-btn" onclick="location.href='{% url "boards:qna_write" %}'">
-            글쓰기
-        </button>
-    </div>
+        <!-- 내용 + 탭 -->
+        <div class="field">
+            <div class="content-head">
+                <label for="postContent">내용</label>
 
-    <div class="pagination">
-        <span>1</span>
-        <span>2</span>
-        <span>3</span>
+                <div class="tabs">
+                    <button type="button" class="tab active" data-tab="write">작성</button>
+                    <button type="button" class="tab" data-tab="preview">미리보기</button>
+                </div>
+            </div>
+
+            <!-- 툴바 -->
+            <div class="toolbar" role="toolbar" aria-label="에디터 툴바">
+                <button type="button" class="tool" data-tool="bold"><b>B</b></button>
+                <button type="button" class="tool" data-tool="italic"><i>I</i></button>
+                <button type="button" class="tool" data-tool="code">{"</button>
+                <button type="button" class="tool" data-tool="link">🔗</button>
+
+                <span class="toolbar-sep"></span>
+
+                <button type="button" class="tool" data-tool="ul">• 리스트</button>
+                <button type="button" class="tool" data-tool="ol">1. 리스트</button>
+
+                <span class="toolbar-sep"></span>
+
+                <!-- ✅ 글씨 색/크기 -->
+                <label class="tool-inline">
+                    글씨색
+                    <input type="color" id="textColor" value="#111111" title="글씨 색">
+                </label>
+
+                <label class="tool-inline">
+                    글씨크기
+                    <select id="textSize" title="글씨 크기">
+                        <option value="">기본</option>
+                        <option value="12">12px</option>
+                        <option value="14">14px</option>
+                        <option value="16">16px</option>
+                        <option value="18">18px</option>
+                        <option value="20">20px</option>
+                        <option value="24">24px</option>
+                        <option value="28">28px</option>
+                        <option value="32">32px</option>
+                    </select>
+                </label>
+
+                <button type="button" class="tool" data-tool="apply-style">적용</button>
+                <button type="button" class="tool" data-tool="clear-style">서식제거</button>
+            </div>
+
+            <textarea id="postContent" rows="10" placeholder="내용을 입력하세요" maxlength="2000"></textarea>
+
+            <div id="previewPane" class="preview-pane" hidden></div>
+
+            <div class="meta-row">
+                <span class="hint">10~2000자 · 마크다운 일부 지원 · 색/크기 지원</span>
+                <span class="counter"><span id="contentCount">0</span>/2000</span>
+            </div>
+            <p class="error" id="contentError"></p>
+        </div>
+
+        <!-- 첨부 -->
+        <div class="field">
+            <label for="attachments">첨부파일</label>
+            <input type="file" id="attachments" multiple>
+            <div class="meta-row">
+                <span class="hint">이미지는 미리보기 가능 · (실제 업로드는 서버 연동 시)</span>
+                <button type="button" class="ghost" id="clearAttachmentsBtn">첨부 전체 삭제</button>
+            </div>
+            <div id="attachmentList" class="attachment-list"></div>
+        </div>
+
+        <!-- 임시저장 -->
+        <div class="draft-row">
+            <div class="draft-left">
+                <span class="draft-status" id="draftStatus">임시저장 준비됨</span>
+            </div>
+            <div class="draft-right">
+                <button type="button" class="ghost" id="loadDraftBtn">임시저장 불러오기</button>
+                <button type="button" class="ghost" id="clearDraftBtn">임시저장 삭제</button>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button id="submitBtn" type="button" onclick="submitPost()">등록</button>
+            <button type="button" onclick="history.back()">취소</button>
+        </div>
+
+        <div id="submitOverlay" class="submit-overlay" hidden>
+            <div class="spinner"></div>
+            <p>등록 처리중…</p>
+        </div>
     </div>
 </div>
 
@@ -77,8 +166,6 @@
     <a href="#">Contact</a>
 </footer>
 
-<!-- ✅ 정적 상세 이동용 JS (없으면 추가해야 함) -->
-<script src="{% static 'boards/js/QnA1.js' %}" defer></script>
-
+<script src="{% static 'boards/js/QnAWrite.js' %}" defer></script>
 </body>
 </html>

@@ -4,8 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>글 상세보기</title>
-
-    <!-- ✅ static 경로로 CSS 연결 -->
     <link rel="stylesheet" href="{% static 'boards/css/QnA2.css' %}">
 </head>
 <body>
@@ -26,50 +24,49 @@
 
 <div class="board-detail-container QnA">
 
-    <!-- 제목줄: 헤더 -->
+    <!-- 제목 헤더 -->
     <div class="title-header">
-        <span class="col-header">No.</span>
-        <span class="col-header">제목</span>
-        <span class="col-header">작성자</span>
-        <span class="col-header">작성일</span>
-        <span class="col-header">조회수</span>
+        <span>No.</span>
+        <span>제목</span>
+        <span>작성자</span>
+        <span>작성일</span>
+        <span>조회수</span>
     </div>
 
-    <!-- ✅ 정적/JS용 데이터줄 (id로 JS가 채움) -->
+    <!-- 제목 데이터 -->
     <div class="title-row">
-        <span id="detailNo">1</span>
-        <span id="detailTitle">첫 번째 질문입니다</span>
-        <span id="detailWriter">익명</span>
-        <span id="detailDate">2026-02-02</span>
-        <span id="detailView">12</span>
+        <span id="detailNo"></span>
+        <strong id="detailTitle"></strong>
+        <span id="detailWriter"></span>
+        <time id="detailDate"></time>
+        <span id="detailView"></span>
     </div>
 
     <hr class="section-divider">
 
-    <!-- ✅ 정적/JS용 내용 -->
-    <div class="detail-content" id="detailContent">
-        내용 자리입니다.
-    </div>
+    <!-- 내용 -->
+    <div class="detail-content" id="detailContent"></div>
 
     <hr class="section-divider">
 
-    <!-- 댓글 영역 (UI 유지, JS로 처리 가능) -->
+    <!-- 댓글 -->
     <div class="comment-section">
         <h3>댓글</h3>
         <div id="commentList"></div>
+
         <div class="comment-input">
-            <input type="text" id="commentText" placeholder="댓글을 입력하세요">
-            <button onclick="addComment()">등록</button>
+            <textarea id="commentText" placeholder="댓글을 입력하세요"></textarea>
+            <button id="commentBtn">등록</button>
         </div>
     </div>
 
-    <!-- 하단 네비게이션 -->
+    <!-- 하단 버튼 -->
     <div class="nav-buttons">
-        <span onclick="goList()">글목록</span>
+        <button onclick="goList()">글목록</button>
     </div>
 </div>
 
-<!-- ✅ JS 연결 -->
+<!-- JS -->
 <script src="{% static 'boards/js/QnA2.js' %}" defer></script>
 
 <!-- ===== FOOTER ===== -->

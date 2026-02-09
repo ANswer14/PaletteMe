@@ -14,8 +14,8 @@ urlpatterns = [
     path("notice/detail/<int:no>/", views.notice_detail, name="notice_detail"),
     path("notice/2/", views.notice2, name="notice2"),
 
-    # QnA (정적 HTML)
+    # QnA ✅ (정석 URL로 통일)
+    path("qna/", views.qna_main, name="qna_main"),
     path("qna/write/", views.qna_write, name="qna_write"),
-    path("qna/1/", views.qna1, name="qna1"),
-    path("qna/2/", views.qna2, name="qna2"),
+    path("qna/<int:no>/", views.qna_detail, name="qna_detail"),
 ]

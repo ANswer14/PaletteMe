@@ -2,72 +2,190 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>QnA 글쓰기</title>
+  <meta charset="UTF-8" />
+  <title>QnA 글 작성</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="{% static 'boards/css/QnAWrite.css' %}">
+  <!-- ✅ 네가 올린 CSS 경로로 연결 -->
+  <link rel="stylesheet" href="{% static 'boards/css/QnAWrite.css' %}">
 </head>
 <body>
 
 <!-- ===== HEADER ===== -->
 <header class="header">
-    <div class="header-left"></div>
-    <div class="logo">
-        <a href="{% url 'boards:board_main' %}">Title</a>
-    </div>
-    <div class="auth">
-        <a href="#">회원정보</a>
-        <a href="#">로그아웃</a>
-    </div>
+  <div class="header-left"></div>
+
+  <div class="logo">
+    <a href="{% url 'boards:board_main' %}">Title</a>
+  </div>
+
+  <div class="auth">
+    <a href="#">회원정보</a>
+    <a href="#">로그아웃</a>
+  </div>
 </header>
 
-<div class="board-write-container QnA">
-    <h2>QnA 글쓰기</h2>
+<!-- ===== WRITE CONTAINER ===== -->
+<div class="board-write-container">
 
-    <!-- ✅ 정적 입력 폼 (JS 처리) -->
-    <div class="write-form">
+  <form id="postForm" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
 
-        <label for="postTitle">제목</label>
-        <input
-            type="text"
-            id="postTitle"
-            placeholder="글 제목을 입력하세요"
-        >
+    <!-- 카테고리 + 옵션(익명/비밀글) -->
+    <div class="field">
+      <div class="options-row">
+        <!-- ✅ 체크박스 UI: input 숨기고 box로 표시 (CSS 구조 그대로) -->
+        <label class="check-item">
+          <input type="checkbox" name="is_anonymous" id="isAnonymous">
+          <span class="box"></span>
+          <span class="label-text">익명</span>
+        </label>
 
-        <label for="postWriter">작성자</label>
-        <input
-            type="text"
-            id="postWriter"
-            value="김주연"
-            readonly
-        >
+        <label class="check-item">
+          <input type="checkbox" name="is_secret" id="isSecret">
+          <span class="box"></span>
+          <span class="label-text">비밀글</span>
+        </label>
 
-        <label for="postContent">내용</label>
-        <textarea
-            id="postContent"
-            rows="10"
-            placeholder="내용을 입력하세요"
-        ></textarea>
+        <!-- (선택) 카테고리: CSS에 category-wrap이 있어서 넣어둠 -->
+        <div class="category-wrap">
+          <select name="category" id="categorySelect">
+            <option value="">카테고리 선택</option>
+            <option value="account">계정</option>
+            <option value="service">서비스</option>
+            <option value="payment">결제</option>
+            <option value="etc">기타</option>
+          </select>
+        </div>
+      </div>
+    </div>
 
-        <div class="button-group">
-            <!-- JS로 처리 -->
-            <button onclick="submitPost()">등록</button>
-            <button onclick="history.back()">취소</button>
+    <!-- 제목 -->
+    <div class="field">
+      <label for="title">제목</label>
+      <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+      <div class="error" id="titleError" style="display:none;">제목을 입력해주세요.</div>
+    </div>
+
+    <!-- ===== 내용 ===== -->
+    <div class="field">
+      <div class="content-head">
+        <h3 style="margin:0;">내용</h3>
+
+        <!-- ✅ 탭 UI (CSS에 있음) -->
+        <div class="tabs">
+          <button type="button" class="tab active" id="tabWrite">작성</button>
+          <button type="button" class="tab" id="tabPreview">미리보기</button>
+        </div>
+      </div>
+
+      <!-- ✅ 툴바 (CSS 구조 그대로) -->
+      <div class="toolbar" id="toolbar">
+        <div class="tool-inline">
+          <span>글씨색</span>
+          <input type="color" id="fontColor" value="#983a3a">
         </div>
 
+        <div class="tool-inline">
+          <span>글씨크기</span>
+          <select id="fontSize">
+            <option value="14px">14px</option>
+            <option value="16px" selected>16px</option>
+            <option value="18px">18px</option>
+            <option value="20px">20px</option>
+            <option value="24px">24px</option>
+            <option value="28px">28px</option>
+            <option value="32px">32px</option>
+          </select>
+        </div>
+
+        <span class="toolbar-sep"></span>
+
+        <button type="button" class="tool" id="removeStyle">서식제거</button>
+
+        <span class="toolbar-help">※ 먼저 글자를 드래그하세요</span>
+
+        <!-- ✅ (선택) JS에 있는 미리보기 모달도 살아있게 버튼도 둠 -->
+        <button type="button" class="tool" id="previewBtn" style="margin-left:auto;">미리보기</button>
+      </div>
+
+      <!-- 작성 영역 -->
+      <div id="writePane" class="pane active">
+        <!-- ✅ JS가 잡는 editor + CSS가 기대하는 rich-editor -->
+        <div id="editor" class="rich-editor" contenteditable="true" data-placeholder="내용을 입력하세요"></div>
+
+        <!-- 서버 전송용 hidden -->
+        <input type="hidden" id="contentInput" name="content">
+
+        <div class="meta-row">
+          <span>10~2000자</span>
+          <span><b id="currentCount">0</b>/<b id="maxCount">2000</b></span>
+        </div>
+
+        <div class="error" id="contentError" style="display:none;">내용을 입력해주세요.</div>
+      </div>
+
+      <!-- 미리보기 영역 (탭에서 보여줄 영역) -->
+      <div id="previewPane" class="pane">
+        <div id="previewContent" class="preview-pane"></div>
+      </div>
     </div>
+
+    <!-- ===== 이미지 첨부 ===== -->
+    <div class="field">
+      <label>이미지 첨부</label>
+
+      <div class="attach-box">
+        <input type="file" id="imageInput" name="images" accept="image/*" multiple>
+
+        <div class="attach-hint">이미지 파일만 선택 가능 · 선택된 이미지는 아래에 미리보기가 뜹니다</div>
+
+        <div class="attach-actions">
+          <button type="button" class="tool" id="clearImagesBtn">전체 삭제</button>
+        </div>
+
+        <div id="uploadEmptyText" class="attach-hint">첨부된 이미지가 없어요.</div>
+
+        <!-- ✅ CSS가 기대하는 리스트 클래스명 -->
+        <div id="imagePreview" class="image-preview-list"></div>
+      </div>
+    </div>
+
+    <!-- 버튼 -->
+    <div class="button-group">
+      <button type="submit">등록</button>
+      <button type="button" onclick="history.back()">취소</button>
+    </div>
+
+  </form>
 </div>
+
+<!-- ===== 미리보기 모달 (QnAWrite.js에 존재) ===== -->
+<div id="previewModal" class="modal" aria-hidden="true">
+  <div id="closePreview" class="modal-backdrop"></div>
+
+  <div class="modal-panel">
+    <div class="modal-head">
+      <strong>미리보기</strong>
+      <button type="button" class="tool" id="closePreviewBtn">닫기</button>
+    </div>
+
+    <div class="modal-body">
+      <h3 id="previewTitle"></h3>
+      <div id="previewContent" class="preview-pane"></div>
+      <div id="previewImages" class="image-preview-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== JS ===== -->
+<script src="{% static 'boards/js/QnAWrite.js' %}" defer></script>
 
 <!-- ===== FOOTER ===== -->
 <footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
+  <a href="#">Instagram</a>
+  <a href="#">Twitter</a>
+  <a href="#">Contact</a>
 </footer>
-
-<!-- JS -->
-<script src="{% static 'boards/js/QnAWrite.js' %}" defer></script>
 
 </body>
 </html>

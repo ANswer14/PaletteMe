@@ -7,7 +7,7 @@ body {
 /* ===== HEADER ===== */
 .header {
     display: flex;
-    justify-content: center; /*가로중앙정렬*/
+    justify-content: center; /* 가로 중앙정렬 */
     align-items: center;
     padding: 30px 30px;
     border-bottom: 1px solid #cdcbcb;
@@ -24,10 +24,10 @@ body {
     font-weight: bold;
 }
 .logo a {
-    color: inherit;        /* .logo 색상 따라감 */
-    text-decoration: none; /* 밑줄 제거 */
-    font-size: inherit;    /* .logo 크기 따라감 */
-    font-weight: inherit;  /* .logo 굵기 따라감 */
+    color: inherit;
+    text-decoration: none;
+    font-size: inherit;
+    font-weight: inherit;
 }
 
 .auth {
@@ -40,6 +40,8 @@ body {
     text-decoration: none;
     color: #333;
 }
+
+/* ===== MAIN ===== */
 .board-container {
     width: 80%;
     margin: 40px auto;
@@ -47,9 +49,11 @@ body {
     padding: 30px;
     border-radius: 10px;
 }
+
 .board-container.QnA h2 {
     color: #333;
 }
+
 .title-row {
     display: flex;
     gap: 20px;  /* 글자 사이 간격 */
@@ -72,29 +76,28 @@ body {
 }
 
 /* 열 비율 */
-.col-no {
-    width: 7%;
-}
+.col-no { width: 7%; }
 
 .col-title {
     width: 60%;
-}
-.col-writer {
-    width: 10%;
-}
-.col-date {
-    width: 13%;
-}
-.col-view {
-    width: 10%;
+    /* ✅ 가독성 개선 */
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-right: 8px;
 }
 
+.col-writer { width: 10%; }
+.col-date { width: 13%; }
+.col-view { width: 10%; }
 
 /* 마우스 올리면 */
 .board-row:hover {
     background-color: #f0f0f0;
     cursor: pointer;
 }
+
 /* 구분선 + 글쓰기 버튼 */
 .board-footer {
     display: flex;
@@ -105,10 +108,10 @@ body {
 }
 
 .section-divider {
-    flex: 1; /* 선이 왼쪽 끝까지 늘어나도록 */
+    flex: 1;
     border: none;
     border-bottom: 1px solid #ccc;
-    margin-right: 10px; /* 글쓰기 버튼과 간격 */
+    margin-right: 10px;
 }
 
 .write-btn {
@@ -131,8 +134,28 @@ body {
 }
 
 .pagination span {
-    margin: 0 8px;
+    display: inline-block;          /* ✅ 클릭 영역 확보 */
+    margin: 0 6px;
+    padding: 6px 10px;              /* ✅ 버튼처럼 */
+    border-radius: 6px;
     cursor: pointer;
+    user-select: none;
+}
+
+.pagination span:hover {
+    background: #f0f0f0;            /* ✅ 호버 피드백 */
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+    .board-container { width: 95%; padding: 16px; }
+    .logo { font-size: 42px; }
+
+    /* 좁은 화면에서는 덜 중요한 컬럼 숨김 */
+    .col-writer, .col-view { display: none; }
+    .col-title { width: 72%; }
+    .col-date { width: 21%; }
+    .col-no { width: 7%; }
 }
 
 /* ===== FOOTER ===== */

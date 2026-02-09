@@ -7,15 +7,13 @@ body {
 /* ===== HEADER ===== */
 .header {
     display: flex;
-    justify-content: center; /*가로중앙정렬*/
+    justify-content: center;
     align-items: center;
-    padding: 30px 30px;
+    padding: 30px;
     border-bottom: 1px solid #cdcbcb;
 }
 
-.header-left {
-    width: 33%;
-}
+.header-left { width: 33%; }
 
 .logo {
     width: 34%;
@@ -23,11 +21,10 @@ body {
     font-size: 70px;
     font-weight: bold;
 }
+
 .logo a {
-    color: inherit;        /* .logo 색상 따라감 */
-    text-decoration: none; /* 밑줄 제거 */
-    font-size: inherit;    /* .logo 크기 따라감 */
-    font-weight: inherit;  /* .logo 굵기 따라감 */
+    color: inherit;
+    text-decoration: none;
 }
 
 .auth {
@@ -40,90 +37,81 @@ body {
     text-decoration: none;
     color: #333;
 }
+
+/* ===== CONTENT ===== */
 .board-detail-container {
     width: 80%;
     margin: 40px auto;
-    background: white;
     padding: 30px;
     border-radius: 10px;
 }
 
-/* 제목줄 헤더 */
-.board-detail-container .title-header,
-.board-detail-container .title-row {
+/* 제목 */
+.title-header,
+.title-row {
     display: flex;
-    justify-content: center; /* 전체 중앙 정렬 */
-    align-items: center;
     gap: 10px;
-}
-.board-detail-container .title-header {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.board-detail-container .title-row {
-    font-weight: normal;
-    margin-bottom: 20px;
-}
-
-
-/* 열 비율 */
-.board-detail-container .title-header span,
-.board-detail-container .title-row span {
-    display: inline-block;
     text-align: center;
+}
+
+.title-header {
+    font-weight: bold;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.title-row {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.title-header span,
+.title-row span,
+.title-row strong,
+.title-row time {
+    width: 20%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
-/* 각 열 폭 지정 */
-.board-detail-container .title-header span:nth-child(1),
-.board-detail-container .title-row span:nth-child(1) { width: 5%; }   /* No */
-.board-detail-container .title-header span:nth-child(2),
-.board-detail-container .title-row span:nth-child(2) { width: 50%; }  /* 제목 */
-.board-detail-container .title-header span:nth-child(3),
-.board-detail-container .title-row span:nth-child(3) { width: 15%; }  /* 작성자 */
-.board-detail-container .title-header span:nth-child(4),
-.board-detail-container .title-row span:nth-child(4) { width: 15%; }  /* 작성일 */
-.board-detail-container .title-header span:nth-child(5),
-.board-detail-container .title-row span:nth-child(5) { width: 15%; }  /* 조회수 */
-
-/* 글 내용 */
-.board-detail-container .detail-content {
-    line-height: 1.8;
+/* 내용 */
+.detail-content {
     min-height: 200px;
-    margin-bottom: 30px;
+    line-height: 1.8;
+    margin: 30px 0;
 }
+
 /* 댓글 */
-.board-detail-container .comment-section h3 {
-    margin-bottom: 10px;
+.comment {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
 }
-.board-detail-container .comment-input {
+
+.comment-input {
     margin-top: 10px;
 }
-.board-detail-container .comment-input input {
-    width: 70%;
-    padding: 5px;
-    margin-right: 5px;
-}
-.board-detail-container .comment-input button {
-    padding: 5px 10px;
+
+.comment-input textarea {
+    width: 100%;
+    height: 60px;
+    padding: 8px;
 }
 
+.comment-input button {
+    margin-top: 5px;
+    padding: 6px 12px;
+}
 
-/* 이전글 | 글목록 | 다음글 중앙정렬 */
+/* 버튼 */
 .nav-buttons {
     text-align: center;
     margin-top: 30px;
 }
-.nav-buttons span {
+
+.nav-buttons button {
     cursor: pointer;
-    margin: 0 5px;
-    color: #333;
-}
-.nav-buttons span:hover {
-    text-decoration: underline;
+    padding: 8px 16px;
 }
 
 /* ===== FOOTER ===== */
@@ -137,4 +125,19 @@ body {
     margin: 0 10px;
     text-decoration: none;
     color: #333;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+    .board-detail-container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .title-header span:nth-child(3),
+    .title-header span:nth-child(5),
+    .title-row span:nth-child(3),
+    .title-row span:nth-child(5) {
+        display: none;
+    }
 }

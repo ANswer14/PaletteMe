@@ -1,12 +1,14 @@
 from django.urls import path
-from . import views
+from personalColors import views
 
-app_name = "personalColors"
+app_name = 'personalColors'
 
 urlpatterns = [
-    path("weather/", views.weather_info, name="weather_info"),
-    path("info/", views.info_color, name="info_color"),
-    path("result/", views.final_result, name="final_result"),
-    path("color-test/", views.color_test, name="color_test"),
-    path("color-result/", views.color_result, name="color_result"),
+    path('', views.getColorInfo, name='personalColors'), # colrInfo 렌더링 용 path
+    path('check/', views.testColor, name='testColor'),
+    path('result/', views.getResultColor, name='getResultColor'),
+    path('map/', views.getMap, name='getWeather'),
+    path('map/weather/', views.getWeather, name='getWeather'),
+    # path('thisWeather/', views.getThisWeather, name='getThisWeather'),
+    path('saveInfo/', views.saveInfo, name='saveInfo'),
 ]

@@ -34,10 +34,9 @@
         <img src="{% static 'personalColors/img/main1.png' %}" alt="생성 이미지">
     </div>
 
-    <!-- 오른쪽 추천 영역 -->
-    <div class="recommend-section">
-
-        <!-- 퍼스널컬러 + 날씨 요약 -->
+        <!-- 오른쪽 추천 영역 -->
+        <div class="recommend-section">
+             <!-- 퍼스널컬러 + 날씨 요약 -->
         <div class="summary">
             <div class="summary-text">
                 <p>당신의 퍼스널컬러는
@@ -71,14 +70,11 @@
             </span>
         </p>
 
-        <!-- ✅ 처음으로 버튼: personalColors weather 페이지로 이동 -->
-        <button id="homeBtn"
-                onclick="location.href='{% url 'personalColors:weather_info' %}'">
-            처음으로
-        </button>
-    </div>
 
-</div>
+            <button id="homeBtn">처음으로</button>
+        </div>
+
+    </div>
 
 <!-- ===== FOOTER ===== -->
 <footer class="footer">

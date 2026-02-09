@@ -15,9 +15,16 @@ class CustomSignupForm(SignupForm):
         nickname = self.cleaned_data.get('nickname')
         from .models import CustomUser
         if CustomUser.objects.filter(nickname=nickname).exists():
-            # 여기서 에러를 내야 서버가 안 터지고 alert이 뜹니다!
             raise forms.ValidationError("이미 사용 중인 닉네임입니다.")
         return nickname
+
+    # 이메일 중복 심사대
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        from .models import CustomUser
+        if CustomUser.objects.filter(email=email).exists():
+            raise forms.ValidationError("이미 등록된 이메일 주소입니다.")
+        return email
 
     # 연락처 중복 심사대
     def clean_phone_number(self):

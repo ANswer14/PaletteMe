@@ -144,6 +144,8 @@ ACCOUNT_FORMS = {  # 회원가입 할때 allauth 대신 CustomSignupForm 사용
 
 AUTH_USER_MODEL = 'accounts.CustomUser'  # 기본 auth.User 대신 auth.CustomUser 사용
 
+ACCOUNT_LOGOUT_ON_GET = True  # 로그인 상태인 메인페이지에 로그아웃을 눌렀을때 탬플릿 거치지 않고 바로 로그아웃
+
 LOGIN_REDIRECT_URL = "/"  # 내 커스텀 로그인 페이지를 써야할때
 ACCOUNT_LOGIN_REDIRECT_URL = "/"  # allauth 기본 탬플릿으로 로그인 후 리다이렉트 > 메인페이지로 감
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"  # allauth 기본 탬플릿으로 로그아웃 후 리다이렉트 > 메인페이지로 감

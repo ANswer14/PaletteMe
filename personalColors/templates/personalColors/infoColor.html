@@ -7,12 +7,7 @@
     <link rel="stylesheet" href="{% static 'personalColors/css/InfoColor.css' %}">
 </head>
 <body>
-    <header class="header">
-        <div class="header-left"></div>
-        <div class="logo"><a href="index.html">Title</a></div>
-        <div class="auth"><a href="login.html">로그아웃</a></div>
-    </header>
-
+    {% include 'personalColors/includes/header.html' %}
     <section id="personalColorSection">
         <div class="left">
             <div class="intro-header">
@@ -29,14 +24,29 @@
 
         <div class="right">
             <h2>유저 정보</h2>
-            <div id="userColorInfo">
-
-            </div>
-
-            <div class="buttons">
-                <button id="proceedBtn">진행</button>
-                <button id="retryBtn">다시하기</button>
-            </div>
+            <!-- 저장된 정보가 있으면 렌더링 -->
+            {% if isSaved == True %}
+                <div id="userColorInfo">
+                    <h3>{{ color }}</h3>
+                    <h3>시행 날짜:{{ date }}</h3>
+                    <h3>{{ mood }}</h3>
+                    <h3>{{ good_color }}</h3>
+                    <h3>{{ bad_color }}</h3>
+                </div>
+                <div class="buttons">
+                    <button id="proceedBtn">진행</button>
+                    <button id="retryBtn">다시하기</button>
+                </div>
+            {% endif %}
+            <!-- 저장된 정보가 없으면 렌더링 -->
+            {% if isSaved == False %}
+                <div id="userColorInfo">
+                    <h3> 저장된 정보가 없습니다.</h3>
+                </div>
+                <div class="buttons">
+                    <button id="colorCheckBtn">진단</button>
+                </div>
+            {% endif %}
         </div>
     </section>
 

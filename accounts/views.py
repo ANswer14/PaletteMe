@@ -2,6 +2,7 @@ from django.shortcuts import render
 from allauth.account.views import SignupView
 from django.http import JsonResponse
 from .models import CustomUser
+from django.contrib.auth.decorators import login_required
 
 # 회원가입 페이지 로드 함수
 def agreement_view(request):
@@ -21,6 +22,7 @@ def check_username(request):
 
 
 # 프로필 페이지 로드 함수
+@login_required  # 👈 이 줄을 추가해서 로그인을 강제해야 합니다.
 def profile_view(request):
     return render(request, "accounts/mypage.html")
 

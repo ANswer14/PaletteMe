@@ -2,6 +2,7 @@
 from django.urls import path
 from . import views  # views.py에 있는 기능 불러옴
 from allauth.account.views import SignupView, LoginView, LogoutView  # allauth의 회원가입, 로그인, 로그아웃 기능 불러옴
+from allauth.account.views import PasswordChangeView, PasswordSetView
 
 
 urlpatterns = [
@@ -19,4 +20,10 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='account_logout'),
 
     path("profile/", views.profile_view, name="profile"),  # url에서 accounts/profile/ 찾으면 함수 실행하기
+
+    # 일반 유저용: 현재 비번 확인 후 변경
+    path("password/change/", PasswordChangeView.as_view(), name="account_change_password"),
+
+    # 소셜 유저용: 비번 새로 생성
+    path("password/set/", PasswordSetView.as_view(), name="account_set_password"),
 ]

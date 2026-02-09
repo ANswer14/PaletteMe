@@ -5,6 +5,7 @@ from .models import CustomUser
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 
 # 회원가입 페이지 로드 함수
 def agreement_view(request):
@@ -34,7 +35,7 @@ class MySignupView(SignupView):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
-# 회원 탈퇴 로직 함수
+# 프로필 페이지의 회원 탈퇴 로직 함수
 def delete_account(request):
     if request.method == 'POST':
         user = request.user
@@ -43,6 +44,36 @@ def delete_account(request):
         # 2. 삭제 후 세션 로그아웃 처리
         logout(request)
         messages.success(request, "회원 탈퇴가 완료되었습니다.")
-        return redirect('/')  # 메인 페이지로 이동
+        return redirect('/')  # 탈퇴 확인하면 메인 페이지로 이동
 
-    return redirect('profile')  # GET 접근 시 프로필로 리다이렉트
+    return redirect('profile')  # GET 접근 시(취소 누르면) 프로필로 리다이렉트
+
+
+# 프로필 페이지의 비밀번호 변경 로직 함수
+def change_password_custom(request):
+    if request.method == 'POST':
+        user = request.user
+        old_pw = request.POST.get('old_password')
+        pw1 = request.POST.get('password1')
+        pw2 = request.POST.get('password2')
+
+        # 1. 현재 비밀번호 확인
+        if not user.check_password(old_pw):
+            messages.error(request, "현재 비밀번호가 일치하지 않습니다.")
+            return redirect('/accounts/profile/')
+
+        # 2. 새 비밀번호 일치 확인
+        if pw1 != pw2:
+            messages.error(request, "새 비밀번호가 서로 일치하지 않습니다.")
+            return redirect('/accounts/profile/')
+
+        # 3. 비밀번호 변경 적용
+        user.set_password(pw1)
+        user.save()
+
+        # 중요: 비밀번호 변경 후 로그아웃되지 않도록 세션 업데이트
+        update_session_auth_hash(request, user)
+        messages.success(request, "비밀번호가 성공적으로 변경되었습니다.")
+        return redirect('/accounts/profile/')
+
+    return redirect('/accounts/profile/')

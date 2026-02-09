@@ -24,12 +24,9 @@ urlpatterns = [
     # ✅ 구글 소셜 로그인을 위한 내부 경로들을 추가
     path('social/', include('allauth.socialaccount.urls')),
 
-    # 일반 유저용: 현재 비번 확인 후 변경
-    path("password/change/", PasswordChangeView.as_view(), name="account_change_password"),
-
-    # 소셜 유저용: 비번 새로 생성
-    path("password/set/", PasswordSetView.as_view(), name="account_set_password"),
-
     # 회원 탈퇴 경로
     path('delete/', views.delete_account, name='delete_account'),
+
+    # 비밀번호 변경 경로
+    path('change-password/', views.change_password_custom, name='change_password_custom'),
 ]

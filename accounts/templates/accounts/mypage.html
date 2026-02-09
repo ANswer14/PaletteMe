@@ -78,17 +78,26 @@
         </form>
     </section>
 
-    <section class="card">
+    {% if user.has_usable_password %}  <!-- 일반 로그인 했을 경우 비밀번호 변경탭 O -->
+    <section class="card security-section">
         <h3>보안 및 인증</h3>
-
-        <form method="post" action="{% url 'account_change_password' %}">
+        <form method="post" action="/accounts/change-password/">
             {% csrf_token %}
-            <input type="password" id="currentPw" name="old_password" placeholder="현재 비밀번호">
-            <input type="password" id="newPw" name="password1" placeholder="새 비밀번호">
-            <input type="password" id="newPwCheck" name="password2" placeholder="새 비밀번호 확인">
+            <input type="password" id="currentPw" name="old_password" placeholder="현재 비밀번호" required>
+            <input type="password" id="newPw" name="password1" placeholder="새 비밀번호" required>
+            <input type="password" id="newPwCheck" name="password2" placeholder="새 비밀번호 확인" required>
             <button type="submit" id="changePwBtn">비밀번호 변경</button>
         </form>
     </section>
+    {% else %}  <!-- 구글 로그인 했을 경우 비밀번호 변경탭 X -->
+    <section class="card security-section">
+        <h3>보안 및 인증</h3>
+        <p style="color: #666; font-size: 0.9rem;">
+            구글 계정으로 로그인 중입니다.<br>
+            소셜 계정은 비밀번호 변경이 필요하지 않습니다.
+        </p>
+    </section>
+    {% endif %}
 
     <section class="card">
         <h3>나의 활동</h3>
@@ -127,6 +136,14 @@
     <a href="#">Twitter</a>
     <a href="#">Contact</a>
 </footer>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            alert("{{ message|escapejs }}");
+        {% endfor %}
+    {% endif %}
+</script>
 
 <script src="{% static 'accounts/js/mypage.js' %}"></script>
 </body>

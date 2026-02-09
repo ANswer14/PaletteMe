@@ -29,4 +29,7 @@ urlpatterns = [
 
     # 소셜 유저용: 비번 새로 생성
     path("password/set/", PasswordSetView.as_view(), name="account_set_password"),
+
+    # 회원 탈퇴 경로
+    path('delete/', views.delete_account, name='delete_account'),
 ]

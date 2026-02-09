@@ -22,7 +22,7 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             # 일반로그인으로 생성한 이메일과 중복되는지 체크
             if User.objects.filter(email=email).exists():
                 # 유저에게 보여줄 메시지 저장
-                messages.error(request, "해당 이메일로 이미 가입된 계정이 있습니다. 일반 로그인 후 연동해주세요.")
+                messages.error(request, "해당 이메일로 이미 가입된 계정이 있습니다. \n일반 로그인 후 연동해주세요.")
                 # 로그인 페이지로 리다이렉트 (에러 페이지 대신)
                 raise ImmediateHttpResponse(redirect('account_login'))
 

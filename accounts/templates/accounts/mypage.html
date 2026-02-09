@@ -114,11 +114,11 @@
     </section>
 
     <section class="card withdraw-section">
-        <h3>계정 탈퇴</h3>
-        <form method="post" action="#">
-            {% csrf_token %}
-            <button type="submit" id="withdrawBtn" onclick="return confirm('정말 탈퇴하시겠습니까?')">회원 탈퇴</button>
-        </form>
+    <h3>계정 탈퇴</h3>
+    <form method="post" action="/accounts/delete/">
+        {% csrf_token %}
+        <button type="submit" id="withdrawBtn" onclick="return confirm('정말 탈퇴하시겠습니까?')">회원 탈퇴</button>
+    </form>
     </section>
 </div>
 

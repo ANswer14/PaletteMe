@@ -24,5 +24,5 @@ urlpatterns = [
     # path("signup/", include('account.urls'), name='account'),
     path('', include('core.urls'), name='core'), # 메인페이지로 이동
     path('accounts/', include('accounts.urls')),  # accounts 경로 보이면 accounts앱의 urls.py로 이동
-    path('accounts/', include('allauth.urls')),
+    path('accounts/', include('allauth.urls')),  # 소셜 로그인(구글 등)의 모든 URL 패턴을 포함
 ]

@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // 유저 퍼스널컬러 정보가 있는지 확인
 
     // 진행 버튼 클릭
-    if (proceedBtn !== null) {
+    if (proceedBtn) {
         proceedBtn.addEventListener("click", function() {
             // 다음 화면으로 이동 (예: 컬러 분석 페이지)
             window.location.href = "weather/";

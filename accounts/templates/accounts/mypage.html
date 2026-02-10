@@ -16,7 +16,7 @@
     </div>
     <div class="auth">
         <img id="headerProfileImg" src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'accounts/images/main1.png' %}{% endif %}" class="profile-circle small">
-        <a href="#">회원정보</a>
+        <a href="{% url 'accounts:profile' %}">프로필</a>
         <a href="{% url 'account_logout' %}">로그아웃</a>
     </div>
 </header>
@@ -41,6 +41,10 @@
                 {% if form.nickname.errors %}
                     <span class="status unavailable" style="color: red;">
                         {{ form.nickname.errors.0 }}
+                    </span>
+                {% elif nickname_ok %}
+                    <span class="status available" style="color: green;">
+                        {{ nickname_ok }}
                     </span>
                 {% endif %}
             </div>

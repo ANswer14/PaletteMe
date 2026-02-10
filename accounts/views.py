@@ -34,9 +34,13 @@ def profile_view(request):
 
         # 1. '중복 확인' 버튼을 눌렀을 때
         if 'check_nickname' in request.POST:
-            form.is_valid()  # 검증만 수행 (에러가 있으면 폼에 담김)
-            # 저장(form.save())을 안 하고 그대로 다시 페이지를 보여줌
-            return render(request, "accounts/mypage.html", {'form': form})
+            if form.is_valid():
+                # 중복이 아니면 context에 성공 메시지를 담음
+                nickname_ok = "사용 가능한 닉네임입니다."
+                return render(request, "accounts/mypage.html", {'form': form, 'nickname_ok': nickname_ok})
+            else:
+                # 중복이면 기존처럼 에러가 담긴 채로 리턴
+                return render(request, "accounts/mypage.html", {'form': form})
 
         # 2. '정보 수정 저장' 버튼을 눌렀을 때
         if 'save_info' in request.POST:

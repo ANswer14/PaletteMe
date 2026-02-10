@@ -1,25 +1,11 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>글 상세보기</title>
-    <link rel="stylesheet" href="QnA2.css">
-</head>
-<body>
-<!-- ===== HEADER ===== -->
-    <header class="header">
-        <div class="header-left">
-            <!-- 필요 시 왼쪽 버튼/메뉴 -->
-        </div>
-        <div class="logo">
-            <a href="index.html">Title</a>
-        </div>
+{% extends "index.html" %}
+{% load static %}
 
-        <div class="auth">
-            <a href="#">회원정보</a>
-            <a href="../login/login.html">로그아웃</a>
-        </div>
-    </header>
+{% block title %} QnA - PaletteMe {% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'QnA/css/QnA1.css' %}">
+
     <div class="board-detail-container QnA">
         <h2>QnA</h2>
         <!-- 제목줄: 헤더 -->
@@ -56,20 +42,13 @@
             </div>
         </div>
 
-        <div class="nav-buttons">
+        <div class="detail-nav">
             <span id="prevBtn" onclick="goPrev()">이전글</span> |
             <span onclick="goList()">글목록</span> |
             <span id="nextBtn" onclick="goNext()">다음글</span>
         </div>
 
     </div>
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
 
-<script src="QnA2.js" defer></script>
-</body>
-</html>
+    <script src="{% static 'boards/js/QnA2.js' %}" defer></script>
+{% endblock %}

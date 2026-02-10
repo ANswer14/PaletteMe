@@ -36,20 +36,6 @@ body {
     cursor: pointer;
 }
 
-
-/* 헤더 행 */
-.board-header, .board-row {
-    display: flex;
-    padding: 12px 10px;
-    border-bottom: 1px solid #ddd;
-    align-items: center;
-}
-
-.board-header {
-    font-weight: bold;
-    background: #ffffff;
-}
-
 /* 열 비율 */
 .col-no {
     width: 7%;

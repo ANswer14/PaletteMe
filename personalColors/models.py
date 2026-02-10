@@ -9,7 +9,7 @@ class ColorHistory(models.Model):
     user_id = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='personal_colors'
+        related_name='color_history'
     )
 
     # 퍼스널 컬러 관련 필드 예시

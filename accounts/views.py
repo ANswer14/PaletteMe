@@ -28,28 +28,26 @@ def check_username(request):
 
 # 프로필 페이지 로드 함수
 @login_required
-def profile_view(request):
+def profile_view(request):  # 저장, 중복확인 버튼을 눌렀을 때 (POST)
     if request.method == 'POST':
         form = MyPageForm(request.POST, request.FILES, instance=request.user)
 
-        # 1. '중복 확인' 버튼을 눌렀을 때
-        if 'check_nickname' in request.POST:
+        if 'check_nickname' in request.POST:  # '중복 확인' 버튼을 눌렀을 때
             if form.is_valid():
-                # 중복이 아니면 context에 성공 메시지를 담음
-                nickname_ok = "사용 가능한 닉네임입니다."
+                nickname_ok = "사용 가능한 닉네임입니다."  # 중복이 아니면 context에 성공 메시지를 담음
                 return render(request, "accounts/mypage.html", {'form': form, 'nickname_ok': nickname_ok})
             else:
-                # 중복이면 기존처럼 에러가 담긴 채로 리턴
+                # 중복이면 기존처럼 에러가 담긴 채로 리턴 (mypage.html의 form.nickname.errors.0 부분)
                 return render(request, "accounts/mypage.html", {'form': form})
 
-        # 2. '정보 수정 저장' 버튼을 눌렀을 때
-        if 'save_info' in request.POST:
+        if 'save_info' in request.POST:  # '정보 수정 저장' 버튼을 눌렀을 때
             if form.is_valid():
-                form.save()  # 실제로 DB에 저장
+                form.save()  # 변경된 내용 실제로 DB에 저장
                 messages.success(request, "정보가 성공적으로 수정되었습니다.")
                 return redirect('accounts:profile')
-    else:
-        form = MyPageForm(instance=request.user)
+
+    else:  # 처음 프로필 페이지에 접속했을 때 (GET)
+        form = MyPageForm(instance=request.user)  # 현재 로그인한 유저의 정보를 폼에 채워서 생성
 
     return render(request, "accounts/mypage.html", {'form': form})
 

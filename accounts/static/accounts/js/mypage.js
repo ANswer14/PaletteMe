@@ -31,7 +31,7 @@ if (saveInfoBtn) {
     };
 }
 
-// 6. 프로필 이미지 미리보기 (기존 유지)
+// 6. 프로필 이미지 미리보기
 function previewFile() {
     const file = document.getElementById('profileUpload').files[0];
     const reader = new FileReader();

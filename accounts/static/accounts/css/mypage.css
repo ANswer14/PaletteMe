@@ -277,3 +277,36 @@ input[readonly] {
     cursor: not-allowed;    /* 금지 표시 마우스 커서 */
     opacity: 0.6;           /* 불투명도 조절 */
 }
+
+/* 성별 섹션 전체 정렬 */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px; /* 칸 사이 간격 */
+}
+
+/* 라디오 버튼을 감싸는 박스 */
+.gender-group {
+    display: flex;
+    align-items: center;
+    gap: 50px; /* 남성/여성 사이 간격 */
+    height: 40px; /* 입력창들과 높이 맞춤 */
+    width: 100%; /* 부모 너비에 맞춤 */
+    max-width: 400px; /* 위쪽 input창들의 max-width가 있다면 맞춰주세요 */
+}
+
+.gender-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* 버튼과 글자 사이 간격 */
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: normal; /* 라벨 두께 조절 */
+}
+
+/* 라디오 버튼 자체 사이즈 (너무 크면 조절) */
+.gender-group input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}

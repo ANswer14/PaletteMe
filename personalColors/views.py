@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from requests.auth import HTTPBasicAuth
 import io
 from .service.personalColorCalc import *
-from .models import ColorHistory, RecentImages
+from .models import ColorHistory, RecentImages, favoriteImages
 import json
 import os
 import requests
@@ -22,7 +22,7 @@ load_dotenv() # .env 파일 로드
 temp_storage = {} # 스레드 정보 임시 저장소
 client = genai.Client(api_key=os.getenv('GEMINI_API_KEY')) # API 연결
 # model = 'gemini-3-flash-preview' # api 모델
-model = 'gemini-2.5-flash' # api 모델
+model = 'gemini-2.5-flash-lite' # api 모델
 system_prompt = f""" 
         당신은 Stable Diffusion 프롬프트 전문가입니다. 
         사용자의 요청을 받아서 이미지를 생성하기 위한 영어 프롬프트와 
@@ -240,9 +240,7 @@ def checkStatus(request):
     result = temp_storage.get(session_id)
 
     if result and result['status'] == 'completed':
-        # 최종 완료 데이터 반환
-        # 결과 반환 후 메모리 관리를 위해 데이터 삭제 (선택 사항)
-        data = temp_storage.pop(session_id)
+        data = temp_storage.get(session_id)
         return JsonResponse(data)
 
     # 진행 중이라면 라이브 프리뷰 데이터 반환
@@ -408,3 +406,22 @@ def saveImage(request, imageUrl):
     ) # 저장 객체
 
     resultInstance.result_image.save(fileName, image_data, save=True) # 저장
+
+def saveFavorite(request):
+    session_id = request.session.session_key
+    img = temp_storage[session_id]['image']
+    fileName = f'{uuid.uuid4()}.png'  # 파일명은 중복 방지를 위해 UUID 사용
+
+
+    favoriteInstance = favoriteImages(
+        user = request.user,
+    )
+
+    result = temp_storage.get(session_id)
+
+    if result and result['status'] == 'completed':
+        data = temp_storage.pop(session_id)
+
+
+    favoriteInstance.favorite_image.save(fileName, ContentFile(base64.b64decode(img), name=fileName), save=True)
+    return JsonResponse({'status': 'success'})

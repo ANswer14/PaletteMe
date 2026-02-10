@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from allauth.account.views import SignupView
 from django.http import JsonResponse
+from .forms import MyPageForm
 from .models import CustomUser
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
+
 
 # 회원가입 페이지 로드 함수
 def agreement_view(request):
@@ -25,9 +27,27 @@ def check_username(request):
 
 
 # 프로필 페이지 로드 함수
-@login_required  # 👈 이 줄을 추가해서 로그인을 강제해야 합니다.
+@login_required
 def profile_view(request):
-    return render(request, "accounts/mypage.html")
+    if request.method == 'POST':
+        form = MyPageForm(request.POST, request.FILES, instance=request.user)
+
+        # 1. '중복 확인' 버튼을 눌렀을 때
+        if 'check_nickname' in request.POST:
+            form.is_valid()  # 검증만 수행 (에러가 있으면 폼에 담김)
+            # 저장(form.save())을 안 하고 그대로 다시 페이지를 보여줌
+            return render(request, "accounts/mypage.html", {'form': form})
+
+        # 2. '정보 수정 저장' 버튼을 눌렀을 때
+        if 'save_info' in request.POST:
+            if form.is_valid():
+                form.save()  # 실제로 DB에 저장
+                messages.success(request, "정보가 성공적으로 수정되었습니다.")
+                return redirect('accounts:profile')
+    else:
+        form = MyPageForm(instance=request.user)
+
+    return render(request, "accounts/mypage.html", {'form': form})
 
 
 # 약관 동의 없이 회원가입 페이지 강제이동 방지

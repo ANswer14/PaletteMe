@@ -16,9 +16,14 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
         if sociallogin.is_existing:
             return
 
+        # 현재 유저가 이미 로그인 상태인지 확인 (즉, 마이페이지에서 연동하기를 누른 경우)
+        if request.user.is_authenticated:
+            # 이미 로그인된 유저가 연동을 시도하는 것이므로
+            # 이메일 중복 체크를 하지 않고 넘김. (allauth가 알아서 연결해줌)
+            return
+
         # 이메일 추출
         email = sociallogin.account.extra_data.get('email')
-
         if email:
             # 일반로그인으로 생성한 이메일과 중복되는지 체크
             if User.objects.filter(email=email).exists():

@@ -24,7 +24,7 @@
                 alert("잘못된 접근입니다. 약관 동의를 먼저 진행해주세요.");
 
                 // 확인 누르면 이동
-                window.location.replace("{% url 'agreement' %}");
+                window.location.replace("{% url 'accounts:agreement' %}");
             }
         })();
     </script>
@@ -37,7 +37,7 @@
     </div>
     <div class="auth">
         <a href="{% url 'account_login' %}">로그인</a>
-        <a href="{% url 'agreement' %}">회원가입</a>
+        <a href="{% url 'accounts:agreement' %}">회원가입</a>
     </div>
 </header>
 

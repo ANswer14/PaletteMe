@@ -1,9 +1,9 @@
 # account/urls.py
 from django.urls import path, include
 from . import views  # views.py에 있는 기능 불러옴
-from allauth.account.views import SignupView, LoginView, LogoutView  # allauth의 회원가입, 로그인, 로그아웃 기능 불러옴
-from allauth.account.views import PasswordChangeView, PasswordSetView
+from allauth.account.views import LoginView, LogoutView  # allauth의 회원가입, 로그인, 로그아웃 기능 불러옴
 
+app_name = 'accounts'
 
 urlpatterns = [
     path("agreement/", views.agreement_view, name="agreement"),  # url에서 accounts/agreement/ 찾으면 함수 실행하기

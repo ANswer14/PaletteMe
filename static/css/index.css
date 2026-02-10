@@ -30,78 +30,43 @@
     font-size: inherit;    /* .logo 크기 따라감 */
     font-weight: inherit;  /* .logo 굵기 따라감 */
 }
+.header-logo-img {
+    max-height: 50px; /* 로고 높이를 헤더에 맞춰 제한 */
+    width: auto;
+}
+
+/* 프로필 이미지 스타일 */
+.header-profile-img {
+    width: 38px;         /* 헤더 높이에 맞게 조절 */
+    height: 38px;
+    border-radius: 50%;  /* 동그랗게 */
+    object-fit: cover;   /* 이미지 비율 유지 */
+    border: 1px solid #dbdbdb; /* 배경이 밝을 때 이미지를 돋보이게 함 */
+    transition: transform 0.2s; /* 살짝 커지는 효과 */
+}
+.header-profile-img:hover {
+    transform: scale(1.1);
+}
+.user-nickname {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+}
 
 .auth {
     width: 33%;
-    text-align: right;
+    display: flex;
+    align-items: center; /* 이미지와 텍스트를 한 줄에 중앙 정렬 */
+    justify-content: flex-end;
+    gap: 15px;
 }
 
 .auth a {
-    margin-left: 15px;
+    margin-left: 0;
     text-decoration: none;
     color: #333;
-}
-
-/* ===== MAIN ===== */
-.main {
-    display: flex;
-    height: 70vh; /* 화면의 대부분 차지 */
-    padding: 40px;
-}
-
-.main-left {
-    width: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.main-left img {
-    width: 70%;
-    max-width: 400px;
-    height: auto;
-}
-
-.main-right {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.main-right h1 {
-    font-size: 50px;
-    line-height: 1.5;
-    margin-bottom: 30px;
-    color: #675f5f;
-    animation: floatUp 1.3s ease-out forwards;
-}
-
-@keyframes floatUp {
-    0% {
-        opacity: 0;
-        filter: blur(4px);
-    }
-    100% {
-        opacity: 1;
-        filter: blur(0);
-    }
-}
-
-.start-btn {
-    align-self: flex-end;
-    padding: 12px 30px;
-    font-size: 16px;
-    background-color: #535252;
-    color: #ffffff;
-    border: none;
-    cursor: pointer;
-}
-
-.fade-delay {
-    opacity: 0;
-    animation: floatUp 1.6s ease-out forwards;
-    animation-delay: 0.6s;
+    font-size: 14px; /* 로그인/회원가입 글자는 조금 작게 하는 것이 추세입니다 */
+    display: inline-flex;
 }
 
 /* ===== BOARD ===== */

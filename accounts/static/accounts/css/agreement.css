@@ -1,64 +1,79 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f9f9f9;
+    background: #ffffff;
 }
 
 .agreement-container {
-    width: 50%;
-    margin: 100px auto;
+    width: 60%;
+    max-width: 600px;
+    margin: 50px auto;
     background: white;
     padding: 40px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
 h2 {
     text-align: center;
+    margin-bottom: 30px;
+    color: #333;
 }
 
 .terms {
-    border: 1px solid #ddd;
+    border: 1px solid #eee;
     padding: 20px;
-    height: 200px;
+    height: 300px;
     overflow-y: scroll;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    background-color: #fafafa;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+}
+/* 크롬, 사파리 등에서 스크롤바 모양 바꾸기 */
+.terms::-webkit-scrollbar {
+    width: 8px; /* 스크롤바 너비 */
+}
+
+.terms::-webkit-scrollbar-thumb {
+    background: #cdcbcb; /* 스크롤바 막대 색상 */
+    border-radius: 10px;  /* 막대 끝을 둥글게 */
+}
+
+.terms::-webkit-scrollbar-track {
+    background: #f1f1f1; /* 스크롤바가 움직이는 통로 색상 */
 }
 
 .checkbox-section {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .error-msg {
-    color: #333333;
+    color: #e37e7e;
     margin-bottom: 15px;
     height: 20px; /* 공간 확보 */
+    font-size: 14px;
 }
 
 #nextBtn {
     width: 100%;
-    padding: 12px;
+    padding: 15px;
     background-color: #535252;
     color: white;
     border: none;
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
 }
 
 #nextBtn:hover {
-    background-color: #333333;
-}
-/* ===== FOOTER ===== */
-.footer {
-    text-align: center;
-    padding: 20px;
-    border-top: 1px solid #ddd;
+    background-color: #333;
 }
 
-.footer a {
-    margin: 0 10px;
-    text-decoration: none;
-    color: #333;
-}

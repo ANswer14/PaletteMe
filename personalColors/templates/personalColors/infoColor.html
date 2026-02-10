@@ -1,17 +1,15 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>퍼스널컬러</title>
+
+{% block title %} 퍼스널컬러 - PaletteMe {% endblock %}
+
+{% block content %}
     <link rel="stylesheet" href="{% static 'personalColors/css/InfoColor.css' %}">
-</head>
-<body>
-    {% include 'personalColors/includes/header.html' %}
+
     <section id="personalColorSection">
         <div class="left">
             <div class="intro-header">
-                <img src="/static/img/main1.png" alt="퍼스널컬러" class="intro-img">
+                <img src="{% static 'img/main1.png' %}" alt="퍼스널컬러" class="intro-img">
                 <div class="intro-text">
                     <h1>퍼스널컬러 소개</h1>
                     <p>
@@ -50,13 +48,5 @@
         </div>
     </section>
 
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
-
-<script src="{% static 'personalColors/js/InfoColor.js' %}"></script>
-</body>
-</html>
+    <script src="{% static 'personalColors/js/InfoColor.js' %}"></script>
+{% endblock %}

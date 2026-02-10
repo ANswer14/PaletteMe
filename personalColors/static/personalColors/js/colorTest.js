@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let currentPage = Number(document.getElementById('page').value);
     const totalPages = 7; // 총 페이지 수
     const percent = (currentPage / totalPages) * 100;
-    let worm = Number(document.getElementById('worm')?.value || 0); // id가 worm인 태그의 value를 갖고오거나 없다면 0
+    let warm = Number(document.getElementById('warm')?.value || 0); // id가 worm인 태그의 value를 갖고오거나 없다면 0
     let cool = Number(document.getElementById('cool')?.value || 0);
     let light = Number(document.getElementById('light')?.value || 0);
     let dark = Number(document.getElementById('dark')?.value || 0);
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.body.appendChild(form);
                 form.submit();
     }
-    console.log('worm: ', worm)
+    console.log('warm: ', warm)
     console.log('idk: ', idk)
 
 
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
             let group = document.querySelectorAll(`input[name="${name}"]:checked`);
             for (let entity of group) {
                 if (entity.value === 'W') {
-                    worm++;
+                    warm++;
                 }
                 if (entity.value === 'C') {
                     cool++;
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!allChecked) {
             // event.preventDefault(); // 기본 동작(폼 제출 등) 중단
 
-            worm = Number(document.getElementById('worm')?.value || 0); // id가 worm인 태그의 value를 갖고오거나 없다면 0
+            warm = Number(document.getElementById('warm')?.value || 0); // id가 worm인 태그의 value를 갖고오거나 없다면 0
             cool = Number(document.getElementById('cool')?.value || 0);
             light = Number(document.getElementById('light')?.value || 0);
             dark = Number(document.getElementById('dark')?.value || 0);
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if(currentPage < totalPages) {
                 const data = {
                     page: currentPage + 1,
-                    worm: worm,
+                    warm: warm,
                     cool: cool,
                     light: light,
                     dark: dark,
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 makeForm('/personalColors/check/', data);
             } else {
                 const data = {
-                    worm: worm,
+                    warm: warm,
                     cool: cool,
                     light: light,
                     dark: dark,

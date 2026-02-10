@@ -1,26 +1,10 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>자유게시판</title>
-    <link rel="stylesheet" href="{% static 'boards/css/board1.css' %}">
-</head>
-<body>
-<!-- ===== HEADER ===== -->
-    <header class="header">
-        <div class="header-left">
-            <!-- 필요 시 왼쪽 버튼/메뉴 -->
-        </div>
-        <div class="logo">
-            <a href="index.html">Title</a>
-        </div>
 
-        <div class="auth">
-            <a href="#">회원정보</a>
-            <a href="../login/login.html">로그아웃</a>
-        </div>
-    </header>
+{% block title %} 자유게시판 - PaletteMe {% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'boards/css/board1.css' %}">
 
     <div class="board-container free">
         <h2>자유게시판</h2>
@@ -56,6 +40,7 @@
                 <div class="col-view">12</div>
             </div>
         </div>
+
         <!-- 구분선 + 글쓰기 버튼 -->
         <div class="board-footer">
             <button class="write-btn" onclick="location.href='boardWrite.html'">글쓰기</button>
@@ -67,13 +52,6 @@
             <span>3</span>
         </div>
     </div>
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
 
 <script src="{% static 'boards/js/board1.js' %}" defer></script>
-</body>
-</html>
+{% endblock %}

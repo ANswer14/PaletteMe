@@ -1,6 +1,7 @@
 // 주소에서 ?no=1 이런 값 가져오기
 const params = new URLSearchParams(window.location.search);
-const no = parseInt(params.get("no"));
+// 값이 없거나 숫자가 아니면 일단 0으로 처리
+const no = parseInt(params.get("no")) || 0;
 
 // 임시 공지 데이터 (나중에 DB로 바뀜)
 const notices = {
@@ -21,29 +22,33 @@ const notices = {
     }
 };
 
-// 화면에 넣기
-document.getElementById("detailNo").innerText = no;
-document.getElementById("detailTitle").innerText = notices[no].title;
-document.getElementById("detailDate").innerText = notices[no].date;
-document.getElementById("detailContent").innerText = notices[no].content;
+// 화면에 넣기 전 데이터 존재 여부 확인
+if (notices[no]) {
+    document.getElementById("detailNo").innerText = no;
+    document.getElementById("detailTitle").innerText = notices[no].title;
+    document.getElementById("detailDate").innerText = notices[no].date;
+    document.getElementById("detailContent").innerText = notices[no].content;
+} else {
+    // 데이터가 없는 번호로 들어왔을 때 알림 후 목록으로 이동(예외처리)
+    alert("존재하지 않는 게시글입니다.");
+    location.href = "notice1.html";
+}
 
 // 목록으로 버튼
 function goList() {
     window.location.href = "notice1.html";
 }
 function goPrev() {
-    if (no > 1) {
-        window.location.href = "notice2.html?no=" + (parseInt(no) - 1);
+    if (notices[no - 1]) {
+        window.location.href = "notice2.html?no=" + (no - 1);
     } else {
         alert("이전 글이 없습니다.");
     }
 }
 
 function goNext() {
-    const maxNo = Object.keys(notices).length;
-
-    if (no < maxNo) {
-        window.location.href = "notice2.html?no=" + (parseInt(no) + 1);
+    if (notices[no + 1]) {
+        window.location.href = "notice2.html?no=" + (no + 1);
     } else {
         alert("다음 글이 없습니다.");
     }

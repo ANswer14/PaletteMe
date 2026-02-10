@@ -14,4 +14,5 @@ urlpatterns = [
     path('saveInfo/', views.saveInfo, name='saveInfo'),
     path('generateImg/', views.genearteStart, name='genearte_start'),
     path('checkStatus/', views.checkStatus, name='checkStatus'),
+    path('saveFavorite/', views.saveFavorite, name='saveFavorite'),
 ]

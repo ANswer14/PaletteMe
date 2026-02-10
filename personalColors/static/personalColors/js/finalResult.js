@@ -1,6 +1,8 @@
 // 페이지 로드 시 또는 작업 시작 시 실행
 document.addEventListener('DOMContentLoaded', function() {
     const pollInterval = setInterval(checkStatus, 800); // 라이브 프리뷰를 위해 주기를 0.8~1초로 짧게 설정
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    const favorBtn = document.getElementById('favorBtn');
 
     function checkStatus() {
         fetch('/personalColors/checkStatus/')
@@ -49,4 +51,23 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('result-container').style.display = 'block';
         document.getElementById('startAI').submit();
     }
+
+    favorBtn.addEventListener('click', async function() {
+        if(confirm('즐겨찾기로 등록 하시겠습니까?')) {
+            const response = await fetch('/personalColors/saveFavorite/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken, // CSRF 토큰 함수 필요
+                },
+            });
+            // 3. 서버로부터 받은 JSON 응답 처리
+            let result = await response.json();
+            if (result.status === 'success') {
+                alert('저장 성공!')
+            } else {
+                alert("저장 실패")
+            }
+        }
+    });
 });

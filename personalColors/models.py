@@ -34,3 +34,13 @@ class RecentImages(models.Model):
 
     result_image = models.ImageField(blank=True, upload_to='personalColors/%Y/%m/%d/')
     created_at = models.DateTimeField(auto_now_add=True)
+
+class favoriteImages(models.Model):
+    favorite_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='favorite_images'
+    )
+
+    favorite_image = models.ImageField(blank=True, upload_to='personalColors/consistency/%Y/%m/%d/')

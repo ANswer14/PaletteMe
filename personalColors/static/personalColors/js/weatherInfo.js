@@ -67,11 +67,12 @@ function handleRowClick(element) {
     console.log(TMN)
 
 
+    let jibunAddress = ''
     // 주소 출력
     searchDetailAddrFromCoords(marker.getPosition(), function(result, status) {
         if (status === kakao.maps.services.Status.OK) {
             // 지번 주소
-            var jibunAddress = result[0].address.address_name.split(' ');
+            jibunAddress = result[0].address.address_name.split(' ');
             console.log('클릭한 위치의 지번 주소 : ' + jibunAddress);
 
             document.getElementById('locationName').innerText = jibunAddress[0] +  ' ' + jibunAddress[1];

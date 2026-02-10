@@ -1,8 +1,8 @@
 const params = new URLSearchParams(window.location.search);
-const no = parseInt(params.get("no"));
+const no = parseInt(params.get("no")) || 0;
 
-// 게시글 데이터 (목록과 동일한 번호 사용)
-const posts = {
+// 임시데이터, 나중에 DB 연동
+const boards = {
     1: {
         title: "첫 번째 글입니다",
         writer: "김주연",
@@ -37,34 +37,39 @@ const posts = {
     }
 };
 
-// 값 넣기
-document.getElementById("detailNo").innerText = no;
-document.getElementById("detailTitle").innerText = posts[no].title;
-document.getElementById("detailWriter").innerText = posts[no].writer;
-document.getElementById("detailDate").innerText = posts[no].date;
-document.getElementById("detailView").innerText = posts[no].views;
-document.getElementById("detailContent").innerText = posts[no].content;
+// 화면에 넣기 전 데이터 존재 여부 확인
+if (boards[no]) {
+    document.getElementById("detailNo").innerText = no;
+    document.getElementById("detailTitle").innerText = boards[no].title;
+    document.getElementById("detailWriter").innerText = boards[no].writer;
+    document.getElementById("detailDate").innerText = boards[no].date;
+    document.getElementById("detailView").innerText = boards[no].views;
+    document.getElementById("detailContent").innerText = boards[no].content;
 
+    // ✅ 댓글 출력
+    const commentList = document.getElementById("commentList");
+    boards[no].comments.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "comment";
+        div.innerHTML = `<b>${c.writer}:</b> ${c.text}`;
+        commentList.appendChild(div);
+    });
+}
+else {
+    // 데이터가 없는 번호로 들어왔을 때 알림 후 목록으로 이동(예외처리)
+    alert("존재하지 않는 게시글입니다.");
+    location.href = "board1.html";
+}
 
-// ✅ 댓글 출력
-const commentList = document.getElementById("commentList");
-posts[no].comments.forEach(c => {
-    const div = document.createElement("div");
-    div.className = "comment";
-    div.innerHTML = `<b>${c.writer}:</b> ${c.text}`;
-    commentList.appendChild(div);
-});
-// 좋아요
+// 좋아요 버튼(토글 방식)
 document.addEventListener("DOMContentLoaded", function () {
     const likeBtn = document.getElementById("likeBtn");
     const likeCount = document.getElementById("likeCount");
 
-    // 처음 좋아요 개수
+    // 처음 좋아요 안눌린 상태
     let count = 0;
     let liked = false;
 
-    // 화면에 처음 숫자 표시
-    likeCount.textContent = count;
     // 버튼 클릭
     likeBtn.addEventListener("click", function () {
         if (!liked) {
@@ -80,36 +85,41 @@ document.addEventListener("DOMContentLoaded", function () {
         likeCount.textContent = count;
     });
 });
+
 // 댓글등록
-window.addComment = function() {
-    const text = document.getElementById("commentText").value;
+function addComment() {
+    const commentInput = document.getElementById("commentText");
+    const text = commentInput.value;
+
     if (text.trim() === "") return;
 
+    const commentList = document.getElementById("commentList");
     const div = document.createElement("div");
     div.className = "comment";
-    div.innerText = `<b>나:</b> ${text}`;
+    div.innerHTML = `<b>나:</b> ${text}`;
     commentList.appendChild(div);
 
-    document.getElementById("commentText").value = "";
-};
+    commentText.value = "";  //입력창 비우기
+}
 
 // 목록으로 버튼
 function goList() {
     window.location.href = "board1.html";
 }
+
 function goPrev() {
-    if (no > 1) {
-        window.location.href = "board2.html?no=" + (parseInt(no) - 1);
-    } else {
+    if (boards[no - 1]) {
+        window.location.href = "board2.html?no=" + (no - 1);
+    }
+    else {
         alert("이전 글이 없습니다.");
     }
 }
 function goNext() {
-    const maxNo = Object.keys(posts).length;
-
-    if (no < maxNo) {
-        window.location.href = "board2.html?no=" + (parseInt(no) + 1);
-    } else {
+    if (boards[no + 1]) {
+        window.location.href = "board2.html?no=" + (no + 1);
+    }
+    else {
         alert("다음 글이 없습니다.");
     }
 }

@@ -44,8 +44,22 @@ def profile_view(request):
 
         # 2. '정보 수정 저장' 버튼을 눌렀을 때
         if 'save_info' in request.POST:
+            form = MyPageForm(request.POST, request.FILES, instance=request.user)
             if form.is_valid():
-                form.save()  # 실제로 DB에 저장
+                user = form.save(commit=False)
+
+                # 1. 사용자가 기본 이미지를 선택했는지 확인
+                default_image = request.POST.get('default_image')
+
+                if default_image:
+                    # 기본 이미지를 선택했다면 해당 경로를 DB에 저장
+                    # (이미지 필드에 문자열 경로를 강제로 할당)
+                    user.profile_image = f"accounts/images/{default_image}"
+
+                # 2. 만약 PC에서 파일을 올렸다면 (request.FILES),
+                # 위에서 commit=False로 생성한 user 객체에 이미 form.save()가
+                # 파일을 할당했을 것이므로 따로 처리 안해도 됨.
+                user.save()
                 messages.success(request, "정보가 성공적으로 수정되었습니다.")
                 return redirect('accounts:profile')
     else:

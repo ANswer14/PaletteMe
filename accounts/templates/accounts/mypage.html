@@ -27,6 +27,8 @@
   <section class="card">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            <input type="hidden" id="selectedDefaultImage" name="default_image" value="">
+
             <div class="form-group">
                 <label>아이디</label>
                 <input type="text" id="userId" value="{{ user.username }}" readonly>

@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (proceedBtn !== null) {
         proceedBtn.addEventListener("click", function() {
             // 다음 화면으로 이동 (예: 컬러 분석 페이지)
-            window.location.href = "weather/";
+            window.location.href = "map/";
         });
     }
 

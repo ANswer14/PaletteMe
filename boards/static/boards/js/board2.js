@@ -1,6 +1,17 @@
 const params = new URLSearchParams(window.location.search);
 const no = parseInt(params.get("no")) || 0;
 
+const titleParam = params.get("title");
+const contentParam = params.get("content");
+const writerParam = params.get("writer");
+
+const detailNo = document.getElementById("detailNo");
+const detailTitle = document.getElementById("detailTitle");
+const detailWriter = document.getElementById("detailWriter");
+const detailDate = document.getElementById("detailDate");
+const detailView = document.getElementById("detailView");
+const detailContent = document.getElementById("detailContent");
+
 // 임시데이터, 나중에 DB 연동
 const boards = {
     1: {
@@ -37,8 +48,20 @@ const boards = {
     }
 };
 
-// 화면에 넣기 전 데이터 존재 여부 확인
-if (boards[no]) {
+// 새 글 등록 직후면 그걸 먼저 보여줌
+if (titleParam) {
+    detailNo.innerText = "New"; // 혹은 no 변수 사용
+    detailTitle.innerText = titleParam;
+    detailWriter.innerText = writerParam || "익명";
+    detailDate.innerText = "방금 전";
+    detailView.innerText = "0";
+    detailContent.innerText = contentParam;
+
+    // 새 글은 댓글이 없으므로 안내 문구 출력
+    document.getElementById("commentList").innerHTML = "<div class='comment'>아직 댓글이 없습니다.</div>";
+}
+// 그게 아니면 데이터 리스트에서 존재 여부 확인
+else if (boards[no]) {
     document.getElementById("detailNo").innerText = no;
     document.getElementById("detailTitle").innerText = boards[no].title;
     document.getElementById("detailWriter").innerText = boards[no].writer;

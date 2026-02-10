@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,7 +45,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'accounts',
     'boards',
-    'personalColors'
+    'personalColors',
+    'django_cleanup.apps.CleanupConfig' # DB 행 삭제 시 해당 파일도 자동 삭제
 ]
 
 MIDDLEWARE = [
@@ -138,6 +140,12 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
+
+# 사용자가 업로드한 파일을 저장할 실제 물리적 경로 (서버 상의 절대 경로)
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# 사용자가 웹 브라우저에서 파일에 접근할 때 사용하는 URL 주소
+MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

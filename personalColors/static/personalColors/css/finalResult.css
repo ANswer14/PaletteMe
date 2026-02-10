@@ -12,6 +12,11 @@
     gap: 50px;
 }
 
+.image-section {
+    width: 400px;
+    height: 500px;
+}
+
 /* 왼쪽 이미지 */
 .image-section img {
     width: 400px;

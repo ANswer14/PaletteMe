@@ -36,7 +36,14 @@
 <!--                <span id="weatherText">날씨 상태가 여기에 표시됩니다.</span>-->
 <!--                <img src="{% static 'img/main1.png' %}" alt="날씨아이콘" class="weather-icon"></p>-->
             <div class="buttons">
-                <button id="nextBtn" class="btn">NEXT</button>
+                <form id="startAI" method="post" action="/personalColors/generateImg/">
+                    {% csrf_token %}
+                    <button id="nextBtn" class="btn">NEXT</button>
+                    <input type="hidden" name="temp">
+                    <input type="hidden" name="weather">
+                    <input type="hidden" name="sky">
+                    <input type="hidden" name="address">
+                </form>
             </div>
         </div>
 

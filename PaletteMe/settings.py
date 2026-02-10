@@ -181,7 +181,7 @@ ACCOUNT_SIGNUP_REDIRECT_URL = "/"
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': '948683674559-7tgdldjaurk9noi1p3gth7pb873cm2oa.apps.googleusercontent.com',
+            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
             'secret': os.getenv('GOOGLE_SECRET_KEY'),
             'key': ''
         },

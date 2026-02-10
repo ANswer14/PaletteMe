@@ -14,9 +14,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('personalColors/', include('personalColors.urls'), name='personalColors'),
@@ -26,3 +27,5 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),  # accounts 경로 보이면 accounts앱의 urls.py로 이동
     path('accounts/', include('allauth.urls')),  # 소셜 로그인(구글 등)의 모든 URL 패턴을 포함
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # 미디어 경로 지정

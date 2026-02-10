@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from requests.auth import HTTPBasicAuth
 import io
 from .service.personalColorCalc import *
-from .models import ColorHistory
+from .models import ColorHistory, RecentImages
 import json
 import os
 import requests
@@ -15,11 +15,14 @@ from dotenv import load_dotenv
 from .service.dfs_xy_converter import mapToGrid
 from google import genai
 from google.genai import types
+import uuid
+from django.core.files.base import ContentFile
 
 load_dotenv() # .env 파일 로드
 temp_storage = {} # 스레드 정보 임시 저장소
 client = genai.Client(api_key=os.getenv('GEMINI_API_KEY')) # API 연결
-model = 'gemini-3-flash-preview' # api 모델
+# model = 'gemini-3-flash-preview' # api 모델
+model = 'gemini-2.5-flash' # api 모델
 system_prompt = f""" 
         당신은 Stable Diffusion 프롬프트 전문가입니다. 
         사용자의 요청을 받아서 이미지를 생성하기 위한 영어 프롬프트와 
@@ -100,7 +103,7 @@ def saveInfo(request):
         goodColor = data.get('goodColor')
         badColor = data.get('badColor')
         new_history = ColorHistory(
-            user_id=request.user,
+            user=request.user,
             color_type=colorType,
             mood=mood,
             good_color=goodColor,
@@ -330,6 +333,7 @@ def generateImgThread(request, session_id, temp, weather, sky):
                 }
                 """
 
+        # 이미지 분석
         analysis_res = client.models.generate_content(
             model=model,  # 멀티모달에 최적화된 모델 권장
             contents=[analysis_prompt, img_obj],
@@ -337,6 +341,7 @@ def generateImgThread(request, session_id, temp, weather, sky):
         )
         print('5')
 
+        # 분석된 결과
         search_data = json.loads(analysis_res.text)
         print(search_data)
 
@@ -369,6 +374,7 @@ def generateImgThread(request, session_id, temp, weather, sky):
         print(real_outer_url)
         print(real_shoes_url)
         print(real_pants_url)
+        saveImage(request, base64_image) # 해당 이미지 최근 이미지 테이블에 저장
 
 
 def get_real_shopping_link(query):
@@ -385,3 +391,20 @@ def get_real_shopping_link(query):
         if items:
             return items[0]['link']  # 가장 유사한 첫 번째 상품 링크 반환
     return "연결 가능한 상품을 찾지 못했습니다."
+
+# 이미지 저장 로직
+def saveImage(request, imageUrl):
+    user_results = RecentImages.objects.filter(user=request.user).order_by('created_at') # 최근 이미지 레코드 모두 가져오기
+
+    if user_results.count() >= 5: # 개수가 5개 이상일 때
+        oldest_result = user_results.first() # 가장 예전 기록
+        oldest_result.delete() # 행 삭제 (django-cleanup이 실제 파일도 삭제함)
+
+    fileName = f'{uuid.uuid4()}.png' # 파일명은 중복 방지를 위해 UUID 사용
+    image_data = ContentFile(base64.b64decode(imageUrl), name=fileName) # Base64를 장고가 이해하는 파일 객체로 변환
+
+    resultInstance = RecentImages(
+        user = request.user,
+    ) # 저장 객체
+
+    resultInstance.result_image.save(fileName, image_data, save=True) # 저장

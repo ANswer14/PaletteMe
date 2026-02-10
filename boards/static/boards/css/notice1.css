@@ -4,42 +4,6 @@ body {
     background: white;
 }
 
-/* ===== HEADER ===== */
-.header {
-    display: flex;
-    justify-content: center; /*가로중앙정렬*/
-    align-items: center;
-    padding: 30px 30px;
-    border-bottom: 1px solid #cdcbcb;
-}
-
-.header-left {
-    width: 33%;
-}
-
-.logo {
-    width: 34%;
-    text-align: center;
-    font-size: 70px;
-    font-weight: bold;
-}
-.logo a {
-    color: inherit;        /* .logo 색상 따라감 */
-    text-decoration: none; /* 밑줄 제거 */
-    font-size: inherit;    /* .logo 크기 따라감 */
-    font-weight: inherit;  /* .logo 굵기 따라감 */
-}
-
-.auth {
-    width: 33%;
-    text-align: right;
-}
-
-.auth a {
-    margin-left: 15px;
-    text-decoration: none;
-    color: #333;
-}
 .board-container {
     width: 80%;
     margin: 40px auto;
@@ -47,23 +11,34 @@ body {
     padding: 30px;
     border-radius: 10px;
 }
-.board-header,
+
+/* 모든 게시판 제목 공통 스타일 */
+.board-container h2,
+.board-detail-container h2,
+.board-write-container h2 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    border-left: 5px solid #535252;
+    padding-left: 15px;
+}
+
+.board-header {
+    display: flex;
+    padding: 12px 10px;
+    border-top: 2px solid #535252;
+    border-bottom: 1px solid #ddd;
+    background-color: #fcfcfc;
+    color: #333;
+    font-weight: bold;
+    align-items: center;
+}
+
 .board-row {
     display: flex;
     padding: 12px 10px;
     border-bottom: 1px solid #ddd;
     align-items: center;
-}
-/* 헤더는 전부 중앙정렬 */
-.board-header .col-no,
-.board-header .col-title,
-.board-header .col-date {
-    text-align: center;
-}
-
-.board-header {
-    font-weight: bold;
-    background: #ffffff;
+    transition: background-color 0.2s; /*배경색 전환 천천히*/
 }
 
 .board-row:hover {
@@ -72,18 +47,27 @@ body {
 }
 
 /* 열 너비 비율 */
-.board-container.notice .col-no {
+.col-no {
     width: 10%;
 }
 
-.board-container.notice .col-title {
+.col-title {
     width: 70%;
+    white-space: nowrap;      /* 줄바꿈 금지 */
+    overflow: hidden;         /* 넘치는 부분 숨김 */
+    text-overflow: ellipsis;  /* 말줄임표(...) 표시 */
 }
 
-.board-container.notice .col-date {
+.col-date {
     width: 20%;
 }
-/* 목록은 제목만 왼쪽 */
+
+/* 정렬: 헤더는 전부 중앙 */
+.board-header > div {
+    text-align: center;
+}
+
+/* 정렬: 본문은 번호/날짜만 중앙, 제목은 왼쪽 */
 .board-row .col-no,
 .board-row .col-date {
     text-align: center;
@@ -91,6 +75,7 @@ body {
 
 .board-row .col-title {
     text-align: left;
+    padding-left: 20px;
 }
 
 /* 페이지네이션 */
@@ -103,15 +88,9 @@ body {
     margin: 0 8px;
     cursor: pointer;
 }
-/* ===== FOOTER ===== */
-.footer {
-    text-align: center;
-    padding: 20px;
-    border-top: 1px solid #ddd;
-}
 
-.footer a {
-    margin: 0 10px;
-    text-decoration: none;
-    color: #333;
+/* 페이지네이션 현재 페이지 강조 */
+.pagination span:first-child {
+    font-weight: bold;
+    text-decoration: underline;
 }

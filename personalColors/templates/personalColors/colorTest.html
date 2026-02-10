@@ -1,14 +1,11 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>컬러 자가진단</title>
+
+{% block title %} 퍼스널컬러 - PaletteMe {% endblock %}
+
+{% block content %}
     <link rel="stylesheet" href="{% static 'personalColors/css/colorTest.css' %}">
-</head>
-<body>
-    <!-- 헤더 공통 -->
-    {% include 'personalColors/includes/header.html' %}
+
     <!-- 본문 -->
     <section id="colorTestSection">
         <div class="progress-container">
@@ -111,7 +108,7 @@
                         <label><input type="radio" name="q2" value="C"> 흰빛·푸른빛</label>
                     </div>
                     <div class="options">
-                        <label><input type="radio" name="q2" value="D"> 잘 모르겠음</label>
+                        <label><input type="radio" name="q2" value="IDK"> 잘 모르겠음</label>
                     </div>
                 </div>
 
@@ -442,13 +439,5 @@
         <input type="hidden" id="idk" value="{{ idk }}">
     </section>
 
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
-
 <script src="{% static 'personalColors/js/colorTest.js' %}"></script>
-</body>
-</html>
+{% endblock %}

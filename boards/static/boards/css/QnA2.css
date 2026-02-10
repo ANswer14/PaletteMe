@@ -4,42 +4,6 @@ body {
     background: white;
 }
 
-/* ===== HEADER ===== */
-.header {
-    display: flex;
-    justify-content: center; /*가로중앙정렬*/
-    align-items: center;
-    padding: 30px 30px;
-    border-bottom: 1px solid #cdcbcb;
-}
-
-.header-left {
-    width: 33%;
-}
-
-.logo {
-    width: 34%;
-    text-align: center;
-    font-size: 70px;
-    font-weight: bold;
-}
-.logo a {
-    color: inherit;        /* .logo 색상 따라감 */
-    text-decoration: none; /* 밑줄 제거 */
-    font-size: inherit;    /* .logo 크기 따라감 */
-    font-weight: inherit;  /* .logo 굵기 따라감 */
-}
-
-.auth {
-    width: 33%;
-    text-align: right;
-}
-
-.auth a {
-    margin-left: 15px;
-    text-decoration: none;
-    color: #333;
-}
 .board-detail-container {
     width: 80%;
     margin: 40px auto;
@@ -48,93 +12,123 @@ body {
     border-radius: 10px;
 }
 
+/* 모든 게시판 제목 공통 스타일 */
+.board-container h2,
+.board-detail-container h2,
+.board-write-container h2 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    border-left: 5px solid #535252;
+    padding-left: 15px;
+}
+
 /* 제목줄 헤더 */
 .board-detail-container .title-header,
 .board-detail-container .title-row {
     display: flex;
-    justify-content: center; /* 전체 중앙 정렬 */
     align-items: center;
-    gap: 10px;
 }
+
 .board-detail-container .title-header {
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    color: #555;
+    font-size: 14px;
 }
 
 .board-detail-container .title-row {
-    font-weight: normal;
+    font-size: 18px;
+    font-weight: bold;
     margin-bottom: 20px;
+    color: #333;
 }
 
-
-/* 열 비율 */
+/* 제목줄 헤더와 데이터줄 안의 모든 span들 */
 .board-detail-container .title-header span,
 .board-detail-container .title-row span {
-    display: inline-block;
-    text-align: center;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    display: inline-block; /* 너비 값을 확실히 먹이기 위한 안전장치 */
+    vertical-align: middle; /* 텍스트 높낮이 정렬 */
 }
 
 /* 각 열 폭 지정 */
-.board-detail-container .title-header span:nth-child(1),
-.board-detail-container .title-row span:nth-child(1) { width: 5%; }   /* No */
-.board-detail-container .title-header span:nth-child(2),
-.board-detail-container .title-row span:nth-child(2) { width: 50%; }  /* 제목 */
-.board-detail-container .title-header span:nth-child(3),
-.board-detail-container .title-row span:nth-child(3) { width: 15%; }  /* 작성자 */
-.board-detail-container .title-header span:nth-child(4),
-.board-detail-container .title-row span:nth-child(4) { width: 15%; }  /* 작성일 */
-.board-detail-container .title-header span:nth-child(5),
-.board-detail-container .title-row span:nth-child(5) { width: 15%; }  /* 조회수 */
-
-/* 글 내용 */
-.board-detail-container .detail-content {
-    line-height: 1.8;
-    min-height: 200px;
-    margin-bottom: 30px;
+/* No */
+.board-detail-container span:nth-child(1) {
+    width: 7%;
+    text-align: center;
 }
+
+/* 제목 */
+.board-detail-container span:nth-child(2) {
+    width: 55%;
+    text-align: left;
+    padding-left: 10px;
+}
+
+ /* 작성자 */
+.board-detail-container span:nth-child(3) {
+    width: 12%;
+    text-align: center;
+}
+
+ /* 작성일 */
+.board-detail-container span:nth-child(4) {
+    width: 15%;
+    text-align: center;
+}
+
+ /* 조회수 */
+.board-detail-container span:nth-child(5) {
+    width: 11%;
+    text-align: center;
+}
+
+/* 내용 영역 */
+.detail-content {
+    line-height: 1.8;
+    min-height: 300px;
+    padding: 20px 10px;
+    font-size: 16px;
+    color: #444;
+}
+
 /* 댓글 */
 .board-detail-container .comment-section h3 {
     margin-bottom: 10px;
 }
 .board-detail-container .comment-input {
+    display: flex;
+    align-items: center;
     margin-top: 10px;
+    gap: 10px;          /* 요소 사이 간격 */
 }
-.board-detail-container .comment-input input {
-    width: 70%;
-    padding: 5px;
+/* 댓글 개별 스타일 */
+.comment {
+    padding: 10px;
+    border-bottom: 1px dashed #eee; /* 점선으로 구분 */
+    font-size: 15px;
+    color: #555;
+}
+
+.comment b {
+    color: #333;
     margin-right: 5px;
 }
-.board-detail-container .comment-input button {
-    padding: 5px 10px;
-}
-
 
 /* 이전글 | 글목록 | 다음글 중앙정렬 */
-.nav-buttons {
+.detail-nav {
     text-align: center;
     margin-top: 30px;
+    color: #888;
 }
-.nav-buttons span {
+
+.detail-nav span {
     cursor: pointer;
-    margin: 0 5px;
-    color: #333;
-}
-.nav-buttons span:hover {
-    text-decoration: underline;
-}
-
-/* ===== FOOTER ===== */
-.footer {
-    text-align: center;
-    padding: 20px;
-    border-top: 1px solid #ddd;
-}
-
-.footer a {
     margin: 0 10px;
-    text-decoration: none;
     color: #333;
+    font-size: 15px;
+}
+
+.detail-nav span:hover {
+    text-decoration: underline;
+    color: #535252; /* 버튼과 동일한 강조색 */
 }

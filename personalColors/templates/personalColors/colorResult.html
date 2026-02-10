@@ -1,19 +1,16 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>퍼스널컬러 진단 결과</title>
+
+{% block title %} 퍼스널컬러 - PaletteMe {% endblock %}
+
+{% block content %}
     <link rel="stylesheet" href="{% static 'personalColors/css/colorResult.css' %}">
-</head>
-<body>
+
 {% csrf_token %}
-    <!-- 헤더 공통 -->
-    {% include 'personalColors/includes/header.html' %}
 
     <section id="resultSection">
         <div class="left">
-            <img src="main1.png" alt="퍼스널컬러" class="result-img">
+            <img src="{% static 'img/main1.png' %}" alt="퍼스널컬러" class="result-img">
         </div>
         <div class="right">
             <h1>당신의 퍼스널컬러는...</h1>
@@ -27,7 +24,7 @@
                 <p id="goodColor">{{ goodColor }}</p>
                 <p id="badColor">{{ badColor }}</p>
 
-                <div class="buttons">
+                <div class="buttons mt-20">
                     <button id="retryBtn" onclick="location.href='/personalColors/check/'">다시하기</button>
                     <button id="nextBtn">NEXT</button>
                 </div>
@@ -45,17 +42,12 @@
     <div id="savePopup" class="popup">
         <div class="popup-content">
             <p>이 결과를 저장할까요?</p>
-            <button id="yesBtn">예</button>
-            <button id="noBtn">아니오</button>
+            <div class="popup-buttons">
+                <button id="yesBtn">예</button>
+                <button id="noBtn">아니오</button>
+            </div>
         </div>
     </div>
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
 
-<script src="{% static 'personalColors/js/colorResult.js' %}"></script>
-</body>
-</html>
+    <script src="{% static 'personalColors/js/colorResult.js' %}"></script>
+{% endblock %}

@@ -1,9 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="/static/css/index.css">
+    <title>{% block title %} PaletteMe {% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
 </head>
 <body>
 
@@ -13,37 +14,30 @@
         <!-- 필요 시 왼쪽 버튼/메뉴 -->
     </div>
     <div class="logo">
-        <a href="{% url 'core:index' %}">Title</a>
+        <a href="{% url 'core:index' %}"><img src="{% static 'img/logo.png' %}" alt="로고" class="header-logo-img"></a>
     </div>
 
     <div class="auth">
         {% if user.is_authenticated %}
-        <!-- 로그인 상태일 때 -->
+            <!-- 이미지 클릭하면 새창으로 이미지가 더 크게 보이게 함 -->
             <span class="user-nickname">{{ user.nickname }}님</span>
-            <a href="{% url 'profile' %}">프로필</a>
+            <a href="javascript:void(0);"
+                onclick="openImagePopup('{{ user.profile_image.url|default:'/static/img/main1.png' }}')">
+            <img src="{{ user.profile_image.url|default:'/static/img/main1.png' }}" alt="프로필" class="header-profile-img">
+            </a>
+            <a href="#">회원정보</a>
             <a href="{% url 'account_logout' %}">로그아웃</a>
         {% else %}
-            <!-- 로그아웃 상태일 때 -->
-            <a href="{% url 'account_login' %}">로그인</a>
+            <a href="javascript:void(0);" onclick="openLoginPopup('{% url 'account_login' %}')">로그인</a>
             <a href="{% url 'agreement' %}">회원가입</a>
         {% endif %}
     </div>
 </header>
 
 <!-- ===== MAIN ===== -->
-<main class="main">
-    <div class="main-left">
-        <!-- 나중에 이미지로 교체 -->
-        <img src="/static/img/main1.png" alt="메인 왼쪽화면 이미지">
-    </div>
-    <form method="get" action="personalColors/">
 
-        <div class="main-right">
-            <h1>날씨와 퍼스널컬러로<br>오늘의 옷을 추천해드려요</h1>
-            <button class="start-btn fade-delay">시작하기</button>
-        </div>
-    </form>
-</main>
+    {% block content %}
+    {% endblock %}
 
 <!-- ===== BOARD ===== -->
 <section class="board">
@@ -52,7 +46,19 @@
     <div class="board-nav">
         <a href="#">Notice</a>
         <span class="divider">|</span>
-        <a href="#">자유게시판</a>
+        {% if user.is_authenticated %}
+            <a href="#">자유게시판</a>
+        {% else %}
+            <a href="javascript:void(0);" onclick="loginRequired()">자유게시판</a>
+        {% endif %}
+
+        <span class="divider">|</span>
+
+        {% if user.is_authenticated %}
+            <a href="#">QnA</a>
+        {% else %}
+            <a href="javascript:void(0);" onclick="loginRequired()">QnA</a>
+        {% endif %}
     </div>
 
     <div class="board-line"></div>
@@ -60,11 +66,13 @@
 
 <!-- ===== FOOTER ===== -->
 <footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
+    {% block footer %}
+        <a href="#">Instagram</a>
+        <a href="#">Twitter</a>
+        <a href="#">Contact</a>
+    {% endblock %}
 </footer>
 
-<script src="/static/js/index.js"></script>
+<script src="{% static 'js/index.js' %}"></script>
 </body>
 </html>

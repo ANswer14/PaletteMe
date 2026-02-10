@@ -4,42 +4,6 @@ body {
     background: white;
 }
 
-/* ===== HEADER ===== */
-.header {
-    display: flex;
-    justify-content: center; /*가로중앙정렬*/
-    align-items: center;
-    padding: 30px 30px;
-    border-bottom: 1px solid #cdcbcb;
-}
-
-.header-left {
-    width: 33%;
-}
-
-.logo {
-    width: 34%;
-    text-align: center;
-    font-size: 70px;
-    font-weight: bold;
-}
-.logo a {
-    color: inherit;        /* .logo 색상 따라감 */
-    text-decoration: none; /* 밑줄 제거 */
-    font-size: inherit;    /* .logo 크기 따라감 */
-    font-weight: inherit;  /* .logo 굵기 따라감 */
-}
-
-.auth {
-    width: 33%;
-    text-align: right;
-}
-
-.auth a {
-    margin-left: 15px;
-    text-decoration: none;
-    color: #333;
-}
 .board-container {
     width: 80%;
     margin: 40px auto;
@@ -47,77 +11,113 @@ body {
     padding: 30px;
     border-radius: 10px;
 }
-.board-container.QnA h2 {
-    color: #333;
-}
-.title-row {
-    display: flex;
-    gap: 20px;  /* 글자 사이 간격 */
-    align-items: center;
-    font-weight: bold;
+
+/* 모든 게시판 제목 공통 스타일 */
+.board-container h2,
+.board-detail-container h2,
+.board-write-container h2 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    border-left: 5px solid #535252;
+    padding-left: 15px;
 }
 
-/* 헤더 행 */
-.board-header, .board-row {
+.board-header {
+    display: flex;
+    padding: 12px 10px;
+    border-top: 2px solid #535252;
+    border-bottom: 1px solid #ddd;
+    background-color: #fcfcfc;
+    color: #333;
+    font-weight: bold;
+    align-items: center;
+}
+
+.board-row {
     display: flex;
     padding: 12px 10px;
     border-bottom: 1px solid #ddd;
     align-items: center;
-    text-align: center;
+    transition: background-color 0.2s; /*배경색 전환 천천히*/
 }
 
-.board-header {
-    font-weight: bold;
-    background: #ffffff;
+.board-row:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
 }
 
 /* 열 비율 */
 .col-no {
     width: 7%;
+    text-align: center;
 }
 
 .col-title {
-    width: 60%;
+    width: 55%;
+    text-align: left;
+    padding-left: 20px;
+    white-space: nowrap;      /* 줄바꿈 금지 */
+    overflow: hidden;         /* 넘치는 부분 숨김 */
+    text-overflow: ellipsis;  /* 말줄임표(...) 표시 */
 }
+
 .col-writer {
-    width: 10%;
+    width: 15%;
+    text-align: center;
 }
+
 .col-date {
-    width: 13%;
+    width: 12%;
+    text-align: center;
 }
+
 .col-view {
-    width: 10%;
+    width: 11%;
+    text-align: center;
 }
 
-
-/* 마우스 올리면 */
-.board-row:hover {
-    background-color: #f0f0f0;
-    cursor: pointer;
+/* 정렬: 헤더는 전부 중앙 */
+.board-header > div {
+    text-align: center !important;
+    padding-left: 0 !important;
 }
-/* 구분선 + 글쓰기 버튼 */
+
+/* 정렬: 본문은 번호, 작성자, 날짜, 조회수는 중앙, 제목은 왼쪽 */
+.board-row .col-no,
+.board-row .col-writer,
+.board-row .col-date,
+.board-row .col-view {
+    text-align: center;
+}
+
+.board-row .col-title {
+    text-align: left;
+    padding-left: 20px;
+}
+
+/* 자유게시판 댓글 수 강조 */
+.comment-count {
+    color: #e67e22; /* 오렌지/브라운 톤으로 포인트 */
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+/* 글쓰기 버튼 */
 .board-footer {
     display: flex;
     justify-content: flex-end; /* 오른쪽에 배치 */
-    align-items: center;
     margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.section-divider {
-    flex: 1; /* 선이 왼쪽 끝까지 늘어나도록 */
-    border: none;
-    border-bottom: 1px solid #ccc;
-    margin-right: 10px; /* 글쓰기 버튼과 간격 */
 }
 
 .write-btn {
-    padding: 6px 12px;
+    padding: 8px 16px;
     background-color: #535252;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .write-btn:hover {
@@ -135,15 +135,8 @@ body {
     cursor: pointer;
 }
 
-/* ===== FOOTER ===== */
-.footer {
-    text-align: center;
-    padding: 20px;
-    border-top: 1px solid #ddd;
-}
-
-.footer a {
-    margin: 0 10px;
-    text-decoration: none;
-    color: #333;
+/* 페이지네이션 현재 페이지 강조 */
+.pagination span:first-child {
+    font-weight: bold;
+    text-decoration: underline;
 }

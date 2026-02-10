@@ -1,20 +1,13 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.getElementById("nextBtn").addEventListener("click", function() {
     const checkbox = document.getElementById("agreeCheckbox");
-    const nextBtn = document.getElementById("nextBtn");
     const errorMsg = document.getElementById("errorMsg");
+    const signupUrl = this.getAttribute("data-url");
 
-    // 체크박스 상태가 바뀔 때마다 에러 메시지 초기화
-    checkbox.addEventListener("change", function() {
-        errorMsg.innerText = "";
-    });
-
-    nextBtn.addEventListener("click", function() {
-        if (!checkbox.checked) {
-            errorMsg.innerText = "약관에 동의해야만 다음 단계로 이동할 수 있습니다.";
-            return;
-        }
-
-        // url을 "/accounts/signup/" 으로 바꿈
-        window.location.href = "/accounts/signup/";
-    });
+    if (checkbox.checked) {
+        // 체크되어 있으면 회원가입 페이지로 이동
+        window.location.href = signupUrl;
+    } else {
+        // 체크 안 되어 있으면 경고 표시
+        errorMsg.innerText = "약관에 동의해야만 회원가입이 가능합니다.";
+    }
 });

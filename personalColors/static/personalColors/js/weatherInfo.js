@@ -61,8 +61,8 @@ function handleRowClick(element) {
     const PCP = element.getAttribute('data-pcp'); // 1시간 강수량
     const snow = element.getAttribute('data-sno'); // 1시간 신적설
     const PTY = element.getAttribute('data-pty'); // 강수 형태
-    const TMN = element.getAttribute('data-tmn');
-    const TMX = element.getAttribute('data-tmx');
+    const TMN = element.getAttribute('data-tmn'); // 최저 기온
+    const TMX = element.getAttribute('data-tmx'); // 최고 기온
 
     console.log(TMN)
 
@@ -87,6 +87,10 @@ function handleRowClick(element) {
     document.getElementById('weather').innerText = getPTYText(PTY)
     document.getElementById('sky').innerText = getSKYText(sky)
 
+    document.querySelector('input[name=temp]').value = temp
+    document.querySelector('input[name=weather]').value = getPTYText(PTY)
+    document.querySelector('input[name=sky]').value = getSKYText(sky)
+    document.querySelector('input[name=address]').value = jibunAddress
 }
 
  function getPTYText(code) {
@@ -226,19 +230,14 @@ kakao.maps.event.addListener(marker, 'click', function(mouseEvent) {
     fetchWeather(lat, lng);
 });
 
-document.addEventListener("DOMContentLoaded", () => {
+document.getElementById('nextBtn').addEventListener('click', function(e) {
+    const btn = e.currentTarget;
+    const btnText = btn.querySelector('.text'); // 버튼 내 텍스트 요소
 
-    const nextBtn = document.getElementById("nextBtn");
-
-
-
-    /* ⏭ NEXT 버튼 */
-    nextBtn.addEventListener("click", () => {
-        // 다음 화면으로 이동
-        // (퍼스널컬러 + 날씨 종합 결과 페이지)
-        window.location.href = "../FinalResult/styleResult.html";
-    });
-
+    // 1. 버튼 비활성화 및 로딩 상태 표시
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    btn.style.cursor = 'not-allowed';
+    document.getElementById('startAI').submit();
 });
-
 

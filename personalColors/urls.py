@@ -12,4 +12,6 @@ urlpatterns = [
     path('map/weather/', views.getWeather, name='getWeather'),
     # path('thisWeather/', views.getThisWeather, name='getThisWeather'),
     path('saveInfo/', views.saveInfo, name='saveInfo'),
+    path('generateImg/', views.genearteStart, name='genearte_start'),
+    path('checkStatus/', views.checkStatus, name='checkStatus'),
 ]

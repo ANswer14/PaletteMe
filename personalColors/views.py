@@ -203,7 +203,7 @@ def getWeather(request):
 
         return JsonResponse(jsonRes, safe=False)
 
-def genearteStart(request):
+def generateStart(request):
     if request.method == 'POST':
         temp = request.POST['temp']
         weather = request.POST['weather']
@@ -227,6 +227,8 @@ def genearteStart(request):
         colorType = request.user.color_history.all().values('color_type').order_by('-executed_at').first()['color_type']
 
         return render(request, 'personalColors/finalResult.html', {'temp': temp + '°C', 'weather': weather, 'sky': sky, 'colorType': colorType, 'address': address})
+    elif request.method == 'GET':
+        return redirect('/personalColors/map')
 
 def checkStatus(request):
     session_id = request.session.session_key

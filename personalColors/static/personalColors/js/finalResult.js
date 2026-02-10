@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const pollInterval = setInterval(checkStatus, 800); // 라이브 프리뷰를 위해 주기를 0.8~1초로 짧게 설정
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
     const favorBtn = document.getElementById('favorBtn');
+    favorBtn.disabled = true
 
     function checkStatus() {
         fetch('/personalColors/checkStatus/')
@@ -34,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('topItem').innerHTML = `<a href=${data.recommendations[1].url} target='blank'>${data.descriptionDetail.top}</a>`
                     document.getElementById('bottomItem').innerHTML = `<a href=${data.recommendations[2].url} target='blank'>${data.descriptionDetail.pants}</a>`
                     document.getElementById('shoesItem').innerHTML = `<a href=${data.recommendations[3].url} target='blank'>${data.descriptionDetail.shoes}</a>`
+                    favorBtn.disabled = false
                 }
             });
     }

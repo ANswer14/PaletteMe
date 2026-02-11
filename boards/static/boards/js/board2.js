@@ -1,6 +1,10 @@
 const params = new URLSearchParams(window.location.search);
 const no = parseInt(params.get("no")) || 0;
 
+// 백엔드 연결시 주석해제
+// let currentPostData = null; // 백엔드에서 받은 전체 데이터를 저장할 빈 주머니
+
+// [삭제 예정] URL에서 데이터를 직접 뽑아오던 방식은 파일(사진)을 못 보냅니다.
 const titleParam = params.get("title");
 const contentParam = params.get("content");
 const writerParam = params.get("writer");
@@ -12,7 +16,7 @@ const detailDate = document.getElementById("detailDate");
 const detailView = document.getElementById("detailView");
 const detailContent = document.getElementById("detailContent");
 
-// 임시데이터, 나중에 DB 연동
+// [삭제 예정] 임시 데이터 객체 boards는 나중에 서버 DB가 대신할 겁니다.
 const boards = {
     1: {
         title: "첫 번째 글입니다",
@@ -46,46 +50,72 @@ const boards = {
             {writer: "김주연", text: "정리 꿀팁 좀 알려주세요"}
             ]
     }
-};
+};       // 여기까지 삭제예정
 
-// 새 글 등록 직후면 그걸 먼저 보여줌
-if (titleParam) {
-    detailNo.innerText = "New"; // 혹은 no 변수 사용
-    detailTitle.innerText = titleParam;
-    detailWriter.innerText = writerParam || "익명";
-    detailDate.innerText = "방금 전";
-    detailView.innerText = "0";
-    detailContent.innerText = contentParam;
+document.addEventListener("DOMContentLoaded", async function () {
+    if (no === 0) {
+        alert("잘못된 접근입니다.");
+        location.href = "board1.html";
+        return;
+    }
 
-    // 새 글은 댓글이 없으므로 안내 문구 출력
-    document.getElementById("commentList").innerHTML = "<div class='comment'>아직 댓글이 없습니다.</div>";
-}
-// 그게 아니면 데이터 리스트에서 존재 여부 확인
-else if (boards[no]) {
+    // [백엔드 연결 시 이 주석을 푸세요]
+    /*
+    try {
+        const response = await fetch(`/api/board/detail/${no}/`);
+        const data = await response.json();
+        renderDetail(data);
+    } catch (error) {
+        console.error("데이터 로드 실패", error);
+    }
+    */
+
+    // [삭제 예정] 현재는 임시 데이터(boards) 사용
+    if (typeof boards !== 'undefined' && boards[no]) {
+        renderDetail(boards[no]);
+    }
+});
+
+// 데이터를 화면에 그리는 함수
+function renderDetail(data) {
+    // 백엔드 연결시에 추가될 변수선언
+    // currentPostData = data; // 전달받은 보따리를 나중을 위해 주머니에 저장!
+    // const today = new Date().toISOString().split('T')[0]; // 오늘 날짜 계산
+
+    // 1. 기본 텍스트 정보 채우기
     document.getElementById("detailNo").innerText = no;
-    document.getElementById("detailTitle").innerText = boards[no].title;
-    document.getElementById("detailWriter").innerText = boards[no].writer;
-    document.getElementById("detailDate").innerText = boards[no].date;
-    document.getElementById("detailView").innerText = boards[no].views;
-    document.getElementById("detailContent").innerText = boards[no].content;
+    document.getElementById("detailTitle").innerText = data.title;
+    document.getElementById("detailWriter").innerText = data.writer;
+    document.getElementById("detailDate").innerText = data.date || "2026-02-11";  // 나중에 날짜 대신 today 라고 씀
+    document.getElementById("detailView").innerText = data.views || 0;
+    document.getElementById("detailContentText").innerText = data.content;
 
-    // ✅ 댓글 출력
-    const commentList = document.getElementById("commentList"); //댓글 붙일 게시판
-    boards[no].comments.forEach(comment => { // 댓글메모지 한장씩 꺼내기
-        // 포스트잇을 뜯기 전에 "누가 썼는지" 미리 확인 (가장 추천)
-        console.log(comment.writer);
+    // 2. 사진 리스트 채우기
+    const imageArea = document.getElementById("detailImages");
+    imageArea.innerHTML = "";         // 사진이 들어갈 게시판 초기화
 
-        const div = document.createElement("div"); // 댓글 적을 새 포스트잇 한장
+    if (data.images && data.images.length > 0) {     // 이미지 개수가 0보다 많은지 확인
+        data.images.forEach(imgUrl => {         //  사진 주소 하나씩 꺼내는 작업
+            const imgTag = document.createElement("img");   // js에서 새로운 img 태그 생성(아직 화면에 붙이진 않은 상태)
+            imgTag.src = imgUrl;      // 새로 만든 img 태그에 방금 꺼낸 사진 주소 넣음
+            imageArea.appendChild(imgTag);     // 완성된 사진 태그를 실제 게시판에 붙임
+        });
+    }
 
-        div.className = "comment"; // "댓글용"이라는 라벨붙여서 테두리 디자인
-        div.innerHTML = `<b>${comment.writer}:</b> ${comment.text}`; // "글쓴이/내용" 적기
-        commentList.appendChild(div); // 다쓴 포스트잇 게시판에 붙이기
-    });
-}
-else {
-    // 데이터가 없는 번호로 들어왔을 때 알림 후 목록으로 이동(예외처리)
-    alert("존재하지 않는 게시글입니다.");
-    location.href = "board1.html";
+    // 3. 댓글 채우기
+    const commentList = document.getElementById("commentList");
+    commentList.innerHTML = "";          // 댓글 들어갈 자리 초기화
+    if (data.comments && data.comments.length > 0) {       // 이 글에 댓글이 달려있는지 확인
+        data.comments.forEach(comment => {              // 댓글 목록에서 댓글 꺼내는 작업(작성자, 댓글 내용)
+            const div = document.createElement("div");      // 새 댓글 적을 포스트잇(div) 생성
+            div.className = "comment";                  //  이 div 포스트잇에 comment라는 이름표(클래스) 붙임
+            div.innerHTML = `<b>${comment.writer}:</b> ${comment.text}`;    // 글쓴이:내용 형식으로 댓글 작성
+            commentList.appendChild(div);               // 댓글 게시판에 다쓴 포스트잇을 순서대로 붙임
+        });
+    }
+    else {
+        commentList.innerHTML = "<div class='comment'>아직 댓글이 없습니다.</div>";
+    }
 }
 
 // 좋아요 버튼(토글 방식)
@@ -131,9 +161,14 @@ function addComment() {
 
 // 목록으로 버튼
 function goList() {
+    // 백엔드 연결시 삭제
     window.location.href = "board1.html";
+    // 백엔드 연결시 주석 해제(실제 사용)
+    /* const page = params.get("page") || 1;    // 주소창에 'page' 정보가 있다면 그 페이지로, 없으면 그냥 목록으로!
+    window.location.href = `board1.html?page=${page}`; */   // get("page")안의 page, ${page} 안의 page 이름 백엔드와 의논필요
 }
 
+// [삭제 예정]
 function goPrev() {
     if (boards[no - 1]) {
         window.location.href = "board2.html?no=" + (no - 1);
@@ -150,3 +185,24 @@ function goNext() {
         alert("다음 글이 없습니다.");
     }
 }
+
+// 백엔드 연결시 바뀔 예정
+/*
+function goPrev() {
+    // data 보따리에 들어있는 '이전 글 번호'가 있는지 확인
+    if (currentPostData && currentPostData.prev_no) {       //currentPostData.prev_no의 prev_no 이름 백엔드와 의논필요
+        window.location.href = "board2.html?no=" + currentPostData.prev_no;
+    } else {
+        alert("이전 글이 없습니다.");
+    }
+}
+
+function goNext() {
+    // data 보따리에 들어있는 '다음 글 번호'가 있는지 확인
+    if (currentPostData && currentPostData.next_no) {       //currentPostData.next_no의 next_no 이름 백엔드와 의논필요
+        window.location.href = "board2.html?no=" + currentPostData.next_no;
+    } else {
+        alert("다음 글이 없습니다.");
+    }
+}
+*/

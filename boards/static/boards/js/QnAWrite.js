@@ -1,25 +1,35 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ===== 필수 요소 =====
-  const postForm = document.getElementById("postForm");
+  const form = document.getElementById("qnaForm");
+  const titleEl = document.getElementById("title");
 
   const editor = document.getElementById("editor");
-  const toolbar = document.getElementById("toolbar");
-
-  const fontSizeSelect = document.getElementById("fontSize");
-  const fontColorInput = document.getElementById("fontColor");
-  const removeStyleBtn = document.getElementById("removeStyle");
-
   const contentInput = document.getElementById("contentInput");
+
   const currentCountEl = document.getElementById("currentCount");
   const maxCountEl = document.getElementById("maxCount");
   const MAX_COUNT = parseInt(maxCountEl?.innerText || "2000", 10);
 
-  // 탭/패널
+  // 탭 UI
   const tabWrite = document.getElementById("tabWrite");
   const tabPreview = document.getElementById("tabPreview");
   const writePane = document.getElementById("writePane");
   const previewPane = document.getElementById("previewPane");
-  const previewContent = document.getElementById("previewContent");
+  const previewContentTab = document.getElementById("previewContentTab");
+
+  // 툴바
+  const toolbar = document.getElementById("toolbar");
+  const fontColorInput = document.getElementById("fontColor");
+  const fontSizeSelect = document.getElementById("fontSize");
+  const removeStyleBtn = document.getElementById("removeStyle");
+
+  // 모달 미리보기
+  const previewBtn = document.getElementById("previewBtn");
+  const previewModal = document.getElementById("previewModal");
+  const closePreview = document.getElementById("closePreview");
+  const closePreviewBtn = document.getElementById("closePreviewBtn");
+  const previewTitle = document.getElementById("previewTitle");
+  const previewContentModal = document.getElementById("previewContentModal");
+  const previewImages = document.getElementById("previewImages");
 
   // 이미지
   const imageInput = document.getElementById("imageInput");
@@ -27,18 +37,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const uploadEmptyText = document.getElementById("uploadEmptyText");
   const clearImagesBtn = document.getElementById("clearImagesBtn");
 
-  if (!editor || !toolbar) return;
+  if (!form || !editor || !contentInput) return;
 
-  // ===== 선택 저장/복원 (중요: 드롭다운 클릭하면 선택이 풀리는 문제 해결) =====
+  // ---------- selection 저장/복원 ----------
   let savedRange = null;
 
   function saveSelection() {
     const sel = window.getSelection();
     if (!sel || sel.rangeCount === 0) return;
     const range = sel.getRangeAt(0);
-    if (editor.contains(range.commonAncestorContainer)) {
-      savedRange = range;
-    }
+    if (editor.contains(range.commonAncestorContainer)) savedRange = range;
   }
 
   function restoreSelection() {
@@ -50,9 +58,22 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
+  document.addEventListener("selectionchange", saveSelection);
+
+  // 툴바 클릭 시 selection 유지
+  toolbar?.addEventListener("mousedown", (e) => {
+    saveSelection();
+    const isSelectOrColor =
+      e.target.matches("select") || e.target.matches('input[type="color"]');
+    if (!isSelectOrColor) {
+      e.preventDefault();
+      editor.focus();
+      restoreSelection();
+    }
+  });
+
   function applyStyleToSelection(styleObj) {
     if (!restoreSelection()) return;
-
     const sel = window.getSelection();
     if (!sel || sel.rangeCount === 0) return;
     const range = sel.getRangeAt(0);
@@ -60,11 +81,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const span = document.createElement("span");
     Object.assign(span.style, styleObj);
-
     span.appendChild(range.extractContents());
     range.insertNode(span);
 
-    // 커서 span 뒤로
     range.setStartAfter(span);
     range.collapse(true);
     sel.removeAllRanges();
@@ -74,48 +93,27 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCount();
   }
 
-  // 선택 변화 저장
-  document.addEventListener("selectionchange", saveSelection);
-
-  // ⭐ 툴바에서 버튼 눌렀을 때만 preventDefault (select/color는 열리게 둠)
-  toolbar.addEventListener("mousedown", (e) => {
-    saveSelection();
-
-    const isSelectOrColor =
-      e.target.matches("select") || e.target.matches('input[type="color"]');
-
-    if (!isSelectOrColor) {
-      e.preventDefault(); // 버튼 클릭 시 포커스 이동 방지
-      editor.focus();
-      restoreSelection();
-    }
-  });
-
-  // 글씨크기
-  fontSizeSelect?.addEventListener("change", (e) => {
-    applyStyleToSelection({ fontSize: e.target.value });
-    editor.focus();
-  });
-
-  // 글씨색
   fontColorInput?.addEventListener("input", (e) => {
     applyStyleToSelection({ color: e.target.value });
     editor.focus();
   });
 
-  // 서식제거: 선택 범위 안의 span만 풀기
+  fontSizeSelect?.addEventListener("change", (e) => {
+    applyStyleToSelection({ fontSize: e.target.value });
+    editor.focus();
+  });
+
   removeStyleBtn?.addEventListener("click", () => {
     if (!restoreSelection()) return;
-
     const sel = window.getSelection();
     if (!sel || sel.rangeCount === 0) return;
     const range = sel.getRangeAt(0);
     if (range.collapsed) return;
 
     const frag = range.extractContents();
-
     const walker = document.createTreeWalker(frag, NodeFilter.SHOW_ELEMENT);
     const unwrapTargets = [];
+
     while (walker.nextNode()) {
       const el = walker.currentNode;
       if (el.tagName === "SPAN") unwrapTargets.push(el);
@@ -136,20 +134,20 @@ document.addEventListener("DOMContentLoaded", () => {
     editor.focus();
   });
 
-  // ===== 글자수 카운트 =====
-  function getPlainTextLength() {
+  // ---------- 글자수 ----------
+  function plainLength() {
     return (editor.innerText || "").trimEnd().length;
   }
 
   function updateCount() {
-    const len = getPlainTextLength();
+    const len = plainLength();
     if (currentCountEl) currentCountEl.innerText = String(len);
   }
 
   editor.addEventListener("input", updateCount);
   updateCount();
 
-  // ===== 탭(작성/미리보기) =====
+  // ---------- 탭 미리보기 ----------
   function setActiveTab(which) {
     if (!tabWrite || !tabPreview || !writePane || !previewPane) return;
 
@@ -164,16 +162,14 @@ document.addEventListener("DOMContentLoaded", () => {
       tabPreview.classList.add("active");
       writePane.classList.remove("active");
       previewPane.classList.add("active");
-
-      // 미리보기 내용 반영
-      if (previewContent) previewContent.innerHTML = editor.innerHTML || "";
+      if (previewContentTab) previewContentTab.innerHTML = editor.innerHTML || "";
     }
   }
 
   tabWrite?.addEventListener("click", () => setActiveTab("write"));
   tabPreview?.addEventListener("click", () => setActiveTab("preview"));
 
-  // ===== 이미지 업로드/미리보기 (네 CSS 구조에 맞춤) =====
+  // ---------- 이미지 미리보기 ----------
   let selectedFiles = [];
 
   function syncEmptyText() {
@@ -182,16 +178,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function rebuildFileInput() {
+    if (!imageInput) return;
     const dt = new DataTransfer();
     selectedFiles.forEach((f) => dt.items.add(f));
     imageInput.files = dt.files;
   }
 
-  function renderPreviews() {
-    if (!imagePreview) return;
-    imagePreview.innerHTML = "";
+  function renderPreviews(container, files) {
+    if (!container) return;
+    container.innerHTML = "";
 
-    selectedFiles.forEach((file, idx) => {
+    files.forEach((file, idx) => {
       const url = URL.createObjectURL(file);
 
       const card = document.createElement("div");
@@ -216,7 +213,8 @@ document.addEventListener("DOMContentLoaded", () => {
       removeBtn.addEventListener("click", () => {
         selectedFiles.splice(idx, 1);
         rebuildFileInput();
-        renderPreviews();
+        renderPreviews(imagePreview, selectedFiles);
+        syncEmptyText();
       });
 
       actions.appendChild(removeBtn);
@@ -225,31 +223,69 @@ document.addEventListener("DOMContentLoaded", () => {
       card.appendChild(name);
       card.appendChild(actions);
 
-      imagePreview.appendChild(card);
+      container.appendChild(card);
     });
-
-    syncEmptyText();
   }
 
   imageInput?.addEventListener("change", () => {
     const files = Array.from(imageInput.files || []);
     selectedFiles = selectedFiles.concat(files);
     rebuildFileInput();
-    renderPreviews();
+    renderPreviews(imagePreview, selectedFiles);
+    syncEmptyText();
   });
 
   clearImagesBtn?.addEventListener("click", () => {
     selectedFiles = [];
     rebuildFileInput();
-    renderPreviews();
+    renderPreviews(imagePreview, selectedFiles);
+    syncEmptyText();
   });
 
   syncEmptyText();
 
-  // ===== 제출 시 contentInput에 HTML 저장 =====
-  postForm?.addEventListener("submit", (e) => {
-    const len = getPlainTextLength();
+  // ---------- 모달 미리보기 ----------
+  function openModal() {
+    if (!previewModal) return;
+    previewModal.classList.add("open");
+    previewModal.setAttribute("aria-hidden", "false");
 
+    if (previewTitle) previewTitle.innerText = (titleEl?.value || "").trim();
+    if (previewContentModal) previewContentModal.innerHTML = editor.innerHTML || "";
+
+    if (previewImages) {
+      previewImages.innerHTML = "";
+      selectedFiles.forEach((file) => {
+        const url = URL.createObjectURL(file);
+        const img = document.createElement("img");
+        img.className = "image-thumb";
+        img.src = url;
+        img.alt = file.name;
+        previewImages.appendChild(img);
+      });
+    }
+  }
+
+  function closeModal() {
+    if (!previewModal) return;
+    previewModal.classList.remove("open");
+    previewModal.setAttribute("aria-hidden", "true");
+  }
+
+  previewBtn?.addEventListener("click", openModal);
+  closePreview?.addEventListener("click", closeModal);
+  closePreviewBtn?.addEventListener("click", closeModal);
+
+  // ---------- submit: 검증 + hidden 채우기 ----------
+  form.addEventListener("submit", (e) => {
+    const title = (titleEl?.value || "").trim();
+    const len = plainLength();
+
+    if (!title) {
+      e.preventDefault();
+      alert("제목을 입력해주세요.");
+      return;
+    }
     if (len < 10) {
       e.preventDefault();
       alert("내용은 10자 이상 입력해주세요.");
@@ -263,6 +299,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (contentInput) contentInput.value = editor.innerHTML;
+    contentInput.value = editor.innerHTML;
   });
 });

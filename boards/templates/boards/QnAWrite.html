@@ -4,50 +4,53 @@
 <head>
   <meta charset="UTF-8" />
   <title>QnA 글 작성</title>
-
-  <!-- ✅ 네가 올린 CSS 경로로 연결 -->
   <link rel="stylesheet" href="{% static 'boards/css/QnAWrite.css' %}">
 </head>
 <body>
 
-<!-- ===== HEADER ===== -->
 <header class="header">
   <div class="header-left"></div>
 
   <div class="logo">
-    <a href="{% url 'boards:board_main' %}">Title</a>
+    <a href="{% url 'boards:qna_list' %}">Title</a>
   </div>
 
   <div class="auth">
-    <a href="#">회원정보</a>
-    <a href="#">로그아웃</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'profile' %}">회원정보</a>
+      <a href="{% url 'logout' %}">로그아웃</a>
+    {% else %}
+      <a href="{% url 'login' %}?next={{ request.path }}">로그인</a>
+    {% endif %}
   </div>
 </header>
 
-<!-- ===== WRITE CONTAINER ===== -->
 <div class="board-write-container">
 
-  <form id="postForm" method="post" enctype="multipart/form-data">
+  <form id="qnaForm"
+        method="post"
+        action="{% if qna %}{% url 'boards:qna_edit' qna.id %}{% else %}{% url 'boards:qna_create' %}{% endif %}"
+        enctype="multipart/form-data">
     {% csrf_token %}
 
-    <!-- 카테고리 + 옵션(익명/비밀글) -->
     <div class="field">
       <div class="options-row">
-        <!-- ✅ 체크박스 UI: input 숨기고 box로 표시 (CSS 구조 그대로) -->
+
         <label class="check-item">
-          <input type="checkbox" name="is_anonymous" id="isAnonymous">
+          <input type="checkbox" name="is_anonymous" id="isAnonymous"
+                 {% if qna and qna.is_anonymous %}checked{% endif %}>
           <span class="box"></span>
           <span class="label-text">익명</span>
         </label>
 
-        <label class="check-item">
+        {# QnA 모델에 is_secret/category가 없다면 숨김 유지(또는 삭제해도 OK) #}
+        <label class="check-item" style="display:none;">
           <input type="checkbox" name="is_secret" id="isSecret">
           <span class="box"></span>
           <span class="label-text">비밀글</span>
         </label>
 
-        <!-- (선택) 카테고리: CSS에 category-wrap이 있어서 넣어둠 -->
-        <div class="category-wrap">
+        <div class="category-wrap" style="display:none;">
           <select name="category" id="categorySelect">
             <option value="">카테고리 선택</option>
             <option value="account">계정</option>
@@ -56,29 +59,26 @@
             <option value="etc">기타</option>
           </select>
         </div>
+
       </div>
     </div>
 
-    <!-- 제목 -->
     <div class="field">
       <label for="title">제목</label>
-      <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+      <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required
+             value="{% if qna %}{{ qna.title }}{% endif %}">
       <div class="error" id="titleError" style="display:none;">제목을 입력해주세요.</div>
     </div>
 
-    <!-- ===== 내용 ===== -->
     <div class="field">
       <div class="content-head">
         <h3 style="margin:0;">내용</h3>
-
-        <!-- ✅ 탭 UI (CSS에 있음) -->
         <div class="tabs">
           <button type="button" class="tab active" id="tabWrite">작성</button>
           <button type="button" class="tab" id="tabPreview">미리보기</button>
         </div>
       </div>
 
-      <!-- ✅ 툴바 (CSS 구조 그대로) -->
       <div class="toolbar" id="toolbar">
         <div class="tool-inline">
           <span>글씨색</span>
@@ -99,22 +99,20 @@
         </div>
 
         <span class="toolbar-sep"></span>
-
         <button type="button" class="tool" id="removeStyle">서식제거</button>
-
         <span class="toolbar-help">※ 먼저 글자를 드래그하세요</span>
 
-        <!-- ✅ (선택) JS에 있는 미리보기 모달도 살아있게 버튼도 둠 -->
         <button type="button" class="tool" id="previewBtn" style="margin-left:auto;">미리보기</button>
       </div>
 
-      <!-- 작성 영역 -->
       <div id="writePane" class="pane active">
-        <!-- ✅ JS가 잡는 editor + CSS가 기대하는 rich-editor -->
-        <div id="editor" class="rich-editor" contenteditable="true" data-placeholder="내용을 입력하세요"></div>
+        <div id="editor"
+             class="rich-editor"
+             contenteditable="true"
+             data-placeholder="내용을 입력하세요">{% if qna %}{{ qna.body_html|safe }}{% endif %}</div>
 
-        <!-- 서버 전송용 hidden -->
-        <input type="hidden" id="contentInput" name="content">
+        <!-- ✅ 서버 전송용: JS가 editor.innerHTML을 여기에 넣어줌 -->
+        <input type="hidden" id="contentInput" name="body_html">
 
         <div class="meta-row">
           <span>10~2000자</span>
@@ -124,13 +122,11 @@
         <div class="error" id="contentError" style="display:none;">내용을 입력해주세요.</div>
       </div>
 
-      <!-- 미리보기 영역 (탭에서 보여줄 영역) -->
       <div id="previewPane" class="pane">
-        <div id="previewContent" class="preview-pane"></div>
+        <div id="previewContentTab" class="preview-pane"></div>
       </div>
     </div>
 
-    <!-- ===== 이미지 첨부 ===== -->
     <div class="field">
       <label>이미지 첨부</label>
 
@@ -144,22 +140,18 @@
         </div>
 
         <div id="uploadEmptyText" class="attach-hint">첨부된 이미지가 없어요.</div>
-
-        <!-- ✅ CSS가 기대하는 리스트 클래스명 -->
         <div id="imagePreview" class="image-preview-list"></div>
       </div>
     </div>
 
-    <!-- 버튼 -->
     <div class="button-group">
-      <button type="submit">등록</button>
+      <button type="submit">{% if qna %}수정{% else %}등록{% endif %}</button>
       <button type="button" onclick="history.back()">취소</button>
     </div>
 
   </form>
 </div>
 
-<!-- ===== 미리보기 모달 (QnAWrite.js에 존재) ===== -->
 <div id="previewModal" class="modal" aria-hidden="true">
   <div id="closePreview" class="modal-backdrop"></div>
 
@@ -171,16 +163,14 @@
 
     <div class="modal-body">
       <h3 id="previewTitle"></h3>
-      <div id="previewContent" class="preview-pane"></div>
+      <div id="previewContentModal" class="preview-pane"></div>
       <div id="previewImages" class="image-preview-list"></div>
     </div>
   </div>
 </div>
 
-<!-- ===== JS ===== -->
 <script src="{% static 'boards/js/QnAWrite.js' %}" defer></script>
 
-<!-- ===== FOOTER ===== -->
 <footer class="footer">
   <a href="#">Instagram</a>
   <a href="#">Twitter</a>

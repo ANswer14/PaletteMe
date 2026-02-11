@@ -1,4 +1,1 @@
-function goQnADetail(no) {
-  // ✅ Django URL 규칙: /boards/qna/<no>/
-  window.location.href = `/boards/qna/${no}/`;
-}
+/* 목록은 템플릿 링크로 이동하므로 JS 필요 없음(비워둠). */

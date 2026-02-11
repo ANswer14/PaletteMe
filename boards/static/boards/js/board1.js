@@ -1,3 +1,1 @@
-function goBoardDetail(no) {
-  window.location.href = "/boards/detail/" + no + "/";
-}
+/* 목록은 템플릿 링크로 이동하므로 JS 필요 없음(비워둠). */

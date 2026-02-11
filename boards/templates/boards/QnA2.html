@@ -2,79 +2,74 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>글 상세보기</title>
-    <link rel="stylesheet" href="{% static 'boards/css/QnA2.css' %}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QnA 상세</title>
+  <link rel="stylesheet" href="{% static 'boards/css/QnA2.css' %}">
 </head>
 <body>
-
-<!-- ===== HEADER ===== -->
 <header class="header">
-    <div class="header-left"></div>
-
-    <div class="logo">
-        <a href="{% url 'boards:board_main' %}">Title</a>
-    </div>
-
-    <div class="auth">
-        <a href="#">회원정보</a>
-        <a href="#">로그아웃</a>
-    </div>
+  <div class="header-left"></div>
+  <div class="logo"><a href="{% url 'boards:qna_list' %}">Title</a></div>
+  <div class="auth">
+  {% if user.is_authenticated %}
+    <a href="{% url 'profile' %}">회원정보</a>
+    <a href="{% url 'logout' %}">로그아웃</a>
+  {% else %}
+    <a href="{% url 'login' %}">로그인</a>
+  {% endif %}
+</div>
 </header>
 
-<div class="board-detail-container QnA">
+<div class="board-detail-container">
+  <div class="title-header">
+    <span>No</span><span>제목</span><span>작성자</span><span>작성일</span><span></span>
+  </div>
+  <div class="title-row">
+    <span>{{ qna.id }}</span>
+    <strong title="{{ qna.title }}">{{ qna.title }}</strong>
+    <span>{% if qna.is_anonymous %}익명{% else %}{{ qna.author.nickname|default:qna.author.username }}{% endif %}</span>
+    <time>{{ qna.created_at|date:"Y-m-d" }}</time>
+    <span>
+      {% if request.user.id == qna.author_id or request.user.is_staff %}
+        <button type="button" onclick="location.href='{% url 'boards:qna_edit' qna.id %}'">수정</button>
+        <form method="post" action="{% url 'boards:qna_delete' qna.id %}" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit">삭제</button>
+        </form>
+      {% endif %}
+    </span>
+  </div>
 
-    <!-- 제목 헤더 -->
-    <div class="title-header">
-        <span>No.</span>
-        <span>제목</span>
-        <span>작성자</span>
-        <span>작성일</span>
-        <span>조회수</span>
+  <div class="detail-content">
+    {{ qna.body_html|safe }}
+  </div>
+
+  <h3>댓글</h3>
+  {% for c in comments %}
+    <div class="comment">
+      <b>{{ c.author.nickname|default:c.author.username }}</b> : {{ c.body }}
+      <span style="color:#666; font-size:12px;">({{ c.created_at|date:"m-d H:i" }})</span>
     </div>
+  {% empty %}
+    <p style="color:#666;">댓글이 없습니다.</p>
+  {% endfor %}
 
-    <!-- 제목 데이터 -->
-    <div class="title-row">
-        <span id="detailNo"></span>
-        <strong id="detailTitle"></strong>
-        <span id="detailWriter"></span>
-        <time id="detailDate"></time>
-        <span id="detailView"></span>
-    </div>
+  <form class="comment-input" method="post" action="{% url 'boards:qna_comment_create' qna.id %}">
+    {% csrf_token %}
+    <textarea name="body" placeholder="댓글을 입력하세요" required></textarea>
+    <button type="submit">등록</button>
+  </form>
 
-    <hr class="section-divider">
-
-    <!-- 내용 -->
-    <div class="detail-content" id="detailContent"></div>
-
-    <hr class="section-divider">
-
-    <!-- 댓글 -->
-    <div class="comment-section">
-        <h3>댓글</h3>
-        <div id="commentList"></div>
-
-        <div class="comment-input">
-            <textarea id="commentText" placeholder="댓글을 입력하세요"></textarea>
-            <button id="commentBtn">등록</button>
-        </div>
-    </div>
-
-    <!-- 하단 버튼 -->
-    <div class="nav-buttons">
-        <button onclick="goList()">글목록</button>
-    </div>
+  <div class="nav-buttons">
+    <button type="button" onclick="location.href='{% url 'boards:qna_list' %}'">목록</button>
+  </div>
 </div>
 
-<!-- JS -->
-<script src="{% static 'boards/js/QnA2.js' %}" defer></script>
-
-<!-- ===== FOOTER ===== -->
 <footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
+  <a href="#">Instagram</a>
+  <a href="#">Twitter</a>
+  <a href="#">Contact</a>
 </footer>
-
 </body>
 </html>

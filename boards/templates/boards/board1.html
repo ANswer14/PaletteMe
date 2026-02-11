@@ -2,87 +2,82 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>자유게시판</title>
-    <link rel="stylesheet" href="{% static 'boards/css/board1.css' %}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>자유게시판</title>
+  <link rel="stylesheet" href="{% static 'boards/css/board1.css' %}">
 </head>
 <body>
-<!-- ===== HEADER ===== -->
 <header class="header">
-    <div class="header-left">
-        <!-- 필요 시 왼쪽 버튼/메뉴 -->
-    </div>
-
-    <!-- ✅ boards 네임스페이스 적용 -->
-    <div class="logo">
-        <a href="{% url 'boards:board_main' %}">Title</a>
-    </div>
-
-    <div class="auth">
-        <a href="#">회원정보</a>
-        <a href="#">로그아웃</a>
-    </div>
+  <div class="header-left"></div>
+  <div class="logo"><a href="{% url 'boards:post_list' %}">Title</a></div>
+  <div class="auth">
+  {% if user.is_authenticated %}
+    <a href="{% url 'profile' %}">회원정보</a>
+    <a href="{% url 'logout' %}">로그아웃</a>
+  {% else %}
+    <a href="{% url 'login' %}">로그인</a>
+  {% endif %}
+</div>
 </header>
 
 <div class="board-container free">
-    <h2>자유게시판</h2>
+  <div class="title-row">
+    <h2 style="margin:0;">자유게시판</h2>
+    <form method="get" style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+      <input name="q" value="{{ q|default:'' }}" placeholder="검색" style="padding:6px 10px; border:1px solid #ddd; border-radius:6px;">
+      <button type="submit" class="write-btn" style="background:#777;">검색</button>
+    </form>
+  </div>
 
-    <div class="board-header">
-        <div class="col-no">번호</div>
-        <div class="col-title">제목</div>
-        <div class="col-writer">작성자</div>
-        <div class="col-date">날짜</div>
-        <div class="col-view">조회수</div>
+  <div class="board-header">
+    <div class="col-no">No</div>
+    <div class="col-title">제목</div>
+    <div class="col-writer">작성자</div>
+    <div class="col-date">작성일</div>
+    <div class="col-view">조회수</div>
+  </div>
+
+  {% for post in page_obj %}
+  <div class="board-row" onclick="location.href='{% url 'boards:post_detail' post.id %}'">
+    <div class="col-no">{{ post.id }}</div>
+    <div class="col-title">{{ post.title }}</div>
+    <div class="col-writer">
+      {% if post.is_anonymous %}익명{% else %}{{ post.author.nickname|default:post.author.username }}{% endif %}
     </div>
+    <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
+    <div class="col-view">{{ post.view_count|default:0 }}</div>
+  </div>
+  {% empty %}
+  <div class="board-row">
+    <div class="col-no">-</div>
+    <div class="col-title">게시글이 없습니다.</div>
+    <div class="col-writer">-</div>
+    <div class="col-date">-</div>
+    <div class="col-view">-</div>
+  </div>
+  {% endfor %}
 
-    <div class="board-list">
-        <div class="board-row" onclick="goBoardDetail(3)">
-            <div class="col-no">3</div>
-            <div class="col-title">퍼스널컬러 후기 공유합니다 <span class="comment-count">[2]</span></div>
-            <div class="col-writer">민수</div>
-            <div class="col-date">2026-02-02</div>
-            <div class="col-view">33</div>
-        </div>
+  <div class="board-footer">
+    <hr class="section-divider">
+    <button class="write-btn" type="button" onclick="location.href='{% url 'boards:post_create' %}'">글쓰기</button>
+  </div>
 
-        <div class="board-row" onclick="goBoardDetail(2)">
-            <div class="col-no">2</div>
-            <div class="col-title">오늘 코디 추천 너무 좋아요 <span class="comment-count">[1]</span></div>
-            <div class="col-writer">홍길동</div>
-            <div class="col-date">2026-02-02</div>
-            <div class="col-view">8</div>
-        </div>
-
-        <div class="board-row" onclick="goBoardDetail(1)">
-            <div class="col-no">1</div>
-            <div class="col-title">첫 번째 글입니다</div>
-            <div class="col-writer">김주연</div>
-            <div class="col-date">2026-02-02</div>
-            <div class="col-view">12</div>
-        </div>
-    </div>
-
-    <!-- ✅ 글쓰기 버튼도 네임스페이스 적용 -->
-    <div class="board-footer">
-        <button class="write-btn"
-                onclick="location.href='{% url 'boards:board_write' %}'">
-            글쓰기
-        </button>
-    </div>
-
-    <div class="pagination">
-        <span>1</span>
-        <span>2</span>
-        <span>3</span>
-    </div>
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+      <span onclick="location.href='?q={{ q|urlencode }}&page={{ page_obj.previous_page_number }}'">이전</span>
+    {% endif %}
+    <span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <span onclick="location.href='?q={{ q|urlencode }}&page={{ page_obj.next_page_number }}'">다음</span>
+    {% endif %}
+  </div>
 </div>
 
-<!-- ===== FOOTER ===== -->
 <footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
+  <a href="#">Instagram</a>
+  <a href="#">Twitter</a>
+  <a href="#">Contact</a>
 </footer>
-
-<script src="{% static 'boards/js/board1.js' %}" defer></script>
 </body>
 </html>

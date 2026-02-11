@@ -2,70 +2,48 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>공지사항 상세</title>
-    <link rel="stylesheet" href="{% static 'boards/css/notice2.css' %}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>공지 상세</title>
+  <link rel="stylesheet" href="{% static 'boards/css/notice2.css' %}">
 </head>
 <body>
-
-<!-- ===== HEADER ===== -->
 <header class="header">
-    <div class="header-left">
-        <!-- 필요 시 왼쪽 버튼/메뉴 -->
-    </div>
-
-    <!-- ❌ index.html → ✅ Django URL -->
-    <div class="logo">
-        <a href="{% url 'notice_main' %}">Title</a>
-    </div>
-
-    <div class="auth">
-        <a href="#">회원정보</a>
-        <a href="#">로그아웃</a>
-    </div>
+  <div class="header-left"></div>
+  <div class="logo"><a href="{% url 'boards:notice_list' %}">Title</a></div>
+  <div class="auth">
+  {% if user.is_authenticated %}
+    <a href="{% url 'profile' %}">회원정보</a>
+    <a href="{% url 'logout' %}">로그아웃</a>
+  {% else %}
+    <a href="{% url 'login' %}">로그인</a>
+  {% endif %}
+</div>
 </header>
 
-<div class="board-detail-container notice">
-    <!-- 제목줄: 헤더 -->
-    <div class="title-header">
-        <span class="col-header">No.</span>
-        <span class="col-header">제목</span>
-        <span class="col-header">작성일</span>
-    </div>
+<div class="board-detail-container">
+  <div class="title-header">
+    <span>No</span><span>제목</span><span>작성일</span>
+  </div>
+  <div class="title-row">
+    <span>{{ notice.id }}</span>
+    <span title="{{ notice.title }}">{{ notice.title }}</span>
+    <span>{{ notice.created_at|date:"Y-m-d" }}</span>
+  </div>
 
-    <!-- 데이터줄 -->
-    <div class="title-row">
-        <!-- ✅ Django에서 넘겨준 no 사용 -->
-        <span id="detailNo">{{ no }}</span>
-        <span id="detailTitle">공지 제목 예시</span>
-        <span id="detailDate">2026-02-02</span>
-    </div>
+  <div class="detail-content">
+    {{ notice.body_html|safe }}
+  </div>
 
-    <hr class="section-divider">
-
-    <div class="detail-content" id="detailContent">
-        공지 상세 내용입니다.<br>
-        추후 DB 연동 시 실제 공지 내용이 출력됩니다.
-    </div>
-
-    <hr class="section-divider">
-
-    <div class="detail-nav">
-        <!-- ❌ JS 파일 이동 → ✅ Django URL -->
-        <span onclick="goPrev()">이전글</span> |
-        <span onclick="goList()">글목록</span> |
-        <span onclick="goNext()">다음글</span>
-    </div>
+  <div class="detail-nav">
+    <span onclick="location.href='{% url 'boards:notice_list' %}'">글목록</span>
+  </div>
 </div>
 
-<!-- ===== FOOTER ===== -->
 <footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
+  <a href="#">Instagram</a>
+  <a href="#">Twitter</a>
+  <a href="#">Contact</a>
 </footer>
-
-<!-- ✅ JS는 static + defer 권장 -->
-<script src="{% static 'boards/js/notice2.js' %}" defer></script>
 </body>
 </html>

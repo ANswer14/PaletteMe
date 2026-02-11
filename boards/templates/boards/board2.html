@@ -2,81 +2,93 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>글 상세보기</title>
-    <link rel="stylesheet" href="{% static 'boards/css/board2.css' %}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>게시글 상세</title>
+  <link rel="stylesheet" href="{% static 'boards/css/board2.css' %}">
 </head>
 <body>
-<!-- ===== HEADER ===== -->
-    <header class="header">
-        <div class="header-left">
-            <!-- 필요 시 왼쪽 버튼/메뉴 -->
-        </div>
-        <div class="logo">
-            <a href="index.html">Title</a>
-        </div>
+<header class="header">
+  <div class="header-left"></div>
+  <div class="logo"><a href="{% url 'boards:post_list' %}">Title</a></div>
+  <div class="auth">
+  {% if user.is_authenticated %}
+    <a href="{% url 'profile' %}">회원정보</a>
+    <a href="{% url 'logout' %}">로그아웃</a>
+  {% else %}
+    <a href="{% url 'login' %}">로그인</a>
+  {% endif %}
+</div>
+</header>
 
-        <div class="auth">
-            <a href="#">회원정보</a>
-            <a href="../login/login.html">로그아웃</a>
-        </div>
-    </header>
-    <div class="board-detail-container free">
-        <!-- 제목줄: 헤더 -->
-        <div class="title-header">
-            <span class="col-header">No.</span>
-            <span class="col-header">제목</span>
-            <span class="col-header">작성자</span>
-            <span class="col-header">작성일</span>
-            <span class="col-header">조회수</span>
-        </div>
+<div class="board-detail-container">
+  <div class="title-header">
+    <span>No</span><span>제목</span><span>작성자</span><span>작성일</span><span>조회수</span>
+  </div>
+  <div class="title-row">
+    <span>{{ post.id }}</span>
+    <span title="{{ post.title }}">{{ post.title }}</span>
+    <span>
+      {% if post.is_anonymous %}익명{% else %}{{ post.author.nickname|default:post.author.username }}{% endif %}
+    </span>
+    <span>{{ post.created_at|date:"Y-m-d" }}</span>
+    <span>{{ post.view_count|default:0 }}</span>
+  </div>
 
-        <!-- 데이터줄: 실제 게시글 -->
-        <div class="title-row">
-            <span id="detailNo"></span>
-            <span id="detailTitle"></span>
-            <span id="detailWriter"></span>
-            <span id="detailDate"></span>
-            <span id="detailView"></span>
-        </div>
-        <hr class="section-divider">
+  <div class="detail-content">
+    {{ post.body_html|safe }}
+  </div>
 
-        <div class="detail-content" id="detailContent">
-            내용 자리
-        </div>
-        <hr class="section-divider">
+  <div class="like-area">
+    <form method="post" action="{% url 'boards:post_toggle_like' post.id %}">
+      {% csrf_token %}
+      <button type="submit" class="like-btn {% if liked %}liked{% endif %}">
+        {% if liked %}좋아요 취소{% else %}좋아요{% endif %}
+      </button>
+    </form>
+    <span>({{ post.likes.count }})</span>
 
-        <!-- 댓글 영역 -->
-        <div class="comment-section">
-            <h3>댓글</h3>
-            <div id="commentList"></div>
-            <div class="comment-input">
-                <!-- 좋아요 -->
-                <div class="like-area">
-                    <button class="like-btn" id="likeBtn">❤️ 좋아요</button>
-                    <!--임시-->
-                    <span class="like-count" id="likeCount">0</span>
-                </div>
-                <div class="comment-write">
-                    <input type="text" id="commentText" placeholder="댓글을 입력하세요">
-                    <button onclick="addComment()">등록</button>
-                </div>
-        </div>
+    {% if request.user.id == post.author_id or request.user.is_staff %}
+      <button type="button" class="like-btn" style="border-color:#ddd;" onclick="location.href='{% url 'boards:post_edit' post.id %}'">수정</button>
+      <form method="post" action="{% url 'boards:post_delete' post.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="like-btn" style="border-color:#ddd;">삭제</button>
+      </form>
+    {% endif %}
+  </div>
 
-        <div class="nav-buttons">
-            <span id="prevBtn" onclick="goPrev()">이전글</span> |
-            <span onclick="goList()">글목록</span> |
-            <span id="nextBtn" onclick="goNext()">다음글</span>
+  <div class="comment-section">
+    <h3>댓글</h3>
+    {% for c in comments %}
+      <div class="comment-input" style="align-items:flex-start;">
+        <div style="min-width:120px; font-weight:bold;">
+          {{ c.author.nickname|default:c.author.username }}
         </div>
+        <div style="flex:1;">{{ c.body }}</div>
+        <div style="min-width:120px; text-align:right; color:#666; font-size:12px;">
+          {{ c.created_at|date:"m-d H:i" }}
+        </div>
+      </div>
+    {% empty %}
+      <p style="color:#666;">댓글이 없습니다.</p>
+    {% endfor %}
 
-    </div>
-<!-- ===== FOOTER ===== -->
+    <form method="post" action="{% url 'boards:post_comment_create' post.id %}" class="comment-write">
+      {% csrf_token %}
+      <input name="body" placeholder="댓글을 입력하세요" required>
+      <button type="submit">등록</button>
+    </form>
+  </div>
+
+  <div class="nav-buttons">
+    <span onclick="location.href='{% url 'boards:post_list' %}'">글목록</span>
+  </div>
+</div>
+
 <footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
+  <a href="#">Instagram</a>
+  <a href="#">Twitter</a>
+  <a href="#">Contact</a>
 </footer>
-
-<script src="{% static 'boards/js/board2.js' %}" defer></script>
 </body>
 </html>

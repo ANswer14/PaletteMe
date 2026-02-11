@@ -1,4 +1,1 @@
-function goNoticeDetail(no) {
-    // 나중에 글 번호에 따라 상세페이지로 이동
-    window.location.href = "notice2.html?no=" + no;
-}
+/* 목록은 템플릿 링크로 이동하므로 JS 필요 없음(비워둠). */

@@ -17,6 +17,7 @@ from google import genai
 from google.genai import types
 import uuid
 from django.core.files.base import ContentFile
+import random
 
 load_dotenv() # .env 파일 로드
 temp_storage = {} # 스레드 정보 임시 저장소
@@ -284,7 +285,7 @@ def generateImgThread(request, session_id, temp, weather, sky):
     description = data.get('description')
     # --- [단계 2] 실제 이미지 생성 요청 ---
     payload = {
-        "prompt": f"simple casual outfit, korean, everyday wear {optimized_prompt}",
+        "prompt": f"simple casual outfit, korean, everyday wear, full body:1.4, full body view:1.4, full body view from head to toe, {optimized_prompt}",
         "negative_prompt": "(worst quality:2), (low quality:2), (normal quality:2), lowres, watermark",
         "steps": 20,
         'seed': 4216575493,
@@ -347,10 +348,15 @@ def generateImgThread(request, session_id, temp, weather, sky):
 
         # 4. [추가] 이제 이 키워드로 네이버/쿠팡 API를 호출하여 진짜 URL을 가져옵니다.
         # (아래 get_real_shopping_link 함수는 별도로 구현 필요)
-        real_outer_url = get_real_shopping_link(request.user.gender + ' ' + search_data['outer_query'])
-        real_top_url = get_real_shopping_link(request.user.gender + ' ' + search_data['top_query'])
-        real_pants_url = get_real_shopping_link(request.user.gender + ' ' + search_data['pants_query'])
-        real_shoes_url = get_real_shopping_link(search_data['shoes_query'])
+        gender = ''
+        if request.user.gender == 'M':
+            gender = '남성'
+        elif request.user.gender == 'F':
+            gender = '여성'
+        real_outer_url = get_real_shopping_link(gender + '의류', search_data['outer_query'])
+        real_top_url = get_real_shopping_link(gender + '의류', search_data['top_query'])
+        real_pants_url = get_real_shopping_link(gender + '의류', search_data['pants_query'])
+        real_shoes_url = get_real_shopping_link(gender + '신발', search_data['shoes_query'])
 
         # 결과를 전역 변수에 저장 (나중에 View가 가져갈 수 있게)
         temp_storage[session_id] = {
@@ -370,26 +376,35 @@ def generateImgThread(request, session_id, temp, weather, sky):
                 {'label': '신발', 'url': real_shoes_url},
             ]
         }
-        print(real_top_url)
-        print(real_outer_url)
-        print(real_shoes_url)
-        print(real_pants_url)
+        # print(real_top_url)
+        # print(real_outer_url)
+        # print(real_shoes_url)
+        # print(real_pants_url)
         saveImage(request, base64_image) # 해당 이미지 최근 이미지 테이블에 저장
 
 
-def get_real_shopping_link(query):
+def get_real_shopping_link(gender, query):
     headers = {
         "X-Naver-Client-Id": os.getenv('NAVER_CLIENT_ID'),
         "X-Naver-Client-Secret": os.getenv('NAVER_CLIENT_SECRET')
     }
-    url = f"https://openapi.naver.com/v1/search/shop.json?query={query}&display=1"
+    url = f"https://openapi.naver.com/v1/search/shop.json?query={gender, query}&display=30&start={random.randint(1, 900)}"
     res = requests.get(url, headers=headers)
-    print(res.json())
+    # print(res.json())
 
     if res.status_code == 200:
         items = res.json().get('items', [])
         if items:
-            return items[0]['link']  # 가장 유사한 첫 번째 상품 링크 반환
+            for item in items:
+                if gender == '남성의류' or gender == '남성신발':
+                    if item['category2'] == gender:
+                        print(item['link'])
+                        print(item)
+                        return item['link']
+                elif gender == '여성의류' or gender == '여성신발':
+                    if item['category2'] == gender:
+                        return item['link']
+            # return items[0]['link']  # 가장 유사한 첫 번째 상품 링크 반환
     return "연결 가능한 상품을 찾지 못했습니다."
 
 # 이미지 저장 로직

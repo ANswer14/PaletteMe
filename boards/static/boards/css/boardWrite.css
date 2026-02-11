@@ -41,10 +41,7 @@ body {
 .board-write-container .write-form input[readonly] {
     background-color: #f0f0f0; /* 작성자 수정 불가 */
 }
-.board-write-container .button-group {
-    margin-top: 20px;
-    text-align: center; /* 버튼 중앙정렬 */
-}
+
 .file-label {
     display: inline-block;
     width: 120px;              /* 버튼 크기 고정 */

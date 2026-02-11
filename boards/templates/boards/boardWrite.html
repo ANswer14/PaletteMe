@@ -19,6 +19,14 @@
         <label for="postContent">내용</label>
         <textarea id="postContent" rows="10" placeholder="내용을 입력하세요"></textarea>
 
+        <div class="file-upload-area">
+            <label class="file-label">
+                사진첨부
+                <input type="file" id="imageInput" accept="image/*" multiple hidden>
+            </label>
+            <div id="previewArea" class="preview-area"></div>
+        </div>
+
         <div class="button-group">
             <button onclick="submitPost()">등록</button>
             <button onclick="cancelPost()">취소</button>

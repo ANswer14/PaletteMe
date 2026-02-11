@@ -57,11 +57,10 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
                 user.nickname = base_name  # 이메일 @앞부분
         return user
 
-    def save_user(self, request, sociallogin, form=None):  # 구글 로그인으로 회원가입 완료 시 메세지 출력
+    # 유저 객체를 실제 DB에 저장
+    def save_user(self, request, sociallogin, form=None):
         # 부모 클래스의 save_user를 호출하여 기본 유저 객체를 생성하고 저장함
         user = super().save_user(request, sociallogin, form)
-        #  회원가입 성공 메시지 예약 로직
-        messages.success(request, f"{user.username}님, 구글 계정으로 회원가입이 완료되었습니다!")
         return user
 
     # 신규 구글 가입 허용 여부

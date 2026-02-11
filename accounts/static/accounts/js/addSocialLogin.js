@@ -50,5 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
             nickInput.focus();
             return;
         }
+
+        // ✅ 모든 검증이 끝난 후 '확인'을 누르면 폼이 제출됨
+        alert("회원가입이 완료되었습니다! \n확인을 누르면 자동 로그인 후 메인 페이지로 이동합니다.");
     });
 });

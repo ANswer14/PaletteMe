@@ -211,29 +211,29 @@ button {
     color: #333;
 }
 
-/* ===== 수정한 부분: 이메일(Readonly) 스타일 ===== */
+/* 1. 이메일(Readonly) 스타일 */
 input[readonly] {
-    background-color: #f5f5f5; /* 연한 회색으로 비활성화 느낌 */
-    color: #888;              /* 글자색을 흐리게 */
-    cursor: not-allowed;      /* 마우스를 올리면 금지 표시 아이콘이 뜸 */
+    background-color: #f5f5f5;
+    color: #888;
+    cursor: not-allowed;
     border: 1px solid #ddd;
 }
 
-/* 닉네임 상태 메시지 색상 (JS에서 제어할 때 사용) */
+/* 2. 닉네임 상태 메시지 */
 #nickNameStatus {
     font-size: 13px;
     font-weight: bold;
 }
+#nickNameStatus.available { color: #28a745; }
+#nickNameStatus.unavailable { color: #dc3545; }
 
-#nickNameStatus.available {
-    color: #28a745; /* 사용 가능할 때 초록색 */
+#nickNameCheckBtn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
-#nickNameStatus.unavailable {
-    color: #dc3545; /* 중복일 때 빨간색 */
-}
-
-/* 보안 및 인증 문구 스타일 */
+/* 3. 보안 및 인증 문구 */
 .security-section p {
     background: #fdfdfd;
     padding: 10px;
@@ -241,7 +241,7 @@ input[readonly] {
     border-left: 4px solid #ddd;
 }
 
-/* 구글 연동 관련 버튼 스타일 */
+/* 4. 구글 연동 버튼 */
 .google-linked-btn {
     background-color: #e8f0fe !important;
     color: #1967d2 !important;
@@ -267,46 +267,57 @@ input[readonly] {
     font-weight: bold;
     transition: background 0.2s;
 }
+.google-connect-btn:hover { background-color: #f1f3f4; }
 
-.google-connect-btn:hover {
-    background-color: #f1f3f4;
-}
-
-#nickNameCheckBtn:disabled {
-    background-color: #ccc; /* 연한 회색 */
-    cursor: not-allowed;    /* 금지 표시 마우스 커서 */
-    opacity: 0.6;           /* 불투명도 조절 */
-}
-
-/* 성별 섹션 전체 정렬 */
+/* 5. 성별 섹션 (비활성화 스타일 추가) */
 .form-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px; /* 칸 사이 간격 */
+    margin-bottom: 20px;
 }
 
-/* 라디오 버튼을 감싸는 박스 */
 .gender-group {
     display: flex;
     align-items: center;
-    gap: 50px; /* 남성/여성 사이 간격 */
-    height: 40px; /* 입력창들과 높이 맞춤 */
-    width: 100%; /* 부모 너비에 맞춤 */
-    max-width: 400px; /* 위쪽 input창들의 max-width가 있다면 맞춰주세요 */
+    gap: 50px;
+    height: 40px;
 }
 
 .gender-group label {
     display: flex;
     align-items: center;
-    gap: 8px; /* 버튼과 글자 사이 간격 */
-    cursor: pointer;
+    gap: 8px;
     font-size: 0.9rem;
-    font-weight: normal; /* 라벨 두께 조절 */
 }
 
-/* 라디오 버튼 자체 사이즈 (너무 크면 조절) */
-.gender-group input[type="radio"] {
-    width: 18px;
-    height: 18px;
-    margin: 0;
+/* [추가/수정] 성별을 비활성화(disabled)했을 때 커서 모양 변경 */
+.gender-group input[type="radio"]:disabled,
+.gender-group input[type="radio"]:disabled + span {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* 6. 하단 활동 및 탈퇴 섹션 */
+.activity-btn {
+    flex: 1;
+    height: 45px;
+    background: white;
+    border: 1px solid #ddd;
+}
+.activity-btn:hover { background: #f1f1f1; }
+
+.withdraw-section {
+    border: 1px solid #ffcccc;
+    background-color: #fffafa;
+}
+
+.danger-btn {
+    color: #d9534f;
+    border: 1px solid #d9534f;
+    background: white;
+    padding: 10px 20px;
+}
+.danger-btn:hover {
+    background: #d9534f;
+    color: white;
 }

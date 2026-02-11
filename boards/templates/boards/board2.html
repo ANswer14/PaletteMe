@@ -55,6 +55,11 @@
         </div>
 
         <div class="detail-nav">
+            <!-- 작성자 본인일 경우 수정, 삭제 버튼 -->
+            <button id="editBtn" onclick="goEdit()" style="display:none;">수정</button>
+            <button id="deleteBtn" onclick="goDelete()" style="display:none;">삭제</button>
+
+            <!-- 이전글|글목록|다음글 -->
             <span id="prevBtn" onclick="goPrev()">이전글</span> |
             <span onclick="goList()">글목록</span> |
             <span id="nextBtn" onclick="goNext()">다음글</span>

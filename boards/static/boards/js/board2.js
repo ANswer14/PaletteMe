@@ -116,6 +116,14 @@ function renderDetail(data) {
     else {
         commentList.innerHTML = "<div class='comment'>아직 댓글이 없습니다.</div>";
     }
+    // [백엔드 연결 시 주석 해제!!!!!]
+    // 작성자 본인일 경우에만 수정/삭제 버튼을 보여주는 로직입니다.
+    /*
+    if (data.is_author === true) {
+        document.getElementById("editBtn").style.display = "inline-block";
+        document.getElementById("deleteBtn").style.display = "inline-block";
+    }
+    */
 }
 
 // 좋아요 버튼(토글 방식)
@@ -157,6 +165,37 @@ function addComment() {
     commentList.appendChild(div);
 
     commentInput.value = "";  //입력창 비우기
+}
+
+// 작성자가 쓴 글이면 수정, 삭제 가능한 버튼
+// 수정
+function goEdit() {
+    // no는 URL에서 가져온 현재 글 번호입니다.(백엔드와 이름 확인!!!!)
+    // mode=edit을 붙여서 '수정 모드'임을 알립니다.
+    location.href = `boardWrite.html?no=${no}&mode=edit`;
+}
+
+// 삭제
+async function goDelete() {
+    if (confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
+        try {
+            // [확인 필요!!!!!] 백엔드의 삭제 API 주소를 나중에 넣어야 함
+            const response = await fetch(`/api/board/delete/${no}/`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert("삭제되었습니다.");
+                location.href = "board1.html"; // 삭제 후 목록으로
+            }
+            else {
+                alert("삭제 권한이 없거나 오류가 발생했습니다.");
+            }
+        } catch (error) {
+            console.error("에러 발생:", error);
+            alert("네트워크 문제로 삭제하지 못했습니다.");
+        }
+    }
 }
 
 // 목록으로 버튼

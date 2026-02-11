@@ -173,6 +173,15 @@ body {
     padding: 5px 10px;
 }
 
+/* 작성자 본인일 경우 수정, 삭제 버튼 */
+#editBtn, #deleteBtn {
+    background: none;
+    border: none;
+    font: inherit; /* 주변 글씨체랑 똑같이 맞추기 */
+    cursor: pointer;
+    padding: 0;
+}
+
 /* 이전글 | 글목록 | 다음글 중앙정렬 */
 .detail-nav {
     text-align: center;

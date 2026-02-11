@@ -16,7 +16,7 @@
     </div>
     <div class="auth">
         <img id="headerProfileImg" src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'accounts/images/main1.png' %}{% endif %}" class="profile-circle small">
-        <a href="{% url 'accounts:profile' %}">프로필</a>
+        <a href="{% url 'profile' %}">프로필</a>
         <a href="{% url 'account_logout' %}">로그아웃</a>
     </div>
 </header>
@@ -54,7 +54,7 @@
                 <div class="input-group">
                     <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
 
-                    {% get_social_accounts user as accounts %}
+                    {% get_social_accounts request.user as accounts %}
                     {% if accounts.google %}
                         <button type="button" class="google-linked-btn" disabled>구글 연동 완료</button>
                     {% else %}
@@ -72,10 +72,16 @@
 
             <div class="form-group">
                 <label>성별</label>
-                <div class="gender-group">
-                    <label><input type="radio" name="gender" value="M" {% if form.gender.value == 'M' or user.gender == 'M' %}checked{% endif %}> 남성</label>
-                    <label><input type="radio" name="gender" value="F" {% if form.gender.value == 'F' or user.gender == 'F' %}checked{% endif %}> 여성</label>
+                <div class="readonly-value">
+                    {% if user.gender == 'M' %}
+                        남성
+                    {% elif user.gender == 'F' %}
+                        여성
+                    {% else %}
+                        미선택
+                    {% endif %}
                 </div>
+                <input type="hidden" name="gender" value="{{ user.gender }}">
             </div>
 
             <div class="form-group profile-section">

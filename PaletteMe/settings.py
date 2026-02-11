@@ -43,11 +43,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'django.contrib.sites',
+    'accounts',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',  # 소셜 로그인 구글 공급자
-    'accounts',
     'boards',
     'personalColors',
     'django_cleanup.apps.CleanupConfig' # DB 행 삭제 시 해당 파일도 자동 삭제
@@ -165,11 +165,12 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username'  # 로그인 할때 사용할 필드:
 ACCOUNT_USERNAME_REQUIRED = True  # 회원가입 할때 아이디를 꼭 입력받겠다
 ACCOUNT_EMAIL_REQUIRED = True  # 회원가입 할때 이메일을 꼭 입력받겠다
 ACCOUNT_EMAIL_VERIFICATION = 'none' # 가입 후 이메일 보내겠다 (이메일 인증 필요 X)
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none' # 이메일 인증 절차 때문에 로그인이 막히는 것을 방지
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
-ACCOUNT_FORMS = {  # 회원가입 할때 allauth 대신 CustomSignupForm 사용
+ACCOUNT_FORMS = {  # 회원가입 할때 allauth 대신 CustomSignupForm 사용 (일반 회원가입용 폼)
     'signup': 'accounts.forms.CustomSignupForm',
 }
 
@@ -178,8 +179,8 @@ AUTH_USER_MODEL = 'accounts.CustomUser'  # 기본 auth.User 대신 auth.CustomUs
 ACCOUNT_LOGOUT_ON_GET = True  # 로그인 상태인 메인페이지에 로그아웃을 눌렀을때 탬플릿 거치지 않고 바로 로그아웃
 
 LOGIN_REDIRECT_URL = "/"  # 내 커스텀 로그인 페이지를 써야할때
-ACCOUNT_LOGIN_REDIRECT_URL = "/"  # allauth 기본 탬플릿으로 로그인 후 리다이렉트 > 메인페이지로 감
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"  # allauth 기본 탬플릿으로 로그아웃 후 리다이렉트 > 메인페이지로 감
+SOCIALACCOUNT_SIGNUP_REDIRECT_URL = '/'  # 소셜 가입(추가 정보 입력 후) 완료 시 이동할 페이지
 
 # 회원가입 성공 후 이동할 페이지 -> 메인페이지 (allauth는 회원가입 성공하면 자동 로그인함.)
 ACCOUNT_SIGNUP_REDIRECT_URL = "/"
@@ -208,5 +209,8 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 # adapter.py 커스텀 어댑터 연결
 SOCIALACCOUNT_ADAPTER = 'accounts.adapter.MySocialAccountAdapter'
 
-# 구글로그인 할때 회원가입 폼을 띄우지 않고 바로 이동하게 설정
-SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_AUTO_SIGNUP = False  # 바로 가입 방지 (추가 정보 입력창 띄우기)
+
+SOCIALACCOUNT_FORMS = {  # 소셜 회원가입용 폼
+    'signup': 'accounts.forms.CustomSignupForm',
+}

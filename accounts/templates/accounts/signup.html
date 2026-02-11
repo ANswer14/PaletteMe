@@ -1,11 +1,10 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>회원가입</title>
-    <link rel="stylesheet" href="{% static 'accounts/css/signup.css' %}">
 
+{% block title %} 회원가입 - PaletteMe {% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'accounts/css/signup.css' %}?v=123">
     <script>
         // 페이지 로드 즉시 실행
         (function() {
@@ -28,66 +27,61 @@
             }
         })();
     </script>
-</head>
-<body>
-<header class="header">
-    <div class="header-left"></div>
-    <div class="logo">
-        <a href="{% url 'core:index' %}">Title</a>
-    </div>
-    <div class="auth">
-        <a href="{% url 'account_login' %}">로그인</a>
-        <a href="{% url 'agreement' %}">회원가입</a>
-    </div>
-</header>
-
-<div id="signup">
-    <h1>회원가입</h1>
-
-    <!-- 🔹 중요: allauth에 맞게 POST + csrf_token 추가 -->
-    <form id="signupForm" method="post" action="{% url 'account_signup' %}">
+    <div class="signup-container">
+        <!-- <h1>회원가입</h1> -->
+        <form id="signupForm" method="POST" action="{% url 'account_signup' %}">
         {% csrf_token %}
 
-        <!-- ===== 1️⃣ 계정 정보 ===== -->
-        <label for="id_username">아이디:</label>
-        <input type="text" id="id_username" name="username" placeholder="아이디 입력" required>
-        <button type="button" id="checkIDBtn">중복확인</button><br><br>
+            <div class="form-group">
+                <label for="userID">아이디</label>
+                <div class="input-group">
+                    <input type="text" id="userID" name="username" placeholder="아이디 입력" required>
+                    <button type="button" id="checkIDBtn">중복확인</button>
+                </div>
+            </div>
 
-        <label for="id_password1">비밀번호:</label>
-        <input type="password" id="id_password1" name="password1" maxlength="30" minlength="8" placeholder="비밀번호 입력 (최소 8자)" required><br><br>
+            <div class="form-group">
+                <label for="passwd">비밀번호</label>
+                <input type="password" id="passwd" name="password1" maxlength="30" minlength="8" placeholder="비밀번호 입력" required>
+            </div>
 
-        <label for="id_password2">비밀번호 확인:</label>
-        <input type="password" id="id_password2" name="password2" maxlength="30" minlength="8" placeholder="비밀번호 확인 (최소 8자)" required><br><br>
+            <div class="form-group">
+                <label for="passwdConfirm">비밀번호 확인</label>
+                <input type="password" id="passwdConfirm" name="password2" maxlength="30" minlength="8" placeholder="비밀번호 확인" required>
+            </div>
 
-        <!-- ===== 2️⃣ 프로필 정보 ===== -->
-        <label for="id_nickname">닉네임:</label>
-        <input type="text" id="id_nickname" name="nickname" maxlength="10" minlength="2" placeholder="닉네임 입력" required><br><br>
+            <div class="form-group">
+                <label for="nickname">닉네임</label>
+                <div class="input-group">
+                    <input type="text" id="nickname" name="nickname" placeholder="닉네임 입력" required>
+                    <button type="button" id="checkNicknameBtn">중복확인</button>
+                </div>
+                <span id="nicknameStatus" class="status"></span>
+            </div>
 
-        <label for="id_email">이메일:</label>
-        <input type="email" id="id_email" name="email" placeholder="이메일 입력" required><br><br>
+            <div class="form-group">
+                <label for="phone">연락처</label>
+                <input type="text" id="phone" name="phone_number" placeholder="연락처 입력">
+            </div>
 
-        <!-- ===== 3️⃣ 추가 정보 ===== -->
-        <label for="id_phone">연락처:</label>
-        <input type="text" id="id_phone" name="phone_number" maxlength="20" minlength="9" placeholder="연락처 입력 (- 제외)"><br><br>
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" placeholder="이메일 입력" required>
+            </div>
 
-        <label>성별:</label>
-        <div class="gender-options">
-            <input type="radio" id="male" name="gender" value="M" required>
-            <label for="male">남</label>
+            <div class="form-group">
+                <label>성별</label>
+                <div class="gender-options">
+                    <input type="radio" id="male" name="gender" value="M" required>
+                    <label for="male">남</label>
+                    <input type="radio" id="female" name="gender" value="F">
+                    <label for="female">여</label>
+                </div>
+            </div>
 
-            <input type="radio" id="female" name="gender" value="F">
-            <label for="female">여</label><br><br>
-        </div>
-
-            <button type="submit">회원가입</button>
+            <button type="submit" class="signup-submit-btn">회원가입 완료</button>
         </form>
     </div>
-
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
 {% if form.errors %}
 <script>
     (function() {
@@ -114,5 +108,5 @@
 </script>
 {% endif %}
 <script src="{% static 'accounts/js/signup.js' %}"></script>
-</body>
-</html>
+
+{% endblock %}

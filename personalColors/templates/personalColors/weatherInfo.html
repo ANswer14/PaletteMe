@@ -1,15 +1,11 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>날씨 정보</title>
-    <link rel="stylesheet" href="{% static 'personalColors/css/weatherInfo.css' %}">
-</head>
-<body>
 
-    <!-- 🔷 헤더 -->
-    {% include 'personalColors/includes/header.html' %}
+{% block title %} 날씨 정보 - PaletteMe {% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'personalColors/css/weatherInfo.css' %}">
+
     <main class="container">
 
         <!-- 왼쪽: 지역 검색 -->
@@ -28,7 +24,7 @@
             <h1>검색하신 지역 <span id="locationName"></span>의 날씨 정보입니다.</h1>
 
             <p>기온 : <span id="temp">-</span>
-{#            <img src="#" alt="온도계" class="weather-icon"></p>#}
+{#            <img src="{% static 'img/main1.png' %}" alt="온도계" class="weather-icon"></p>#}
             <p>일 최저 온도: <span id="lowestTemp"></span></p>
             <p>일 최고 온도: <span id="highestTemp"></span></p>
             <p>체감온도 : <span id="feelsLike">-</span></p>
@@ -36,23 +32,22 @@
             <p>강수 : <span id="weather">-</span></p>
             <p id="sky"></p>
 
-<!--            <p class="weather-line">-->
+<!--<p class="weather-line">-->
 <!--                <span id="weatherText">날씨 상태가 여기에 표시됩니다.</span>-->
-<!--                <img src="#" alt="날씨아이콘" class="weather-icon"></p>-->
+<!--                <img src="{% static 'img/main1.png' %}" alt="날씨아이콘" class="weather-icon"></p>-->
             <div class="buttons">
-                <button id="nextBtn" class="btn">NEXT</button>
+                <form id="startAI" method="post" action="/personalColors/generateImg/">
+                    {% csrf_token %}
+                    <button id="nextBtn" class="btn">NEXT</button>
+                    <input type="hidden" name="temp">
+                    <input type="hidden" name="weather">
+                    <input type="hidden" name="sky">
+                    <input type="hidden" name="address">
+                </form>
             </div>
         </div>
 
     </main>
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
-
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ KAKAO_MAP_API_KEY }}&libraries=services"></script>
-<script src="{% static 'personalColors/js/weatherInfo.js' %}"></script>
-</body>
-</html>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ KAKAO_MAP_API_KEY }}&libraries=services"></script>
+    <script src="{% static 'personalColors/js/weatherInfo.js' %}"></script>
+{% endblock %}

@@ -1,49 +1,35 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>공지 상세</title>
-  <link rel="stylesheet" href="{% static 'boards/css/notice2.css' %}">
-</head>
-<body>
-<header class="header">
-  <div class="header-left"></div>
-  <div class="logo"><a href="{% url 'boards:notice_list' %}">Title</a></div>
-  <div class="auth">
-  {% if user.is_authenticated %}
-    <a href="{% url 'profile' %}">회원정보</a>
-    <a href="{% url 'logout' %}">로그아웃</a>
-  {% else %}
-    <a href="{% url 'login' %}">로그인</a>
-  {% endif %}
-</div>
-</header>
 
-<div class="board-detail-container">
-  <div class="title-header">
-    <span>No</span><span>제목</span><span>작성일</span>
-  </div>
-  <div class="title-row">
-    <span>{{ notice.id }}</span>
-    <span title="{{ notice.title }}">{{ notice.title }}</span>
-    <span>{{ notice.created_at|date:"Y-m-d" }}</span>
-  </div>
+{% block title %} Notice - PaletteMe {% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'boards/css/notice2.css' %}">
+
+    <div class="board-detail-container notice">
+        <!-- 제목줄: 헤더 -->
+        <div class="title-header">
+            <span class="col-header">No</span>
+            <span class="col-header">제목</span>
+            <span class="col-header">작성일</span>
+        </div>
+
+        <!-- 데이터줄: 실제 게시글 -->
+        <div class="title-row">
+            <span>{{ notice.id }}</span>
+            <span title="{{ notice.title }}">{{ notice.title }}</span>
+            <span>{{ notice.created_at|date:"Y-m-d" }}</span>
+        </div>
+        <hr class="section-divider">
 
   <div class="detail-content">
     {{ notice.body_html|safe }}
   </div>
 
-  <div class="detail-nav">
-    <span onclick="location.href='{% url 'boards:notice_list' %}'">글목록</span>
-  </div>
-</div>
+        <div class="detail-nav">
+            <span onclick="location.href='{% url 'boards:notice_list' %}'">글목록</span>
+        </div>
+    </div>
 
-<footer class="footer">
-  <a href="#">Instagram</a>
-  <a href="#">Twitter</a>
-  <a href="#">Contact</a>
-</footer>
-</body>
-</html>
+<script src="{% static 'boards/js/notice2.js' %}"></script>
+{% endblock %}

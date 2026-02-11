@@ -6,10 +6,10 @@ class ColorHistory(models.Model):
     history_id = models.AutoField(primary_key=True)
 
     # CustomUser의 기본키를 외래키로 설정
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='personal_colors'
+        related_name='color_history'
     )
 
     # 퍼스널 컬러 관련 필드 예시
@@ -21,3 +21,26 @@ class ColorHistory(models.Model):
 
     def __str__(self):
         return f"History #{self.history_id}: {self.user.username}'s {self.color_type}"
+
+# 최근 이미지 테이블
+class RecentImages(models.Model):
+    recent_id = models.AutoField(primary_key=True)
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='recent_images'
+    )
+
+    result_image = models.ImageField(blank=True, upload_to='personalColors/%Y/%m/%d/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class favoriteImages(models.Model):
+    favorite_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='favorite_images'
+    )
+
+    favorite_image = models.ImageField(blank=True, upload_to='personalColors/consistency/%Y/%m/%d/')

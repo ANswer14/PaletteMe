@@ -1,45 +1,31 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QnA 상세</title>
-  <link rel="stylesheet" href="{% static 'boards/css/QnA2.css' %}">
-</head>
-<body>
-<header class="header">
-  <div class="header-left"></div>
-  <div class="logo"><a href="{% url 'boards:qna_list' %}">Title</a></div>
-  <div class="auth">
-  {% if user.is_authenticated %}
-    <a href="{% url 'profile' %}">회원정보</a>
-    <a href="{% url 'logout' %}">로그아웃</a>
-  {% else %}
-    <a href="{% url 'login' %}">로그인</a>
-  {% endif %}
-</div>
-</header>
 
-<div class="board-detail-container">
-  <div class="title-header">
-    <span>No</span><span>제목</span><span>작성자</span><span>작성일</span><span></span>
-  </div>
-  <div class="title-row">
-    <span>{{ qna.id }}</span>
-    <strong title="{{ qna.title }}">{{ qna.title }}</strong>
-    <span>{% if qna.is_anonymous %}익명{% else %}{{ qna.author.nickname|default:qna.author.username }}{% endif %}</span>
-    <time>{{ qna.created_at|date:"Y-m-d" }}</time>
-    <span>
-      {% if request.user.id == qna.author_id or request.user.is_staff %}
-        <button type="button" onclick="location.href='{% url 'boards:qna_edit' qna.id %}'">수정</button>
-        <form method="post" action="{% url 'boards:qna_delete' qna.id %}" style="display:inline;">
-          {% csrf_token %}
-          <button type="submit">삭제</button>
-        </form>
-      {% endif %}
-    </span>
-  </div>
+{% block title %} QnA - PaletteMe {% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'QnA/css/QnA2.css' %}">
+
+    <div class="board-detail-container QnA">
+      <div class="title-header">
+        <span class="col-header">No</span><span class="col-header">제목</span><span class="col-header">작성자</span><span class="col-header">작성일</span><span class="col-header"></span>
+      </div>
+      <div class="title-row">
+        <span id="detailNo">{{ qna.id }}</span>
+        <span id="detailTitle"><strong title="{{ qna.title }}">{{ qna.title }}</strong></span>
+        <span id="detailWriter">{% if qna.is_anonymous %}익명{% else %}{{ qna.author.nickname|default:qna.author.username }}{% endif %}</span>
+        <span id="detailDate"><time>{{ qna.created_at|date:"Y-m-d" }}</time></span>
+        <span id="detailView">
+          {% if request.user.id == qna.author_id or request.user.is_staff %}
+            <button type="button" onclick="location.href='{% url 'boards:qna_edit' qna.id %}'">수정</button>
+            <form method="post" action="{% url 'boards:qna_delete' qna.id %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit">삭제</button>
+            </form>
+          {% endif %}
+        </span>
+      </div>
+    <hr class="section-divider">
 
   <div class="detail-content">
     {{ qna.body_html|safe }}
@@ -61,15 +47,11 @@
     <button type="submit">등록</button>
   </form>
 
-  <div class="nav-buttons">
-    <button type="button" onclick="location.href='{% url 'boards:qna_list' %}'">목록</button>
-  </div>
-</div>
+        <div class="detail-nav">
+            <button type="button" onclick="location.href='{% url 'boards:qna_list' %}'">목록</button>
+        </div>
 
-<footer class="footer">
-  <a href="#">Instagram</a>
-  <a href="#">Twitter</a>
-  <a href="#">Contact</a>
-</footer>
-</body>
-</html>
+    </div>
+
+    <script src="{% static 'boards/js/QnA2.js' %}" defer></script>
+{% endblock %}

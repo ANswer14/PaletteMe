@@ -5,47 +5,16 @@
     font-family: Arial, sans-serif;
 }
 
-/* ===== HEADER ===== */
-.header {
-    display: flex;
-    justify-content: center; /*가로중앙정렬*/
-    align-items: center;
-    padding: 30px 30px;
-    border-bottom: 1px solid #cdcbcb;
-}
-
-.header-left {
-    width: 33%;
-}
-
-.logo {
-    width: 34%;
-    text-align: center;
-    font-size: 70px;
-    font-weight: bold;
-}
-.logo a {
-    color: inherit;        /* .logo 색상 따라감 */
-    text-decoration: none; /* 밑줄 제거 */
-    font-size: inherit;    /* .logo 크기 따라감 */
-    font-weight: inherit;  /* .logo 굵기 따라감 */
-}
-
-.auth {
-    width: 33%;
-    text-align: right;
-}
-
-.auth a {
-    margin-left: 15px;
-    text-decoration: none;
-    color: #333;
-}
 /* 메인 레이아웃 */
 .container {
     display: flex;
     padding: 40px;
     gap: 50px;
+}
+
+.image-section {
+    width: 400px;
+    height: 500px;
 }
 
 /* 왼쪽 이미지 */
@@ -114,7 +83,7 @@
 
 
 /* 버튼 */
-#homeBtn {
+#favorBtn {
     margin-top: 40px;
     padding: 10px 20px;
     font-size: 16px;
@@ -124,16 +93,4 @@
     cursor: pointer;
     margin-left: auto;
     display: block;
-}
-/* ===== FOOTER ===== */
-.footer {
-    text-align: center;
-    padding: 20px;
-    border-top: 1px solid #ddd;
-}
-
-.footer a {
-    margin: 0 10px;
-    text-decoration: none;
-    color: #333;
 }

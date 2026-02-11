@@ -1,35 +1,20 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>공지사항</title>
-  <link rel="stylesheet" href="{% static 'boards/css/notice1.css' %}">
-</head>
-<body>
-<header class="header">
-  <div class="header-left"></div>
-  <div class="logo"><a href="{% url 'boards:notice_list' %}">Title</a></div>
-  <div class="auth">
-  {% if user.is_authenticated %}
-    <a href="{% url 'profile' %}">회원정보</a>
-    <a href="{% url 'logout' %}">로그아웃</a>
-  {% else %}
-    <a href="{% url 'login' %}">로그인</a>
-  {% endif %}
-</div>
-</header>
 
-<div class="board-container notice">
-  <h2 style="margin:0 0 16px 0;">공지사항</h2>
+{% block title %} Notice - PaletteMe {% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'boards/css/notice1.css' %}">
+
+    <div class="board-container notice">
+        <h2>공지사항</h2>
 
   <div class="board-header">
     <div class="col-no">No</div>
     <div class="col-title">제목</div>
     <div class="col-date">작성일</div>
   </div>
-
+<div class="board-list">
   {% for n in page_obj %}
   <div class="board-row" onclick="location.href='{% url 'boards:notice_detail' n.id %}'">
     <div class="col-no">{{ n.id }}</div>
@@ -43,7 +28,7 @@
     <div class="col-date">-</div>
   </div>
   {% endfor %}
-
+</div>
   <div class="pagination">
     {% if page_obj.has_previous %}
       <span onclick="location.href='?page={{ page_obj.previous_page_number }}'">이전</span>
@@ -55,10 +40,5 @@
   </div>
 </div>
 
-<footer class="footer">
-  <a href="#">Instagram</a>
-  <a href="#">Twitter</a>
-  <a href="#">Contact</a>
-</footer>
-</body>
-</html>
+<script src="{% static 'boards/js/notice1.js' %}" defer></script>
+{% endblock %}

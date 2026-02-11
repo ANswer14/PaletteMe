@@ -1,25 +1,10 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>자유게시판</title>
-  <link rel="stylesheet" href="{% static 'boards/css/board1.css' %}">
-</head>
-<body>
-<header class="header">
-  <div class="header-left"></div>
-  <div class="logo"><a href="{% url 'boards:post_list' %}">Title</a></div>
-  <div class="auth">
-  {% if user.is_authenticated %}
-    <a href="{% url 'profile' %}">회원정보</a>
-    <a href="{% url 'logout' %}">로그아웃</a>
-  {% else %}
-    <a href="{% url 'login' %}">로그인</a>
-  {% endif %}
-</div>
-</header>
+
+{% block title %} 자유게시판 - PaletteMe {% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'boards/css/board1.css' %}">
 
 <div class="board-container free">
   <div class="title-row">
@@ -38,46 +23,43 @@
     <div class="col-view">조회수</div>
   </div>
 
-  {% for post in page_obj %}
-  <div class="board-row" onclick="location.href='{% url 'boards:post_detail' post.id %}'">
-    <div class="col-no">{{ post.id }}</div>
-    <div class="col-title">{{ post.title }}</div>
-    <div class="col-writer">
-      {% if post.is_anonymous %}익명{% else %}{{ post.author.nickname|default:post.author.username }}{% endif %}
+        <div class="board-list">
+            {% for post in page_obj %}
+              <div class="board-row" onclick="location.href='{% url 'boards:post_detail' post.id %}'">
+                <div class="col-no">{{ post.id }}</div>
+                <div class="col-title">{{ post.title }}</div>
+                <div class="col-writer">
+                  {% if post.is_anonymous %}익명{% else %}{{ post.author.nickname|default:post.author.username }}{% endif %}
+                </div>
+                <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
+                <div class="col-view">{{ post.view_count|default:0 }}</div>
+              </div>
+            {% empty %}
+              <div class="board-row">
+                <div class="col-no">-</div>
+                <div class="col-title">게시글이 없습니다.</div>
+                <div class="col-writer">-</div>
+                <div class="col-date">-</div>
+                <div class="col-view">-</div>
+              </div>
+            {% endfor %}
+        </div>
+    <!-- 구분선 + 글쓰기 버튼 -->
+    <div class="board-footer">
+        <hr class="section-divider">
+        <button class="write-btn" type="button" onclick="location.href='{% url 'boards:post_create' %}'">글쓰기</button>
     </div>
-    <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
-    <div class="col-view">{{ post.view_count|default:0 }}</div>
-  </div>
-  {% empty %}
-  <div class="board-row">
-    <div class="col-no">-</div>
-    <div class="col-title">게시글이 없습니다.</div>
-    <div class="col-writer">-</div>
-    <div class="col-date">-</div>
-    <div class="col-view">-</div>
-  </div>
-  {% endfor %}
 
-  <div class="board-footer">
-    <hr class="section-divider">
-    <button class="write-btn" type="button" onclick="location.href='{% url 'boards:post_create' %}'">글쓰기</button>
-  </div>
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+              <span onclick="location.href='?q={{ q|urlencode }}&page={{ page_obj.previous_page_number }}'">이전</span>
+            {% endif %}
+            <span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+              <span onclick="location.href='?q={{ q|urlencode }}&page={{ page_obj.next_page_number }}'">다음</span>
+             {% endif %}
+        </div>
+    </div>
 
-  <div class="pagination">
-    {% if page_obj.has_previous %}
-      <span onclick="location.href='?q={{ q|urlencode }}&page={{ page_obj.previous_page_number }}'">이전</span>
-    {% endif %}
-    <span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-    {% if page_obj.has_next %}
-      <span onclick="location.href='?q={{ q|urlencode }}&page={{ page_obj.next_page_number }}'">다음</span>
-    {% endif %}
-  </div>
-</div>
-
-<footer class="footer">
-  <a href="#">Instagram</a>
-  <a href="#">Twitter</a>
-  <a href="#">Contact</a>
-</footer>
-</body>
-</html>
+<script src="{% static 'boards/js/board1.js' %}" defer></script>
+{% endblock %}

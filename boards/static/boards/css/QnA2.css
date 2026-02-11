@@ -4,82 +4,91 @@ body {
     background: white;
 }
 
-/* ===== HEADER ===== */
-.header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px;
-    border-bottom: 1px solid #cdcbcb;
-}
-
-.header-left { width: 33%; }
-
-.logo {
-    width: 34%;
-    text-align: center;
-    font-size: 70px;
-    font-weight: bold;
-}
-
-.logo a {
-    color: inherit;
-    text-decoration: none;
-}
-
-.auth {
-    width: 33%;
-    text-align: right;
-}
-
-.auth a {
-    margin-left: 15px;
-    text-decoration: none;
-    color: #333;
-}
-
-/* ===== CONTENT ===== */
 .board-detail-container {
     width: 80%;
     margin: 40px auto;
+    background: white;
     padding: 30px;
     border-radius: 10px;
 }
 
-/* 제목 */
-.title-header,
-.title-row {
+/* 모든 게시판 제목 공통 스타일 */
+.board-container h2,
+.board-detail-container h2,
+.board-write-container h2 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    border-left: 5px solid #535252;
+    padding-left: 15px;
+}
+
+/* 제목줄 헤더 */
+.board-detail-container .title-header,
+.board-detail-container .title-row {
     display: flex;
-    gap: 10px;
+    align-items: center;
+}
+
+.board-detail-container .title-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #555;
+    font-size: 14px;
+}
+
+.board-detail-container .title-row {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* 제목줄 헤더와 데이터줄 안의 모든 span들 */
+.board-detail-container .title-header span,
+.board-detail-container .title-row span {
+    display: inline-block; /* 너비 값을 확실히 먹이기 위한 안전장치 */
+    vertical-align: middle; /* 텍스트 높낮이 정렬 */
+}
+
+/* 각 열 폭 지정 */
+/* No */
+.board-detail-container span:nth-child(1) {
+    width: 7%;
     text-align: center;
 }
 
-.title-header {
-    font-weight: bold;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 5px;
+/* 제목 */
+.board-detail-container span:nth-child(2) {
+    width: 55%;
+    text-align: left;
+    padding-left: 10px;
 }
 
-.title-row {
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
+ /* 작성자 */
+.board-detail-container span:nth-child(3) {
+    width: 12%;
+    text-align: center;
 }
 
-.title-header span,
-.title-row span,
-.title-row strong,
-.title-row time {
-    width: 20%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+ /* 작성일 */
+.board-detail-container span:nth-child(4) {
+    width: 15%;
+    text-align: center;
 }
 
-/* 내용 */
+ /* 조회수 */
+.board-detail-container span:nth-child(5) {
+    width: 11%;
+    text-align: center;
+}
+
+/* 내용 영역 */
 .detail-content {
-    min-height: 200px;
     line-height: 1.8;
-    margin: 30px 0;
+    min-height: 300px;
+    padding: 20px 10px;
+    font-size: 16px;
+    color: #444;
 }
 
 /* 댓글 */
@@ -87,44 +96,42 @@ body {
     padding: 8px 0;
     border-bottom: 1px solid #f0f0f0;
 }
-
-.comment-input {
+.board-detail-container .comment-input {
+    display: flex;
+    align-items: center;
     margin-top: 10px;
+    gap: 10px;          /* 요소 사이 간격 */
+}
+/* 댓글 개별 스타일 */
+.comment {
+    padding: 10px;
+    border-bottom: 1px dashed #eee; /* 점선으로 구분 */
+    font-size: 15px;
+    color: #555;
 }
 
-.comment-input textarea {
-    width: 100%;
-    height: 60px;
-    padding: 8px;
+.comment b {
+    color: #333;
+    margin-right: 5px;
 }
 
-.comment-input button {
-    margin-top: 5px;
-    padding: 6px 12px;
-}
-
-/* 버튼 */
-.nav-buttons {
+/* 이전글 | 글목록 | 다음글 중앙정렬 */
+.detail-nav {
     text-align: center;
     margin-top: 30px;
+    color: #888;
 }
 
-.nav-buttons button {
+.detail-nav span {
     cursor: pointer;
-    padding: 8px 16px;
-}
-
-/* ===== FOOTER ===== */
-.footer {
-    text-align: center;
-    padding: 20px;
-    border-top: 1px solid #ddd;
-}
-
-.footer a {
     margin: 0 10px;
-    text-decoration: none;
     color: #333;
+    font-size: 15px;
+}
+
+.detail-nav span:hover {
+    text-decoration: underline;
+    color: #535252; /* 버튼과 동일한 강조색 */
 }
 
 /* ===== MOBILE ===== */

@@ -1,25 +1,10 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>글쓰기</title>
-    <link rel="stylesheet" href="mypage.css">
-</head>
-<body>
-<!-- ===== HEADER ===== -->
-<header class="header">
-    <div class="header-left"></div>
-    <div class="logo">
-        <a href="index.html">
-            <img src="logo.png" alt="로고" class="header-logo-img">
-        </a>
-    </div>
-    <div class="auth">
-        <img id="headerProfileImg" src="main1.png" class="profile-circle small">
-        <a href="#">회원정보</a>
-        <a href="../login/login.html">로그아웃</a>
-    </div>
-</header>
+{% extends "index.html" %}
+{% load static %}
+
+{% block title %} 마이페이지 - PaletteMe {% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'accounts/css/mypage.css' %}">
 
 <div class="mypage">
     <h2>마이페이지</h2>
@@ -28,14 +13,14 @@
     <section class="card">
         <div class="form-group">
             <label>아이디</label>
-            <input type="text" id="userId" readonly>
+            <input type="text" id="userId" value="{{ user.username }}" readonly>
         </div>
 
         <div class="form-group">
             <label>닉네임</label>
             <div class="input-group">
-                <input type="text" id="userName">
-                <button type="button" id="nickNameCheckBtn">중복 확인</button>
+                <input type="text" id="nickname" name="nickname" value="{{ user.nickname }}">
+                <button type="button" id="nickNameCheckBtn" data-url="{% url 'check_nickname' %}">중복 확인</button>
             </div>
             <span id="nickNameStatus" class="status"></span>
         </div>
@@ -43,68 +28,96 @@
         <div class="form-group">
             <label>이메일</label>
             <div class="input-group">
-                <input type="email" id="email">
-                <button type="button" id="emailDuplicateBtn">중복 확인</button>
+                <input type="email" id="email" value="{{ user.email }}">
+                <button type="button" id="emailDuplicateBtn" data-url="{% url 'check_email' %}">중복 확인</button>
             </div>
             <span id="emailStatus" class="status"></span>
         </div>
 
         <div class="form-group">
             <label>휴대폰 번호</label>
-            <input type="text" id="phone">
+            <input type="text" id="phone" name="phone" value="{{ user.phone }}">
         </div>
 
         <div class="form-group profile-section">
             <label>프로필 사진</label>
             <div class="profile-main">
-                <img id="profilePreview" src="main1.png" alt="프로필" class="profile-circle large">
+                <img id="profilePreview" src="{{ user.profile_image.url|default:'/static/img/default-profile.png' }}" alt="프로필" class="profile-circle large">
                 <button type="button" class="custom-file-btn" onclick="document.getElementById('profileUpload').click()">
                     내 PC에서 사진 선택
                 </button>
             </div>
-            <input type="file" id="profileUpload" accept="image/*" onchange="previewFile()">
+            <input type="file" id="profileUpload" name="profile_image" accept="image/*" onchange="previewFile()" style="display:none;">
 
             <div class="default-images">
                 <p>기본 이미지 선택</p>
                 <div class="img-list">
-                    <img src="logo4.png" class="selectable-img" onclick="selectImage('logo4.png')">
-                    <img src="logo2.png" class="selectable-img" onclick="selectImage('logo2.png')">
-                    <img src="logo3.png" class="selectable-img" onclick="selectImage('logo3.png')">
+                    <img src="{% static 'img/logo4.png' %}" class="selectable-img" onclick="selectImage('logo4.png')">
+                    <img src="{% static 'img/logo2.png' %}" class="selectable-img" onclick="selectImage('logo2.png')">
+                    <img src="{% static 'img/logo3.png' %}" class="selectable-img" onclick="selectImage('logo3.png')">
                 </div>
             </div>
+            <input type="hidden" id="selectedDefaultImage" name="default_image_name">
         </div>
-        <button id="saveInfoBtn">정보 수정 저장</button>
+
+        <button id="saveInfoBtn" class="signup-submit-btn">정보 수정 저장</button>
     </section>
 
     <!-- 보안 -->
     <section class="card">
         <h3>보안 및 인증</h3>
+        <div class="pw-change-group">
 
-        <input type="password" id="currentPw" placeholder="현재 비밀번호">
-        <input type="password" id="newPw" placeholder="새 비밀번호">
-        <input type="password" id="newPwCheck" placeholder="새 비밀번호 확인">
-        <button id="changePwBtn">비밀번호 변경</button>
-
+            <input type="password" id="currentPw" placeholder="현재 비밀번호">
+            <input type="password" id="newPw" placeholder="새 비밀번호">
+            <input type="password" id="newPwCheck" placeholder="새 비밀번호 확인">
+            <button id="changePwBtn" class="secondary-btn">비밀번호 변경</button>
+        </div>
     </section>
 
     <!-- 부가 정보 -->
     <section class="card">
         <h3>나의 활동</h3>
         <div class="link-buttons">
-            <button onclick="location.href='/my-posts'">내 게시글 보기</button>
-            <button onclick="location.href='/my-comments'">내 댓글 보기</button>
+            <button class="activity-btn" onclick="location.href='{% url 'my_posts' %}'">내 게시글 보기</button>
+            <button class="activity-btn" onclick="location.href='{% url 'my_comments' %}'">내 댓글 보기</button>
         </div>
     </section>
 
     <!-- 핵심 기록 -->
     <section class="card">
         <h3>최근 생성 이미지</h3>
-        <div id="recentImages" class="image-box"></div>
+        <div id="recentImages" class="image-box">
+            {% for image in recent_images %}
+            <img src="{{ image.file.url }}" alt="생성 이미지">
+            {% empty %}
+                <p class="empty-msg">최근 생성한 이미지가 없습니다.</p>
+            {% endfor %}
+        </div>
     </section>
 
     <section class="card">
         <h3>진단 히스토리</h3>
-        <table id="diagnosisTable"></table>
+        <table id="diagnosisTable">
+            <thead>
+                <tr>
+                    <th>날짜</th>
+                    <th>결과</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in diagnosis_history %}
+                <tr>
+                    <td>{{ record.created_at|date:"Y-m-d" }}</td>
+                    <td>{{ record.result_name }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2" class="no-data">기록이 없습니다.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </section>
 
     <section class="card">
@@ -115,17 +128,12 @@
     <!-- 탈퇴 -->
     <section class="card withdraw-section">
         <h3>계정 탈퇴</h3>
-        <button id="withdrawBtn">회원 탈퇴</button>
+        <p class="warning-text">탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.</p>
+        <button id="withdrawBtn" class="danger-btn">회원 탈퇴</button>
     </section>
 </div>
 
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
 
-<script src="mypage.js"></script>
-</body>
-</html>
+<div id="static-path" data-path="{% static 'img/' %}" style="display:none;"></div>
+<script src="{% static 'accounts/js/mypage.js' %}"></script>
+{% endblock %}

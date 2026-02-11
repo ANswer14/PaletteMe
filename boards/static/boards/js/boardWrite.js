@@ -5,9 +5,16 @@ document.addEventListener("DOMContentLoaded", function () {
     let uploadedFiles = []; // 업로드된 여러개의 파일들을 담을 배열
 
     imageInput.addEventListener('change', function (e) {
-        const files = Array.from(e.target.files);
+        const newFiles = Array.from(e.target.files);
+        
+        // 첨부이미지파일은 10개까지만
+        if (uploadedFiles.length + newFiles.length > 10) {
+            alert("이미지는 최대 10개까지만 첨부할 수 있습니다.");
+            imageInput.value = ""; 
+            return; 
+        }
 
-        files.forEach(file => {
+        newFiles.forEach(file => {
             // 배열에 파일 저장
             uploadedFiles.push(file);
 

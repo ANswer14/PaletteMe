@@ -1,4 +1,4 @@
-body {
+/*body {
     margin: 0;
     font-family: Arial, sans-serif;
     background: white;
@@ -13,6 +13,7 @@ body {
 }
 
 /* 모든 게시판 제목 공통 스타일 */
+/*
 .board-container h2,
 .board-detail-container h2,
 .board-write-container h2 {
@@ -20,6 +21,36 @@ body {
     margin-bottom: 20px;
     border-left: 5px solid #535252;
     padding-left: 15px;
+}
+
+/* 게시판 선택 영역 스타일 */
+/*
+.write-category {
+    margin-bottom: 20px; /* 제목 입력창과의 간격 *//*
+}
+
+.write-category label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.write-category select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+/* 마우스 클릭 시 강조 효과 *//*
+.write-category select:focus {
+    border-color: #535252;
+    background-color: #fff;
 }
 
 .board-write-container .write-form label {
@@ -44,7 +75,7 @@ body {
 
 .button-group {
     margin-top: 20px;
-    text-align: center; /* 버튼 중앙정렬 */
+    text-align: center; /* 버튼 중앙정렬 *//*
 }
 
 .board-write-container .button-group button {
@@ -68,4 +99,4 @@ body {
 
 .board-write-container .button-group button + button:hover {
     background-color: #333333;
-}
+}*/

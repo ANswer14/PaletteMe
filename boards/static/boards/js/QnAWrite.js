@@ -1,4 +1,4 @@
-function submitPost() {
+/*function submitPost() {
     const title = document.getElementById("postTitle").value.trim();
     const writer = document.getElementById("postWriter").value;
     const content = document.getElementById("postContent").value.trim();
@@ -17,4 +17,4 @@ function submitPost() {
 
 function cancelPost() {
     window.location.href = "QnA1.html"; // 글쓰기 취소하면 목록으로
-}
+}*/

@@ -1,13 +1,21 @@
 {% extends "index.html" %}
 {% load static %}
 
-{% block title %} 자유게시판 - PaletteMe {% endblock %}
+{% block title %} 게시글 작성 - PaletteMe {% endblock %}
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'boards/css/boardWrite.css' %}">
 
-<div class="board-write-container free">
-    <h2>자유게시판 글쓰기</h2>
+<div class="board-write-container">
+    <h2>게시글 작성</h2>
+
+    <div class="write-category">
+        <label for="boardCategory">게시판 선택</label>
+        <select id="boardCategory">
+            <option value="free">자유게시판</option>
+            <option value="qna">Q&A 게시판</option>
+        </select>
+    </div>
 
     <div class="write-form">
         <label for="postTitle">제목</label>

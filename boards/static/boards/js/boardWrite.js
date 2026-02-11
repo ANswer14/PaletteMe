@@ -1,3 +1,14 @@
+// 보고있던 글목록에서 글쓰기 버튼 눌렀을때 게시판 선택버튼이 우선적으로 자동으로 지정되게 하는 함수
+document.addEventListener("DOMContentLoaded", function() {
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get("type"); // 주소창에 ?type=qna 처럼 올 경우
+
+    if (type) {
+        document.getElementById("boardCategory").value = type;
+    }
+});
+
+// 파일 첨부 관련 함수
 document.addEventListener("DOMContentLoaded", function () {
 
     const imageInput = document.getElementById('imageInput');
@@ -52,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 async function submitPost() {
+    const category = document.getElementById("boardCategory").value; // 'free' 또는 'qna'가 담김
     const title = document.getElementById("postTitle").value.trim();
     const writer = document.getElementById("postWriter").value;
     const content = document.getElementById("postContent").value.trim();
@@ -63,6 +75,8 @@ async function submitPost() {
 
     // [중요] 나중에 백엔드와 연결할 때 쓸 보따리(이름 상의해서 맞춰야함)
     const formData = new FormData();
+    // [상의 필요] 서버에서 게시판 종류를 받을 이름표 (예: 'category' 또는 'board_type'/category 변수 안에 담긴 실제값도 확인할것)
+    formData.append('category', category);
     formData.append('title', title);
     formData.append('writer', writer);
     formData.append('content', content);
@@ -72,6 +86,17 @@ async function submitPost() {
     uploadedFiles.forEach((file) => {
         formData.append(`images`, file);   // 'images'라는 이름으로 사진들을 담음
     });
+
+    // ---------------------------------------------------------
+    // 💡 [임시 테스트용 코드] : 백엔드 없어도 상세페이지로 강제 이동!
+    // 테스트가 끝나면 나중에 이 부분만 지우면 됩니다.
+    const testNo = 1; // 임시 번호
+    const targetPage = (category === 'qna') ? 'QnA2.html' : 'board2.html';
+
+    alert(`테스트 모드: ${category} 게시판으로 이동합니다.`);
+    window.location.href = `${targetPage}?no=${testNo}&title=${encodeURIComponent(title)}`;
+    return; // 👈 여기서 멈추게 해서 아래 fetch(에러 날 부분)가 실행 안 되게 합니다.
+    // ---------------------------------------------------------
 
     try {
         // 서버에 전송 (실제 백엔드 URL이 필요함)
@@ -103,6 +128,15 @@ async function submitPost() {
 
 }
 
+// 글쓰기 취소 버튼을 누를 경우 앞서 보고있었던 글목록으로 돌아감(자유게시판/QnA)
 function cancelPost() {
-    window.location.href = "board1.html"; // 글쓰기 취소하면 목록으로
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get("type");
+
+    if (type === 'qna') {
+        window.location.href = "QnA1.html"; // Q&A 목록
+    }
+    else {
+        window.location.href = "board1.html"; // 자유게시판 목록
+    }
 }

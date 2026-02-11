@@ -1,31 +1,18 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>글 상세보기</title>
-    <link rel="stylesheet" href="{% static 'boards/css/board2.css' %}">
-</head>
-<body>
-<!-- ===== HEADER ===== -->
-    <header class="header">
-        <div class="header-left">
-            <!-- 필요 시 왼쪽 버튼/메뉴 -->
-        </div>
-        <div class="logo">
-            <a href="index.html">Title</a>
-        </div>
 
-        <div class="auth">
-            <a href="#">회원정보</a>
-            <a href="../login/login.html">로그아웃</a>
-        </div>
-    </header>
+{% block title %} 자유게시판 - PaletteMe {% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'boards/css/board2.css' %}">
+
     <div class="board-detail-container free">
+        <h2>자유게시판</h2>
+
         <!-- 제목줄: 헤더 -->
         <div class="title-header">
             <span class="col-header">No.</span>
-            <span class="col-header">제목</span>
+            <span class="col-header">제 목</span>
             <span class="col-header">작성자</span>
             <span class="col-header">작성일</span>
             <span class="col-header">조회수</span>
@@ -61,22 +48,16 @@
                     <input type="text" id="commentText" placeholder="댓글을 입력하세요">
                     <button onclick="addComment()">등록</button>
                 </div>
+            </div>
         </div>
 
-        <div class="nav-buttons">
+        <div class="detail-nav">
             <span id="prevBtn" onclick="goPrev()">이전글</span> |
             <span onclick="goList()">글목록</span> |
             <span id="nextBtn" onclick="goNext()">다음글</span>
         </div>
 
     </div>
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
 
 <script src="{% static 'boards/js/board2.js' %}" defer></script>
-</body>
-</html>
+{% endblock %}

@@ -1,41 +1,3 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
-}
-
-/* 헤더 공통 */
-.header {
-    display: flex;
-    justify-content: center; /*가로중앙정렬*/
-    align-items: center;
-    padding: 30px 30px;
-    border-bottom: 1px solid #ddd;
-}
-
-.header-left { width: 33%; }
-.logo {
-    width: 34%;
-    text-align: center;
-    font-size: 70px;
-    font-weight: bold;
-}
-.logo a {
-    color: inherit;
-    text-decoration: none;
-    font-size: inherit;
-    font-weight: inherit;
-}
-.auth {
-    width: 33%;
-    text-align: right;
-}
-.auth a {
-    margin-left: 15px;
-    text-decoration: none;
-    color: #333;
-}
-
 /* 섹션 절반 레이아웃 */
 #personalColorSection {
     display: flex;
@@ -81,9 +43,15 @@ body {
     justify-content: space-between;
 }
 
-.right h1 { margin-top: 0; }
-#userColorInfo { white-space: pre-line; margin-bottom: 20px; }
+#userColorInfo {
+    white-space: pre-line;
+    margin-bottom: 20px;
+}
 
+#userColorInfo h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
 .buttons button {
     margin-right: 10px;
     padding: 10px 20px;
@@ -97,16 +65,4 @@ body {
 
 .buttons button:hover {
     background-color: #333333;
-}
-/* ===== FOOTER ===== */
-.footer {
-    text-align: center;
-    padding: 20px;
-    border-top: 1px solid #ddd;
-}
-
-.footer a {
-    margin: 0 10px;
-    text-decoration: none;
-    color: #333;
 }

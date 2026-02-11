@@ -1,28 +1,14 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>공지사항 상세</title>
-    <link rel="stylesheet" href="{% static 'boards/css/notice2.css' %}">
-</head>
-<body>
-<!-- ===== HEADER ===== -->
-    <header class="header">
-        <div class="header-left">
-            <!-- 필요 시 왼쪽 버튼/메뉴 -->
-        </div>
-        <div class="logo">
-            <a href="index.html">Title</a>
-        </div>
 
-        <div class="auth">
-            <a href="#">회원정보</a>
-            <a href="../login/login.html">로그아웃</a>
-        </div>
-    </header>
+{% block title %} Notice - PaletteMe {% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'boards/css/notice2.css' %}">
 
     <div class="board-detail-container notice">
+        <h2>공지사항</h2>
+
         <!-- 제목줄: 헤더 -->
         <div class="title-header">
             <span class="col-header">No.</span>
@@ -49,13 +35,6 @@
             <span onclick="goNext()">다음글</span>
         </div>
     </div>
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
 
 <script src="{% static 'boards/js/notice2.js' %}"></script>
-</body>
-</html>
+{% endblock %}

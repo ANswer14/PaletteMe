@@ -1,25 +1,10 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>MyPage</title>
-    <link rel="stylesheet" href="{% static 'accounts/css/mypage.css' %}">
-</head>
-<body>
-<header class="header">
-    <div class="header-left"></div>
-    <div class="logo">
-        <a href="{% url 'core:index' %}">
-            <img src="{% static 'accounts/images/logo.png' %}" alt="로고" class="header-logo-img">
-        </a>
-    </div>
-    <div class="auth">
-        <img id="headerProfileImg" src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'accounts/images/main1.png' %}{% endif %}" class="profile-circle small">
-        <a href="{% url 'profile' %}">프로필</a>
-        <a href="{% url 'account_logout' %}">로그아웃</a>
-    </div>
-</header>
+
+{% block title %} 마이페이지 - PaletteMe {% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'accounts/css/mypage.css' %}">
 
 <div class="mypage">
     <h2>마이페이지</h2>
@@ -94,17 +79,17 @@
                 </div>
                 <input type="file" id="profileUpload" name="profile_image" accept="image/*" onchange="previewFile()" style="display:none;">
 
-                <div class="default-images">
-                    <p>기본 이미지 선택</p>
-                    <div class="img-list">
+            <div class="default-images">
+                <p>기본 이미지 선택</p>
+                <div class="img-list">
                         <img src="{% static 'accounts/images/logo4.png' %}" class="selectable-img" onclick="selectImage('logo4.png')">
                         <img src="{% static 'accounts/images/logo2.png' %}" class="selectable-img" onclick="selectImage('logo2.png')">
                         <img src="{% static 'accounts/images/logo3.png' %}" class="selectable-img" onclick="selectImage('logo3.png')">
-                    </div>
                 </div>
             </div>
-            <button type="submit" id="saveInfoBtn" name="save_info">정보 수정 저장</button>
-        </form>
+        </div>
+        <input type="hidden" id="selectedDefaultImage" name="default_image_name">
+        <button type="submit" id="saveInfoBtn" name="save_info" class="signup-submit-btn">정보 수정 저장</button>
     </section>
 
     {% if user.has_usable_password %}  <!-- 일반 로그인 했을 경우 비밀번호 변경탭 O -->
@@ -128,22 +113,49 @@
     </section>
     {% endif %}
 
+    <!-- 부가 정보 -->
     <section class="card">
         <h3>나의 활동</h3>
         <div class="link-buttons">
-            <button onclick="location.href='#'">내 게시글 보기</button>
-            <button onclick="location.href='#'">내 댓글 보기</button>
+            <button class="activity-btn" onclick="location.href='#'">내 게시글 보기</button>
+            <button class="activity-btn" onclick="location.href='#'">내 댓글 보기</button>
+        </div>
+    </section>
+
+    <!-- 핵심 기록 -->
+    <section class="card">
+        <h3>최근 생성 이미지</h3>
+        <div id="recentImages" class="image-box">
+            {% for image in recent_images %}
+            <img src="{{ image.file.url }}" alt="생성 이미지">
+            {% empty %}
+                <p class="empty-msg">최근 생성한 이미지가 없습니다.</p>
+            {% endfor %}
         </div>
     </section>
 
     <section class="card">
-        <h3>최근 생성 이미지</h3>
-        <div id="recentImages" class="image-box"></div>
-    </section>
-
-    <section class="card">
         <h3>진단 히스토리</h3>
-        <table id="diagnosisTable"></table>
+        <table id="diagnosisTable">
+            <thead>
+                <tr>
+                    <th>날짜</th>
+                    <th>결과</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in diagnosis_history %}
+                <tr>
+                    <td>{{ record.created_at|date:"Y-m-d" }}</td>
+                    <td>{{ record.result_name }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2" class="no-data">기록이 없습니다.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </section>
 
     <section class="card">
@@ -151,21 +163,19 @@
         <div id="favoriteImages" class="image-box"></div>
     </section>
 
+    <!-- 탈퇴 -->
     <section class="card withdraw-section">
     <h3>계정 탈퇴</h3>
+    <p class="warning-text">탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.</p>
     <form method="post" action="/accounts/delete/">
         {% csrf_token %}
-        <button type="submit" id="withdrawBtn" onclick="return confirm('정말 탈퇴하시겠습니까?')">회원 탈퇴</button>
+        <button type="submit" id="withdrawBtn" class="danger-btn" onclick="return confirm('정말 탈퇴하시겠습니까?')">회원 탈퇴</button>
     </form>
     </section>
 </div>
 
-<footer class="footer">
-    <a href="#">Instagram</a>
-    <a href="#">Twitter</a>
-    <a href="#">Contact</a>
-</footer>
 
+<div id="static-path" data-path="{% static 'img/' %}" style="display:none;"></div>
 <script>
     {% if messages %}
         {% for message in messages %}
@@ -173,7 +183,5 @@
         {% endfor %}
     {% endif %}
 </script>
-
 <script src="{% static 'accounts/js/mypage.js' %}"></script>
-</body>
-</html>
+{% endblock %}

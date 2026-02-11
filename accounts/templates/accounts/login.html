@@ -1,25 +1,29 @@
 {% load static %}
 {% load socialaccount %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>LOGIN</title>
-    <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
-
+    <title>로그인 - PaletteMe</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}?v=2">
 </head>
 <body>
-    <div id="login">
-        <h1>Sign In</h1>
-        <form method="post" action="{% url 'account_login' %}">
-            {% csrf_token %}
-
-            <input type="text" name="login" id="userID" placeholder="아이디"><br>
-            <input type="password" name="password" id="passwd" placeholder="비밀번호"><br>
-
-            <button type="submit" id="loginBtn">LOGIN</button>
-        </form>
-
+    <div class="login-container">
+        <div id="login-box">
+            <h1>Sign In</h1>
+            <form method="post" action="{% url 'account_login' %}" id="loginForm">
+                <div class="login-inputs">
+                    {% csrf_token %}
+                    <input type="text" id="userID" name="login" placeholder="아이디"><br>
+                    <input type="password" id="passwd" name="password"  placeholder="비밀번호"><br>
+                </div>
+                <button type='submit' id="loginBtn" class="signup-submit-btn">LOGIN</button>
+            </form>
+            <p class="login-helper">
+                아직 계정이 없으신가요?
+                <a href="javascript:void(0);" onclick="goToSignup('{% url 'agreement' %}')">회원가입</a>
+            </p>
+        </div>
     </div>
     <div class="social-login-container">
     <p>또는 소셜 계정으로 로그인</p>

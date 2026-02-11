@@ -1,21 +1,48 @@
-body{
-    margin: 0;
+/* 상위 레이아웃: index.html의 헤더와 푸터 사이 중앙 정렬 */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 화면 높이에 맞춰 중앙 배치 */
+    background-color: #fff;
+    overflow: hidden;
 }
-#login
-{
-    width: 300px;
-    margin: 100px auto;
+
+#login-box {
+    width: 350px;
     text-align: center;
-    border: lightgrey 2px;
-    border-style: solid;
-    border-radius: 10px;
-    padding: 20px;
-    padding-bottom: 50px;
-    font-size: 18px;
-    color: #333333;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 40px 30px;
+    color: #333;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
-#loginBtn{
-    width: 160px;
+
+#login-box h1 {
+    font-size: 24px;
+    margin-bottom: 30px;
+    color: #000;
+}
+
+/* 아이디, 비번 입력창 스타일 */
+.login-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.login-inputs input {
+    height: 48px;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    box-sizing: border-box; /* 패딩이 너비를 넘지 않게 함 */
+}
+
+.signup-submit-btn {
+    width: 100%; /* 박스 너비에 맞춤 */
     height: 50px;
     background-color: #535252;
     color: white;
@@ -24,9 +51,28 @@ body{
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    margin: 30px;
-    margin-bottom: 0;
+    margin-top: 25px;
+    transition: background-color 0.2s;
 }
-#loginBtn:hover{
+
+.signup-submit-btn:hover {
     background-color: #333333;
+}
+
+/* 회원가입 링크 */
+.login-helper {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.login-helper a {
+    color: #535252;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.login-helper a:hover {
+    text-decoration: underline;
 }

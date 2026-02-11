@@ -1,147 +1,130 @@
-/* 전체 배경과 폰트 */
+/* 전체 배경 */
 body {
-    font-family: Arial, sans-serif;
     background-color: #ffffff;
     margin: 0;
-    padding: 0;
+    font-family: 'Arial', sans-serif;
 }
 
-/* ===== HEADER ===== */
-.header {
-    display: flex;
-    justify-content: center; /*가로중앙정렬*/
-    align-items: center;  /*세로중앙정렬*/
-    padding: 30px 30px;
-    border-bottom: 1px solid #ddd;
-}
-
-.header-left {
-    width: 33%;
-}
-
-.logo {
-    width: 34%;
-    text-align: center;
-    font-size: 70px;
-    font-weight: bold;
-}
-.logo a {
-    color: inherit;        /* .logo 색상 따라감 */
-    text-decoration: none; /* 밑줄 제거 */
-    font-size: inherit;    /* .logo 크기 따라감 */
-    font-weight: inherit;  /* .logo 굵기 따라감 */
-}
-
-.auth {
-    width: 33%;
-    text-align: right;
-}
-
-.auth a {
-    margin-left: 15px;
-    text-decoration: none;
-    color: #333;
-}
-
-/* 회원가입 박스 중앙 배치 */
-#signup {
-    width: 400px;
+/* 회원가입 컨테이너 */
+.signup-container {
+    width: 600px;
     margin: 50px auto;
-    padding: 30px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
-/* 제목 */
-#signup h1 {
+h1 {
     text-align: center;
-    margin-bottom: 30px;
-    color: #333333;
+    margin-bottom: 40px;
+    color: #333;
+    font-size: 28px;
 }
 
-/* 라벨 스타일 */
-#signup label {
-    display: block;
-    margin-bottom: 5px;
+/* 폼 그룹 */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.form-group label {
     font-weight: bold;
-    color: #555555;
-}
-
-/* 입력창 스타일 */
-#signup input[type="text"],
-#signup input[type="password"],
-#signup input[type="email"] {
-    width: calc(100% - 20px);
-    padding: 8px 10px;
-    margin-bottom: 15px;
-    border: 1px solid #cccccc;
-    border-radius: 5px;
+    margin-bottom: 8px;
     font-size: 14px;
+    color: #555;
+}
+
+/* 입력창 공통 스타일 */
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    height: 45px;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
     box-sizing: border-box;
+    transition: border-color 0.2s;
 }
 
-/* 아이디 중복확인 버튼 옆에 띄우기 */
-#checkIDBtn, #checkNickBtn {
-    margin-left: 10px;
-    padding: 8px 12px;
-    font-size: 12px;
-    background-color: #535252;
-    color: white;
-    border: none;
-    border-radius: 5px;
+input:focus {
+    border-color: #535252;
+    outline: none;
+}
+
+/* 중복확인 버튼이 있는 그룹 */
+.input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.input-group input {
+    flex: 1; /* 입력창이 남은 공간 다 차지 */
+}
+
+/* 버튼 공통 스타일 */
+button {
     cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: all 0.2s;
 }
 
-/* 라디오 버튼 성별 */
-#signup input[type="radio"] {
-    margin-left: 10px;
-    margin-right: 5px;
+/* 중복확인 등 일반 버튼 (마이페이지 스타일) */
+#checkIDBtn, #checkNicknameBtn, .custom-file-btn {
+    padding: 0 15px;
+    height: 45px;
+    background-color: #535252;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
 }
 
-/* 성별 라디오 버튼 한 줄 배치 */
+#checkIDBtn:hover, #checkNicknameBtn:hover, .custom-file-btn:hover {
+    background-color: #333;
+}
+
+/* 성별 선택 옵션 */
 .gender-options {
     display: flex;
-    align-items: center;
-    gap: 20px; /* 남/여 버튼 사이 간격 */
+    gap: 15px;
+    padding: 5px 0;
 }
-
-.gender-options label {
+.gender-options input[type="radio"] {
+    width: 18px;
+    height: 20px;
+    cursor: pointer;
     margin: 0;
 }
+.gender-options label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    cursor: pointer;
+    margin-right: 20px;
+}
 
-/* 회원가입 버튼 */
-#signup button[type="submit"] {
+/* 가입 완료 버튼 */
+.signup-submit-btn {
     width: 100%;
-    padding: 12px;
+    height: 55px;
     background-color: #535252;
     color: white;
     border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.2s ease;
+    font-size: 18px;
+    margin-top: 20px;
 }
 
-#signup button[type="submit"]:hover {
-    background-color: #535252;
+.signup-submit-btn:hover {
+    background-color: #333;
 }
 
-/* 줄 간격 */
-#signup br {
-    line-height: 1.5;
-}
-/* ===== FOOTER ===== */
-.footer {
-    text-align: center;
-    padding: 20px;
-    border-top: 1px solid #ddd;
-}
-
-.footer a {
-    margin: 0 10px;
-    text-decoration: none;
-    color: #333;
+hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 30px 0;
 }

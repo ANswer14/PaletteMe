@@ -64,7 +64,7 @@ def testColor(request):
     user = request.user
     if request.method == 'POST':
         page = int(request.POST.get('page', 1)) # 만약 pageNo를 쿼리 파라미터(URI)에서 찾지 못하면 기본값 1
-        worm = int(request.POST.get('worm', 1))
+        warm = int(request.POST.get('warm', 1))
         cool = int(request.POST.get('cool', 1))
         light = int(request.POST.get('light', 1))
         dark = int(request.POST.get('dark', 1))
@@ -72,10 +72,10 @@ def testColor(request):
         vivid = int(request.POST.get('vivid', 1))
         idk = int(request.POST.get('idk', 1))
         gender = user.gender # 유저 성별 받아옴
-        return render(request, 'personalColors/colorTest.html', {'page': page, 'worm': worm, 'cool': cool, 'light': light,
+        return render(request, 'personalColors/colorTest.html', {'page': page, 'warm': warm, 'cool': cool, 'light': light,
                                                                  'dark': dark, 'mute': mute, 'vivid': vivid, 'idk': idk, 'gender': gender})
     return render(request, 'personalColors/colorTest.html',
-                  {'page': 1, 'worm': 0, 'cool': 0, 'light': 0,
+                  {'page': 1, 'warm': 0, 'cool': 0, 'light': 0,
                    'dark': 0, 'mute': 0, 'vivid': 0, 'idk': 0})
 
 def getResultColor(request):

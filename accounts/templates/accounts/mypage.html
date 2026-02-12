@@ -42,7 +42,7 @@
         <div class="form-group profile-section">
             <label>프로필 사진</label>
             <div class="profile-main">
-                <img id="profilePreview" src="{{ user.profile_image.url|default:'/static/img/default-profile.png' }}" alt="프로필" class="profile-circle large">
+                <img id="profilePreview" src="{{ user.profile_image.url|default:'/static/img/profile1.png' }}" alt="프로필" class="profile-circle large">
                 <button type="button" class="custom-file-btn" onclick="document.getElementById('profileUpload').click()">
                     내 PC에서 사진 선택
                 </button>
@@ -52,9 +52,11 @@
             <div class="default-images">
                 <p>기본 이미지 선택</p>
                 <div class="img-list">
-                    <img src="{% static 'img/logo4.png' %}" class="selectable-img" onclick="selectImage('logo4.png')">
-                    <img src="{% static 'img/logo2.png' %}" class="selectable-img" onclick="selectImage('logo2.png')">
-                    <img src="{% static 'img/logo3.png' %}" class="selectable-img" onclick="selectImage('logo3.png')">
+                    <img src="{% static 'img/profileImg1.png' %}" class="selectable-img" onclick="selectImage('profileImg1.png')">
+                    <img src="{% static 'img/profileImg2.png' %}" class="selectable-img" onclick="selectImage('profileImg2.png')">
+                    <img src="{% static 'img/profileImg3.png' %}" class="selectable-img" onclick="selectImage('profileImg3.png')">
+                    <img src="{% static 'img/profileImg4.png' %}" class="selectable-img" onclick="selectImage('profileImg4.png')">
+                    <img src="{% static 'img/profileImg5.png' %}" class="selectable-img" onclick="selectImage('profileImg5.png')">
                 </div>
             </div>
             <input type="hidden" id="selectedDefaultImage" name="default_image_name">

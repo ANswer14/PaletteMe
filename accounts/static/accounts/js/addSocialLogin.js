@@ -51,7 +51,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // ✅ 모든 검증이 끝난 후 '확인'을 누르면 폼이 제출됨
-        alert("회원가입이 완료되었습니다! \n확인을 누르면 자동 로그인 후 메인 페이지로 이동합니다.");
+        // 성별 선택 여부 확인
+        const gender = document.querySelector('input[name="gender"]:checked');
+        if (!gender) {
+            e.preventDefault();
+            alert("성별을 선택해주세요.");
+            return;
+        }
     });
 });

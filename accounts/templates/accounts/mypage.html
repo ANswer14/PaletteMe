@@ -20,18 +20,10 @@
             <div class="form-group">
                 <label>닉네임</label>
                 <div class="input-group">
-                    <input type="text" id="userName" name="nickname" value="{{ form.nickname.value|default:user.nickname }}">
+                    <input type="text" id="nickname" name="nickname" value="{{ form.nickname.value|default:user.nickname }}">
                     <button type="submit" id="nickNameCheckBtn" name="check_nickname">중복 확인</button>
                 </div>
-                {% if form.nickname.errors %}
-                    <span class="status unavailable" style="color: red;">
-                        {{ form.nickname.errors.0 }}
-                    </span>
-                {% elif nickname_ok %}
-                    <span class="status available" style="color: green;">
-                        {{ nickname_ok }}
-                    </span>
-                {% endif %}
+                <span id="nickNameStatus" class="status"></span>
             </div>
 
             {% load socialaccount %} <div class="form-group">

@@ -1,66 +1,112 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. 요소 선택 (HTML의 ID와 정확히 일치시킴)
-    const userNameInput = document.getElementById('userName');
+
+    const nicknameInput = document.getElementById('nickname');
     const nickNameCheckBtn = document.getElementById('nickNameCheckBtn');
     const nickNameStatus = document.getElementById('nickNameStatus');
-    const initialNickname = userNameInput.value.trim();
-    const emailInput = document.getElementById('email');
-    const emailDuplicateBtn = document.getElementById('emailDuplicateBtn');
-    const emailStatus = document.getElementById('emailStatus');
-
     const saveInfoBtn = document.getElementById('saveInfoBtn');
-    const selectedDefaultImageInput = document.getElementById("selectedDefaultImage");
 
-    let isNickNameChecked = true; // 이미 저장된 정보이므로 초기값은 true
-    let isEmailChecked = true;
+    // 초기값 저장
+    const initialNickname = nicknameInput ? nicknameInput.value.trim() : "";
+    let isNickNameChecked = true;
 
-    // 3. 페이지 로드 시 버튼 상태 설정
-    // 닉네임이 그대로라면 중복 확인 버튼을 비활성화(연하게) 함
-    nickNameCheckBtn.disabled = (userNameInput.value.trim() === initialNickname);
+    // 페이지 로드 시 초기 상태: 버튼 비활성화 (원래 닉네임이니까)
+    if (nickNameCheckBtn) {
+        nickNameCheckBtn.disabled = true;
+    }
 
-    // 4. 입력창 감시: 실시간으로 버튼 켜고 끄기
-    userNameInput.addEventListener('input', function () {
-        const currentNickname = userNameInput.value.trim();
+    // --- (3) 닉네임 중복 확인 로직 (AJAX) ---
+    if (nickNameCheckBtn && nicknameInput) {
+        nickNameCheckBtn.onclick = function(e) {
+            e.preventDefault();
 
-        // 원래 이름과 다르고 빈칸이 아닐 때만 버튼 활성화
-        if (currentNickname !== initialNickname && currentNickname.length > 0) {
-            nickNameCheckBtn.disabled = false;
-        } else {
-            nickNameCheckBtn.disabled = true;
-        }
-    });
+            const value = nicknameInput.value.trim();
+            const url = "/accounts/check-username/";
 
-    // 5. 저장 버튼 클릭 시 컨펌만 진행
-    if (saveInfoBtn) {
-        saveInfoBtn.onclick = function (e) {
-            if (!confirm("수정된 내용을 저장하시겠습니까?")) {
-                e.preventDefault();
+            if (!value) {
+                alert("닉네임을 입력해주세요.");
+                return;
+            }
+
+            fetch(`${url}?type=nickname&value=${encodeURIComponent(value)}`)
+                .then(res => res.json())
+                .then(data => {
+                    const exists = data.exists || data.isDuplicate;
+                    if (nickNameStatus) {
+                        nickNameStatus.innerText = exists ? "이미 사용 중인 닉네임입니다." : "사용 가능한 닉네임입니다.";
+                        nickNameStatus.style.color = exists ? "red" : "green";
+                    }
+                    isNickNameChecked = !exists;
+                })
+                .catch(err => console.error("중복 확인 에러:", err));
+        };
+
+        // 🔥 입력창 감시: 버튼 활성/비활성 제어
+        nicknameInput.oninput = () => {
+            const currentValue = nicknameInput.value.trim();
+
+            if (currentValue === initialNickname) {
+                // 원래 닉네임으로 돌아오면: 버튼 비활성 + 상태 초기화
+                nickNameCheckBtn.disabled = true;
+                isNickNameChecked = true;
+                if (nickNameStatus) nickNameStatus.innerText = "";
+            } else if (currentValue.length > 0) {
+                // 값이 바뀌고 빈칸이 아니면: 버튼 활성 + 중복확인 필요 상태
+                nickNameCheckBtn.disabled = false;
+                isNickNameChecked = false;
+                if (nickNameStatus) nickNameStatus.innerText = "";
+            } else {
+                // 빈칸이면: 버튼 비활성
+                nickNameCheckBtn.disabled = true;
+                isNickNameChecked = false;
             }
         };
     }
 
-    // 5. 프로필 이미지 관련 (Global functions)
-    function selectImage(imgName) {
-        const staticPath = document.getElementById('static-path').dataset.path;
-        const preview = document.getElementById('profilePreview');
-        const selectedInput = document.getElementById("selectedDefaultImage");
-        const fileInput = document.getElementById('profileUpload');
-
-        preview.src = staticPath + imgName;
-        if (selectedInput) selectedInput.value = imgName;
-        fileInput.value = ""; // 파일 업로드 초기화
-    }
-
-// 직접 파일 업로드 시 미리보기
-    function previewFile() {
-        const preview = document.getElementById('profilePreview');
-        const file = document.getElementById('profileUpload').files[0];
-        const selectedInput = document.getElementById("selectedDefaultImage");
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            preview.src = reader.result;
-            if (selectedInput) selectedInput.value = ""; // 기본 이미지 선택 초기화
-        };
-        if (file) reader.readAsDataURL(file);
+    // --- (4) 정보 수정 저장 버튼 로직 ---
+    if (saveInfoBtn) {
+        saveInfoBtn.addEventListener('click', function(e) {
+            if (!isNickNameChecked) {
+                alert("닉네임 중복 확인을 먼저 완료해주세요.");
+                e.preventDefault();
+                return;
+            }
+            if (!confirm("수정된 내용을 저장하시겠습니까?")) {
+                e.preventDefault();
+            }
+        });
     }
 });
+
+
+/**
+ * [2] 이미지 관련 전역 함수 (Global Functions)
+ */
+function selectImage(imgName) {
+    const staticPathEl = document.getElementById('static-path');
+    if (!staticPathEl) return;
+
+    const staticPath = staticPathEl.dataset.path;
+    const preview = document.getElementById('profilePreview');
+    const selectedInput = document.getElementById("selectedDefaultImage");
+    const fileInput = document.getElementById('profileUpload');
+
+    if (preview) preview.src = staticPath + imgName;
+    if (selectedInput) selectedInput.value = imgName;
+    if (fileInput) fileInput.value = "";
+}
+
+function previewFile() {
+    const preview = document.getElementById('profilePreview');
+    const fileInput = document.getElementById('profileUpload');
+    if (!fileInput || !fileInput.files[0]) return;
+
+    const file = fileInput.files[0];
+    const selectedInput = document.getElementById("selectedDefaultImage");
+    const reader = new FileReader();
+
+    reader.onloadend = function () {
+        if (preview) preview.src = reader.result;
+        if (selectedInput) selectedInput.value = "";
+    }
+    reader.readAsDataURL(file);
+}

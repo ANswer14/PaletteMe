@@ -339,3 +339,13 @@ input[readonly] {
     background: #d9534f;
     color: white;
 }
+
+/* 사용 불가 (에러) 스타일 */
+.status.unavailable {
+    color: #ff4d4d;     /* 선명한 빨간색 */
+}
+
+/* 사용 가능 스타일 */
+.status.available {
+    color: #28a745;     /* 선명한 초록색 */
+}

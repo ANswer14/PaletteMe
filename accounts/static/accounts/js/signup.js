@@ -2,14 +2,14 @@ document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("signupForm");
     // --- 아이디 관련 ---
     const checkIDBtn = document.getElementById("checkIDBtn");
-    const usernameInput = document.getElementById("id_username");
-    const idCheckMark = document.getElementById("id_check_mark");
+    const usernameInput = document.getElementById("userID");
+    const idCheckMark = document.getElementById("idStatus");
     // --- 닉네임 관련 (추가) ---
-    const checkNickBtn = document.getElementById("checkNickBtn");
-    const nicknameInput = document.getElementById("id_nickname");
-    const nickCheckMark = document.getElementById("nick_check_mark");
-    const password1 = document.getElementById("id_password1");
-    const password2 = document.getElementById("id_password2");
+    const checkNickBtn = document.getElementById("checkNicknameBtn");
+    const nicknameInput = document.getElementById("nickname");
+    const nickCheckMark = document.getElementById("nickNameStatus");
+    const password1 = document.getElementById("passwd");
+    const password2 = document.getElementById("passwdConfirm");
 
 
     let isIdChecked = false;  // 아이디 중복 확인 상태
@@ -100,6 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
             e.preventDefault();
             alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
             password2.focus();
+            return; // ✨ 이 return이 있어야 아래 성공 alert가 안 뜹니다!
         }
 
          // 회원 정보 저장

@@ -9,8 +9,11 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from .forms import CustomSignupForm # CustomSignupForm 임포트
-from allauth.account.adapter import get_adapter as get_account_adapter # 일반 계정 어댑터
 
+# 소셜 로그인 시 로그인 창이 닫히지 않아 추가한 로직
+def login_success_view(request):
+    # render를 사용하여 만든 html을 띄워줍니다.
+    return render(request, 'accounts/login_success.html')
 
 # 회원가입 페이지 로드 함수
 def agreement_view(request):

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 처리 중</title>
+</head>
+<body>
+    <div style="text-align: center; margin-top: 50px;">
+        <p>로그인이 완료되었습니다.</p>
+        <p>잠시 후 메인 페이지로 이동합니다...</p>
+    </div>
+
+    <script>
+        // 1. 부모 창(메인)이 있는지 확인
+        if (window.opener && !window.opener.closed) {
+            // 2. 부모 창을 메인으로 새로고침 (가장 확실한 방법)
+            window.opener.location.href = "/";
+            // 3. 부모 창에 포커스 주기
+            window.opener.focus();
+        }
+
+        // 4. 약간의 시간차(0.1초)를 두고 팝업창 닫기 (세션 동기화 보장)
+        setTimeout(function() {
+            window.close();
+        }, 100);
+    </script>
+</body>
+</html>

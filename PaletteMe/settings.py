@@ -178,7 +178,7 @@ AUTH_USER_MODEL = 'accounts.CustomUser'  # 기본 auth.User 대신 auth.CustomUs
 
 ACCOUNT_LOGOUT_ON_GET = True  # 로그인 상태인 메인페이지에 로그아웃을 눌렀을때 탬플릿 거치지 않고 바로 로그아웃
 
-LOGIN_REDIRECT_URL = "/"  # 내 커스텀 로그인 페이지를 써야할때
+LOGIN_REDIRECT_URL = "/accounts/login-success/"  # 로그인 성공 시 리다이렉트 할 url
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"  # allauth 기본 탬플릿으로 로그아웃 후 리다이렉트 > 메인페이지로 감
 SOCIALACCOUNT_SIGNUP_REDIRECT_URL = '/'  # 소셜 가입(추가 정보 입력 후) 완료 시 이동할 페이지
 

@@ -22,5 +22,7 @@ urlpatterns = [
 
     path('change-password/', views.change_password_custom, name='change_password_custom'),  # 비밀번호 변경 경로
 
+    path('login-success/', views.login_success_view, name='login_success'),  # 추가: /accounts/login-success/ 주소로 접속하면 login_success_view 실행
+
     path('', include('allauth.urls')),  # allauth의 나머지 기능들(이메일 인증..etc)은 무조건 마지막에 지정. (overriding 때문)
 ]

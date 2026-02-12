@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
     nickNameCheckBtn.disabled = (userNameInput.value.trim() === initialNickname);
 
     // 4. 입력창 감시: 실시간으로 버튼 켜고 끄기
-    userNameInput.addEventListener('input', function() {
+    userNameInput.addEventListener('input', function () {
         const currentNickname = userNameInput.value.trim();
 
         // 원래 이름과 다르고 빈칸이 아닐 때만 버튼 활성화
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 5. 저장 버튼 클릭 시 컨펌만 진행
     if (saveInfoBtn) {
-        saveInfoBtn.onclick = function(e) {
+        saveInfoBtn.onclick = function (e) {
             if (!confirm("수정된 내용을 저장하시겠습니까?")) {
                 e.preventDefault();
             }
@@ -50,15 +50,17 @@ document.addEventListener("DOMContentLoaded", function() {
         if (selectedInput) selectedInput.value = imgName;
         fileInput.value = ""; // 파일 업로드 초기화
     }
+
 // 직접 파일 업로드 시 미리보기
-function previewFile() {
-    const preview = document.getElementById('profilePreview');
-    const file = document.getElementById('profileUpload').files[0];
-    const selectedInput = document.getElementById("selectedDefaultImage");
-    const reader = new FileReader();
-    reader.onloadend = () => {
-        preview.src = reader.result;
-        if (selectedInput) selectedInput.value = ""; // 기본 이미지 선택 초기화
-    };
-    if (file) reader.readAsDataURL(file);
-}
+    function previewFile() {
+        const preview = document.getElementById('profilePreview');
+        const file = document.getElementById('profileUpload').files[0];
+        const selectedInput = document.getElementById("selectedDefaultImage");
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            preview.src = reader.result;
+            if (selectedInput) selectedInput.value = ""; // 기본 이미지 선택 초기화
+        };
+        if (file) reader.readAsDataURL(file);
+    }
+});

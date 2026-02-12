@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let currentPage = Number(document.getElementById('page').value);
     const totalPages = 7; // 총 페이지 수
     const percent = (currentPage / totalPages) * 100;
-    let warm = Number(document.getElementById('warm')?.value || 0); // id가 worm인 태그의 value를 갖고오거나 없다면 0
+    let warm = Number(document.getElementById('warm')?.value || 0); // id가 warm인 태그의 value를 갖고오거나 없다면 0
     let cool = Number(document.getElementById('cool')?.value || 0);
     let light = Number(document.getElementById('light')?.value || 0);
     let dark = Number(document.getElementById('dark')?.value || 0);
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!allChecked) {
             // event.preventDefault(); // 기본 동작(폼 제출 등) 중단
 
-            warm = Number(document.getElementById('warm')?.value || 0); // id가 worm인 태그의 value를 갖고오거나 없다면 0
+            warm = Number(document.getElementById('warm')?.value || 0); // id가 warm인 태그의 value를 갖고오거나 없다면 0
             cool = Number(document.getElementById('cool')?.value || 0);
             light = Number(document.getElementById('light')?.value || 0);
             dark = Number(document.getElementById('dark')?.value || 0);

@@ -1,0 +1,85 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>글쓰기</title>
+
+  <link rel="stylesheet" href="{% static 'boards/css/write.css' %}">
+</head>
+<body>
+
+  <h1>글쓰기</h1>
+
+  <form method="post" action="{% url 'boards:post_create_simple' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <nav class="main-nav">
+      <div class="main-buttons">
+        <button type="button" class="main-btn active" data-target="freeMenu">자유게시판</button>
+        <button type="button" class="main-btn" data-target="qnaMenu">QnA</button>
+      </div>
+
+      <div id="qnaMenu" class="sub-menu">
+        <div class="qna-type-group">
+          <label class="qna-type">
+            <input type="radio" name="qna_type" value="bug">
+            <span>버그 제보</span>
+          </label>
+
+          <label class="qna-type">
+            <input type="radio" name="qna_type" value="question">
+            <span>사이트 관련 질문</span>
+          </label>
+
+          <label class="qna-type">
+            <input type="radio" name="qna_type" value="suggestion">
+            <span>건의 사항</span>
+          </label>
+        </div>
+      </div>
+    </nav>
+
+    <p>
+      <label>제목</label>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <input type="text" id="title" name="title" required style="flex:1;">
+      </div>
+    </p>
+
+    <p>
+      <label>내용</label>
+      <textarea name="body_html" rows="10" required></textarea>
+    </p>
+
+    <p>
+      <label>이미지 첨부</label>
+
+      <div class="attach-box">
+        <input type="file" id="imageInput" name="images" accept="image/*" multiple>
+
+        <div class="attach-hint">이미지 파일만 · 여러 장 선택 가능 · 아래에 미리보기 표시</div>
+
+        <div class="attach-actions">
+          <button type="button" class="tool" id="clearImagesBtn">전체 삭제</button>
+        </div>
+
+        <div id="uploadEmptyText" class="attach-hint">첨부된 이미지가 없어요.</div>
+        <div id="imagePreview" class="image-preview-list"></div>
+      </div>
+    </p>
+
+    <p class="checks">
+      <label><input type="checkbox" name="is_secret" value="1"> 비밀글</label>
+      <label><input type="checkbox" name="is_anonymous" value="1"> 익명</label>
+    </p>
+
+    <div class="actions">
+      <button type="submit">등록</button>
+      <a class="cancel" href="{% url 'boards:post_list' %}">취소</a>
+    </div>
+  </form>
+
+  <script src="{% static 'boards/js/write.js' %}"></script>
+</body>
+</html>

@@ -26,6 +26,7 @@
             <img src="{{ user.profile_image.url|default:'/static/img/main1.png' }}" alt="프로필" class="header-profile-img">
             </a>
             <a href="#">회원정보</a>
+<!--            <a href="">회원정보</a>-->
             <a href="{% url 'account_logout' %}">로그아웃</a>
         {% else %}
             <a href="javascript:void(0);" onclick="openLoginPopup('{% url 'account_login' %}')">로그인</a>
@@ -45,21 +46,24 @@
 
 <!--클릭하면 해당 사이트로 들어가짐-->
     <div class="board-nav">
-        <a href="{% url 'boards:notice_main' %}">Notice</a>
+        <a href="/boards/notice/">Notice</a>
+
         <span class="divider">|</span>
         {% if user.is_authenticated %}
-            <a href="{% url 'boards:board_main' %}">자유게시판</a>
+            <a href="/boards/">자유게시판</a>
         {% else %}
             <a href="javascript:void(0);" onclick="loginRequired()">자유게시판</a>
         {% endif %}
 
         <span class="divider">|</span>
-
         {% if user.is_authenticated %}
-            <a href="#">QnA</a>
+            <a href="/boards/qna/">QnA</a>
         {% else %}
-            <a href="javascript:void(0);" onclick="loginRequired()">QnA</a>
+            <a href="javascript:void(0);" onclick="loginRequired()">| QnA</a>
         {% endif %}
+
+
+
     </div>
 
     <div class="board-line"></div>
@@ -68,9 +72,8 @@
 <!-- ===== FOOTER ===== -->
 <footer class="footer">
     {% block footer %}
-        <a href="#">Instagram</a>
-        <a href="#">Twitter</a>
-        <a href="#">Contact</a>
+        <a href="https://www.instagram.com/">Instagram</a>
+        <a href="https://x.com/?lang=ko">Twitter</a>
     {% endblock %}
 </footer>
 

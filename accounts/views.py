@@ -8,7 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
-from .forms import CustomSignupForm # CustomSignupForm 임포트
+from .forms import CustomSignupForm
+from allauth.account.utils import perform_login
+from django.urls import reverse
 
 # 소셜 로그인 시 로그인 창이 닫히지 않아 추가한 로직
 def login_success_view(request):
@@ -93,9 +95,19 @@ class MySocialSignupView(SocialSignupView):
         form.signup(self.request, user)  # 커스텀 필드들 재확인
         user.save()
 
-        # 5. 가입 완료 프로세스 호출 (로그인 및 리다이렉트 처리)
-        from allauth.socialaccount.internal import flows
-        return flows.signup.complete_social_signup(self.request, self.sociallogin)
+        # [추가] 이 유저를 현재 세션에 로그인시킵니다.
+        # signup 프로세스이므로 'signup' 단계임을 명시합니다.
+        perform_login(
+            self.request,
+            user,
+            email_verification='optional',  # 설정에 맞게 조절
+            redirect_url=reverse('login_success'),  # 로그인 후 목적지
+            signup=True
+        )
+
+        # complete_social_signup을 호출하는 대신, 직접 login_success로 보냅니다.
+        from django.shortcuts import redirect
+        return redirect('login_success')
 
 
 # 프로필 페이지의 회원 탈퇴 로직 함수

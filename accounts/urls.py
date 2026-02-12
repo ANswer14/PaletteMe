@@ -4,7 +4,9 @@ from . import views  # views.py에 있는 기능 불러옴
 from allauth.account.views import LoginView, LogoutView  # allauth의 회원가입, 로그인, 로그아웃 기능 불러옴
 
 urlpatterns = [
-    path('3rdparty/signup/', views.MySocialSignupView.as_view(), name='socialaccount_signup'),
+    path('login-success/', views.login_success_view, name='login_success'),  # 추가: /accounts/login-success/ 주소로 접속하면 login_success_view 실행
+
+    path('3rdparty/signup/', views.MySocialSignupView.as_view(), name='custom_social_signup'),
 
     path("agreement/", views.agreement_view, name="agreement"),  # url에서 accounts/agreement/ 찾으면 views.py에 있는 agreement.view 함수 실행하기
 
@@ -21,8 +23,6 @@ urlpatterns = [
     path('delete/', views.delete_account, name='delete_account'),  # 회원 탈퇴 경로
 
     path('change-password/', views.change_password_custom, name='change_password_custom'),  # 비밀번호 변경 경로
-
-    path('login-success/', views.login_success_view, name='login_success'),  # 추가: /accounts/login-success/ 주소로 접속하면 login_success_view 실행
 
     path('', include('allauth.urls')),  # allauth의 나머지 기능들(이메일 인증..etc)은 무조건 마지막에 지정. (overriding 때문)
 ]

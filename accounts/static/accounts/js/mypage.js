@@ -70,18 +70,25 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // --- (4) 정보 수정 저장 버튼 로직 ---
-    if (saveInfoBtn) {
-        saveInfoBtn.addEventListener('click', function(e) {
+    const profileForm = document.querySelector('form[enctype="multipart/form-data"]'); // 프로필 폼 선택
+
+    if (profileForm) {
+        profileForm.onsubmit = function(e) {
+            // 중복 확인 여부 체크
             if (!isNickNameChecked) {
                 alert("닉네임 중복 확인을 먼저 완료해주세요.");
                 e.preventDefault();
-                return;
+                return false;
             }
+
+            // 최종 확인창 (여기서 한 번만 떠야 함)
             if (!confirm("수정된 내용을 저장하시겠습니까?")) {
                 e.preventDefault();
+                return false;
             }
-        });
+        };
     }
+
     // --- (5) 비밀번호 변경 검증 로직 (엔터 지원 버전) ---
     const pwForm = document.querySelector('form[action="/accounts/change-password/"]');
 

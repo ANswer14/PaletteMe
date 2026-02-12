@@ -1,4 +1,5 @@
 # accounts/adapter.py  - 일반/소셜 로그인 시 중간 커스텀 로직 역할
+from django.urls import reverse
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
@@ -66,3 +67,17 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     # 신규 구글 가입 허용 여부
     def is_open_for_signup(self, request, sociallogin):
         return True
+
+    # 어떤 상황에서도 login-success로 보내도록 모든 통로를 막음
+    def get_connect_redirect_url(self, request, socialaccount):
+        return reverse('login_success')
+
+    def get_login_redirect_url(self, request):
+        return reverse('login_success')
+
+    def get_signup_redirect_url(self, request):
+        return reverse('login_success')
+
+    def get_next_redirect_url(self, request, redirect_field_name="next"):
+        # 만약 URL 파라미터에 ?next=/ 가 붙어있으면 그걸 무시하고 우리 주소로 보냄
+        return reverse('login_success')

@@ -11,6 +11,7 @@
     </div>
 
     <script>
+        localStorage.setItem('refreshParent', 'true')
         // 1. 부모 창(메인)이 있는지 확인
         if (window.opener && !window.opener.closed) {
             // 2. 부모 창을 메인으로 새로고침 (가장 확실한 방법)
@@ -18,11 +19,10 @@
             // 3. 부모 창에 포커스 주기
             window.opener.focus();
         }
-
-        // 4. 약간의 시간차(0.1초)를 두고 팝업창 닫기 (세션 동기화 보장)
+        // 4. 약간의 시간차(0.2초)를 두고 팝업창 닫기 (세션 동기화 보장)
         setTimeout(function() {
             window.close();
-        }, 100);
+        }, 200);
     </script>
 </body>
 </html>

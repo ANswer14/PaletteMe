@@ -10,7 +10,7 @@
     <div class="mypage add-info-popup"> <div class="card"> <h2>추가 정보 입력</h2>
             <p class="desc">정확한 서비스 이용을 위해 정보를 입력해주세요.</p>
 
-            <form id="addInfoForm" method="post" action="{{ request.path }}">
+            <form id="addInfoForm" method="post" action="{% url 'socialaccount_signup' %}">
                 {% csrf_token %}
 
             {% if form.non_field_errors %}

@@ -168,12 +168,5 @@
 
 
 <div id="static-path" data-path="{% static 'img/' %}" style="display:none;"></div>
-<script>
-    {% if messages %}
-        {% for message in messages %}
-            alert("{{ message|escapejs }}");
-        {% endfor %}
-    {% endif %}
-</script>
 <script src="{% static 'accounts/js/mypage.js' %}"></script>
 {% endblock %}

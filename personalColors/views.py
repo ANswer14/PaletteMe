@@ -18,12 +18,13 @@ from google.genai import types
 import uuid
 from django.core.files.base import ContentFile
 import random
+from tenacity import retry, stop_after_attempt, wait_random_exponential, retry_if_exception_type
+from google.genai.errors import ServerError
 
 load_dotenv() # .env 파일 로드
 temp_storage = {} # 스레드 정보 임시 저장소
 client = genai.Client(api_key=os.getenv('GEMINI_API_KEY')) # API 연결
-# model = 'gemini-3-flash-preview' # api 모델
-model = 'gemini-2.5-flash-lite' # api 모델
+model = 'gemini-3-flash-preview' # api 모델
 system_prompt = f""" 
         당신은 Stable Diffusion 프롬프트 전문가입니다. 
         사용자의 요청을 받아서 이미지를 생성하기 위한 영어 프롬프트와 
@@ -212,7 +213,7 @@ def generateStart(request):
         address = request.POST['address']
 
         session_id = request.session.session_key
-
+        print('generateStart POST 방식')
         # [방어 로직] 이미 해당 세션의 작업이 진행 중인지 확인
         if session_id in temp_storage and temp_storage[session_id]['status'] == 'processing':
             return redirect('/personalColors/map')
@@ -235,6 +236,7 @@ def generateStart(request):
 
         return render(request, 'personalColors/finalResult.html', {'temp': temp + '°C', 'weather': weather, 'sky': sky, 'colorType': colorType, 'address': address})
     elif request.method == 'GET':
+        print('generateStart GET')
         return redirect('/personalColors/map')
 
 def checkStatus(request):
@@ -261,6 +263,12 @@ def checkStatus(request):
                          'current_image': prog_data['current_image'] # Base64 미리보기 이미지
                          })
 
+@retry(
+    retry=retry_if_exception_type(ServerError),
+    wait=wait_random_exponential(min=1, max=60),
+    stop=stop_after_attempt(5),
+    before_sleep=lambda retry_state: print(f"재시도 중... {retry_state.attempt_number}회차")
+)
 def generateImgThread(request, session_id, temp, weather, sky, stop_event):
 
 
@@ -272,12 +280,15 @@ def generateImgThread(request, session_id, temp, weather, sky, stop_event):
     colorList = request.user.color_history.all().values('color_type', 'good_color', 'bad_color').order_by('-executed_at').first()
     print(colorList) # 해당 유저의 퍼스널 컬러 정보 갖고오기
 
-
+    if request.user.gender == 'M':
+        gender = '남성'
+    else:
+        gender = '여성'
     if stop_event.is_set(): return # Gemini 연동 전 중단 요청이 들어왔는지 확인
     response = client.models.generate_content(
         model=model,
         contents=f"{system_prompt}\n날씨 정보: 하늘의 상태 - {sky}, 체감온도 - {temp}, 강수 상태 - {weather}\n"
-                 f"사용자 정보: 성별 - {request.user.gender}, "
+                 f"사용자 정보: 성별 - {gender}, "
                  f"color_type - {colorList['color_type']}, "
                  f"잘 어울리는 색 - {colorList['good_color']}, "
                  f"어울리지 않는 색 - {colorList['bad_color']}\n"
@@ -298,23 +309,28 @@ def generateImgThread(request, session_id, temp, weather, sky, stop_event):
     # 2. 추출된 데이터 활용
     optimized_prompt = data.get('sd_prompt')
     description = data.get('description')
+
     # --- [단계 2] 실제 이미지 생성 요청 ---
-    payload = {
-        "prompt": f"simple casual outfit, korean, everyday wear, full body:1.4, full body view:1.4, full body view from head to toe, {optimized_prompt}",
-        "negative_prompt": "(worst quality:2), (low quality:2), (normal quality:2), lowres, watermark",
-        "steps": 20,
-        'seed': 4216575493,
-        'cfg_scale': 7,
-        "sampler_name": "Restart",
-        "enable_hr": True,
-        "hr_upscaler": "8x_NMKD-Superscale_150000_G",  # 확장자 제외, 업스케일러
-        "hr_scale": 2,
-        'hr_second_pass_steps': 15,
-        "denoising_strength": 0.4,
-        "override_settings": {"CLIP_stop_at_last_layers": 2,
-                              "sd_vae": 'vae-ft-mse-840000-ema-pruned.ckpt'},  # VAE
-    }
+    generateImg(request, session_id, stop_event, optimized_prompt, url_txt2img, auth, description)
+
+def generateImg(request, session_id, stop_event, optimized_prompt, url_txt2img, auth, description):
+
     try:
+        payload = {
+            "prompt": f"simple casual outfit, asian, everyday wear, full body:1.4, full body view:1.4, full body view from head to toe, {optimized_prompt}",
+            "negative_prompt": "(worst quality:2), (low quality:2), (normal quality:2), lowres, watermark",
+            "steps": 20,
+            'seed': 4216575493,
+            'cfg_scale': 7,
+            "sampler_name": "Restart",
+            "enable_hr": True,
+            "hr_upscaler": "8x_NMKD-Superscale_150000_G",  # 확장자 제외, 업스케일러
+            "hr_scale": 2,
+            'hr_second_pass_steps': 15,
+            "denoising_strength": 0.4,
+            "override_settings": {"CLIP_stop_at_last_layers": 2,
+                                  "sd_vae": 'vae-ft-mse-840000-ema-pruned.ckpt'},  # VAE
+        }
 
         if stop_event.is_set(): return # 실제 이미지 생성 요청 전 중단 요청 확인
         sd_res = requests.post(url_txt2img, json=payload, auth=auth, timeout=60)

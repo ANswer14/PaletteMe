@@ -32,7 +32,7 @@ class RecentImages(models.Model):
         related_name='recent_images'
     )
 
-    result_image = models.ImageField(blank=True, upload_to='personalColors/%Y/%m/%d/')
+    result_image = models.ImageField(blank=True, upload_to='personalColors/recent/%Y/%m/%d/')
     created_at = models.DateTimeField(auto_now_add=True)
 
 class favoriteImages(models.Model):

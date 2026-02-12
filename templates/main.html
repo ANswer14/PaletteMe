@@ -10,7 +10,11 @@
 
     <div class="main-right">
         <h1>날씨와 퍼스널컬러로<br>오늘의 옷을 추천해드려요</h1>
-        <button class="start-btn fade-delay" onclick="location.href='/personalColors/'">시작하기</button>
+        {% if user.is_authenticated %}
+            <button class="start-btn fade-delay" onclick="location.href='/personalColors/'">시작하기</button>
+        {% else %}
+            <button class="start-btn fade-delay" onclick="loginRequired()">시작하기</button>
+        {% endif %}
     </div>
 </main>
 {% endblock %}

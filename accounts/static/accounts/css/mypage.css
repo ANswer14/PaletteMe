@@ -229,123 +229,42 @@ tbody tr:hover {
     background: #f1f1f1;
 }
 
-/* 1. 이메일(Readonly) 스타일 */
-input[readonly] {
-    background-color: #f5f5f5;
-    color: #888;
-    cursor: not-allowed;
-    border: 1px solid #ddd;
-}
-
-/* 2. 닉네임 상태 메시지 */
-#nickNameStatus {
-    font-size: 13px;
-    font-weight: bold;
-}
-#nickNameStatus.available { color: #28a745; }
-#nickNameStatus.unavailable { color: #dc3545; }
-
-#nickNameCheckBtn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-/* 3. 보안 및 인증 문구 */
-.security-section p {
-    background: #fdfdfd;
-    padding: 10px;
-    border-radius: 4px;
-    border-left: 4px solid #ddd;
-}
-
-/* 4. 구글 연동 버튼 */
-.google-linked-btn {
-    background-color: #e8f0fe !important;
-    color: #1967d2 !important;
-    border: 1px solid #1967d2 !important;
-    cursor: default !important;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-}
-
-.google-connect-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 40px;
-    padding: 0 15px;
-    background-color: #ffffff;
-    border: 1px solid #4285F4;
-    color: #4285F4;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: bold;
-    transition: background 0.2s;
-}
-.google-connect-btn:hover { background-color: #f1f3f4; }
-
-/* 5. 성별 섹션 (비활성화 스타일 추가) */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-}
-
-.gender-group {
-    display: flex;
-    align-items: center;
-    gap: 50px;
-    height: 40px;
-}
-
-.gender-group label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-}
-
-/* [추가/수정] 성별을 비활성화(disabled)했을 때 커서 모양 변경 */
-.gender-group input[type="radio"]:disabled,
-.gender-group input[type="radio"]:disabled + span {
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-/* 6. 하단 활동 및 탈퇴 섹션 */
-.activity-btn {
-    flex: 1;
-    height: 45px;
-    background: white;
-    border: 1px solid #ddd;
-}
-.activity-btn:hover { background: #f1f1f1; }
-
+/* 탈퇴 섹션 */
 .withdraw-section {
     border: 1px solid #ffcccc;
     background-color: #fffafa;
 }
-
 .danger-btn {
     color: #d9534f;
     border: 1px solid #d9534f;
     background: white;
-    padding: 10px 20px;
-}
+    padding: 10px 20px; }
 .danger-btn:hover {
     background: #d9534f;
     color: white;
 }
 
-/* 사용 불가 (에러) 스타일 */
-.status.unavailable {
-    color: #ff4d4d;     /* 선명한 빨간색 */
+/* 비밀번호 변경 버튼 (정보 수정 저장 버튼과 통일) */
+#changePwBtn {
+    width: 100%;
+    height: 55px;           /* .signup-submit-btn과 동일한 높이 */
+    background-color: #535252; /* 동일한 메인 컬러 */
+    color: white;
+    border: none;
+    font-size: 16px;        /* 메인 버튼(18px)보다 아주 살짝 작게 하여 균형 유지 */
+    font-weight: bold;
+    margin-top: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-/* 사용 가능 스타일 */
-.status.available {
-    color: #28a745;     /* 선명한 초록색 */
+#changePwBtn:hover {
+    background-color: #333; /* .signup-submit-btn:hover와 동일한 효과 */
+}
+
+/* 보안 섹션 내 인풋 간격 정돈 */
+.security-section input[type="password"] {
+    max-width: 100%;        /* 섹션 안에서 시원하게 꽉 차도록 */
+    margin-bottom: 12px;
 }

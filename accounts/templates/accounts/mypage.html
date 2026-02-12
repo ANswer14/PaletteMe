@@ -21,7 +21,7 @@
                 <label>닉네임</label>
                 <div class="input-group">
                     <input type="text" id="nickname" name="nickname" value="{{ form.nickname.value|default:user.nickname }}">
-                    <button type="submit" id="nickNameCheckBtn" name="check_nickname">중복 확인</button>
+                    <button type="button" id="nickNameCheckBtn" name="check_nickname">중복 확인</button>
                 </div>
                 <span id="nickNameStatus" class="status"></span>
             </div>
@@ -82,12 +82,12 @@
         </div>
         <input type="hidden" id="selectedDefaultImage" name="default_image_name">
         <button type="submit" id="saveInfoBtn" name="save_info" class="signup-submit-btn">정보 수정 저장</button>
-    </section>
+        </form></section>
 
     {% if user.has_usable_password %}  <!-- 일반 로그인 했을 경우 비밀번호 변경탭 O -->
     <section class="card security-section">
         <h3>보안 및 인증</h3>
-        <form method="post" action="/accounts/change-password/">
+        <form method="post" action="{% url 'change_password_custom' %}">
             {% csrf_token %}
             <input type="password" id="currentPw" name="old_password" placeholder="현재 비밀번호" required>
             <input type="password" id="newPw" name="password1" placeholder="새 비밀번호" required>

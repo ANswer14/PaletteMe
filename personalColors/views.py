@@ -217,13 +217,19 @@ def generateStart(request):
         if session_id in temp_storage and temp_storage[session_id]['status'] == 'processing':
             return redirect('/personalColors/map')
 
-        temp_storage[session_id] = {'status': 'processing', 'image': None}
+        stop_event = threading.Event()
+
+        temp_storage[session_id] = {'status': 'processing', 'image': None, 'stop_event': stop_event}
+        # stop_event: 중단 신호용 플래그(Event 객체 저장)
 
         thread = threading.Thread(
             target=generateImgThread,
-            args=(request, session_id, temp, weather, sky)
+            args=(request, session_id, temp, weather, sky, stop_event)
         )
+        thread.daemon = True # 프로세스 종료 시 함께 종료되도록 설정
         thread.start()
+        temp_storage[session_id]['thread'] = thread  # 스레드 객체 저장
+
 
         colorType = request.user.color_history.all().values('color_type').order_by('-executed_at').first()['color_type']
 
@@ -233,15 +239,18 @@ def generateStart(request):
 
 def checkStatus(request):
     session_id = request.session.session_key
-
     auth = HTTPBasicAuth(os.getenv("SD_API_USER"), os.getenv("SD_API_PASSWORD"))
+    result = temp_storage.get(session_id)
+
+    if not result or (result.get('stop_event') and result['stop_event'].is_set()):
+        return JsonResponse({
+            'status': 'stopped',
+            'message': '작업이 중단되었거나 세션이 만료되었습니다.'
+        }, status=410)  # 410 Gone 또는 200으로 보내고 JS에서 처리
 
     # 1. SD 서버에 현재 진행 상황 물어보기
     prog_res = requests.get(os.getenv('SD_API_URL') + "progress", auth=auth)
     prog_data = prog_res.json()
-
-    result = temp_storage.get(session_id)
-
     if result and result['status'] == 'completed':
         data = temp_storage.get(session_id)
         return JsonResponse(data)
@@ -252,7 +261,9 @@ def checkStatus(request):
                          'current_image': prog_data['current_image'] # Base64 미리보기 이미지
                          })
 
-def generateImgThread(request, session_id, temp, weather, sky):
+def generateImgThread(request, session_id, temp, weather, sky, stop_event):
+
+
     url_options = os.getenv('SD_API_URL') + "options"
     url_txt2img = os.getenv('SD_API_URL') + "txt2img"
     auth = HTTPBasicAuth(os.getenv("SD_API_USER"), os.getenv("SD_API_PASSWORD"))
@@ -260,8 +271,9 @@ def generateImgThread(request, session_id, temp, weather, sky):
 
     colorList = request.user.color_history.all().values('color_type', 'good_color', 'bad_color').order_by('-executed_at').first()
     print(colorList) # 해당 유저의 퍼스널 컬러 정보 갖고오기
-    
 
+
+    if stop_event.is_set(): return # Gemini 연동 전 중단 요청이 들어왔는지 확인
     response = client.models.generate_content(
         model=model,
         contents=f"{system_prompt}\n날씨 정보: 하늘의 상태 - {sky}, 체감온도 - {temp}, 강수 상태 - {weather}\n"
@@ -272,7 +284,10 @@ def generateImgThread(request, session_id, temp, weather, sky):
                  f"위 정보를 바탕으로잘 어울리는 의상을 입은 사진을 만들어줘"
     )
     print('gemini 연동!')
+
     option_payload = {"sd_model_checkpoint": 'majicmixRealistic_v7.safetensors'}
+
+    if stop_event.is_set(): return # SD 모델 설정 전 중단 요청이 들어왔는지 확인
     requests.post(url_options, json=option_payload, auth=auth)
     print('SD 연결!! ')
 
@@ -299,89 +314,98 @@ def generateImgThread(request, session_id, temp, weather, sky):
         "override_settings": {"CLIP_stop_at_last_layers": 2,
                               "sd_vae": 'vae-ft-mse-840000-ema-pruned.ckpt'},  # VAE
     }
+    try:
 
-    sd_res = requests.post(url_txt2img, json=payload, auth=auth)
+        if stop_event.is_set(): return # 실제 이미지 생성 요청 전 중단 요청 확인
+        sd_res = requests.post(url_txt2img, json=payload, auth=auth, timeout=60)
 
-    if sd_res.status_code == 200:
-        print('1')
-        # 1. 생성된 이미지(Base64) 가져오기
-        base64_image = sd_res.json()['images'][0]
-        print('2')
+        if sd_res.status_code != 200:
+            print("SD 작업이 외부(Interrupt)에 의해 중단되었습니다.")
+            return
+        if stop_event.is_set(): return  # 분석 수행 전 체크
+        if sd_res.status_code == 200:
+            print('1')
+            # 1. 생성된 이미지(Base64) 가져오기
+            base64_image = sd_res.json()['images'][0]
+            print('2')
 
-        # 2. Base64를 PIL 이미지 객체로 변환 (Gemini 분석용)
-        img_data = base64.b64decode(base64_image)
-        print('3')
-        img_obj = PILImage.open(io.BytesIO(img_data))
-        print('4')
+            # 2. Base64를 PIL 이미지 객체로 변환 (Gemini 분석용)
+            img_data = base64.b64decode(base64_image)
+            print('3')
+            img_obj = PILImage.open(io.BytesIO(img_data))
+            print('4')
 
-        # 3. [추가] 생성된 이미지를 Gemini 멀티모달로 정밀 분석
-        # 이제 Gemini는 실제 이미지를 보고 검색 키워드를 뽑습니다.
-        analysis_prompt = """
-                이미지를 정밀 분석하여 다음 카테고리별로 최적의 네이버 쇼핑 검색어를 뽑아줘.
-                해당 아이템이 없는 경우 빈 문자열("")로 응답해.
-                
-                1. outer: 코트, 자켓, 가디건 등 겉에 입은 옷
-                2. top: 셔츠, 블라우스, 티셔츠 등 안의 상의
-                3. pants: 바지, 스커트 등 하의
-                4. shoes: 신발
-                
-                응답 형식(JSON):
-                {
-                    "outer_query": "베이지 오버핏 핸드메이드 코트",
-                    "top_query": "화이트 실크 리본 블라우스",
-                    "pants_query": "세미 와이드 슬랙스",
-                    "shoes_query": "화이트 스틸레토 힐"
-                }
-                """
+            # 3. [추가] 생성된 이미지를 Gemini 멀티모달로 정밀 분석
+            # 이제 Gemini는 실제 이미지를 보고 검색 키워드를 뽑습니다.
+            analysis_prompt = """
+                    이미지를 정밀 분석하여 다음 카테고리별로 최적의 네이버 쇼핑 검색어를 뽑아줘.
+                    해당 아이템이 없는 경우 빈 문자열("")로 응답해.
 
-        # 이미지 분석
-        analysis_res = client.models.generate_content(
-            model=model,  # 멀티모달에 최적화된 모델 권장
-            contents=[analysis_prompt, img_obj],
-            config=types.GenerateContentConfig(response_mime_type="application/json")
-        )
-        print('5')
+                    1. outer: 코트, 자켓, 가디건 등 겉에 입은 옷
+                    2. top: 셔츠, 블라우스, 티셔츠 등 안의 상의
+                    3. pants: 바지, 스커트 등 하의
+                    4. shoes: 신발
 
-        # 분석된 결과
-        search_data = json.loads(analysis_res.text)
-        print(search_data)
+                    응답 형식(JSON):
+                    {
+                        "outer_query": "베이지 오버핏 핸드메이드 코트",
+                        "top_query": "화이트 실크 리본 블라우스",
+                        "pants_query": "세미 와이드 슬랙스",
+                        "shoes_query": "화이트 스틸레토 힐"
+                    }
+                    """
 
-        # 4. [추가] 이제 이 키워드로 네이버/쿠팡 API를 호출하여 진짜 URL을 가져옵니다.
-        # (아래 get_real_shopping_link 함수는 별도로 구현 필요)
-        gender = ''
-        if request.user.gender == 'M':
-            gender = '남성'
-        elif request.user.gender == 'F':
-            gender = '여성'
-        real_outer_url = get_real_shopping_link(gender + '의류', search_data['outer_query'])
-        real_top_url = get_real_shopping_link(gender + '의류', search_data['top_query'])
-        real_pants_url = get_real_shopping_link(gender + '의류', search_data['pants_query'])
-        real_shoes_url = get_real_shopping_link(gender + '신발', search_data['shoes_query'])
+            if stop_event.is_set(): return  # 이미지 분석 전 중단 요청 확인
+            # 이미지 분석
+            analysis_res = client.models.generate_content(
+                model=model,  # 멀티모달에 최적화된 모델 권장
+                contents=[analysis_prompt, img_obj],
+                config=types.GenerateContentConfig(response_mime_type="application/json")
+            )
+            print('5')
 
-        # 결과를 전역 변수에 저장 (나중에 View가 가져갈 수 있게)
-        temp_storage[session_id] = {
-            'status': 'completed',
-            'image': sd_res.json()['images'][0],
-            'description': description,
-            'descriptionDetail': {
-                'outer': search_data['outer_query'],
-                'top': search_data['top_query'],
-                'pants': search_data['pants_query'],
-                'shoes': search_data['shoes_query']
-            },
-            'recommendations': [
-                {'label': '외투', 'url': real_outer_url},
-                {'label': '상의', 'url': real_top_url},
-                {'label': '하의', 'url': real_pants_url},
-                {'label': '신발', 'url': real_shoes_url},
-            ]
-        }
-        # print(real_top_url)
-        # print(real_outer_url)
-        # print(real_shoes_url)
-        # print(real_pants_url)
-        saveImage(request, base64_image) # 해당 이미지 최근 이미지 테이블에 저장
+            # 분석된 결과
+            search_data = json.loads(analysis_res.text)
+            print(search_data)
 
+            # 4. [추가] 이제 이 키워드로 네이버/쿠팡 API를 호출하여 진짜 URL을 가져옵니다.
+            # (아래 get_real_shopping_link 함수는 별도로 구현 필요)
+            gender = ''
+            if request.user.gender == 'M':
+                gender = '남성'
+            elif request.user.gender == 'F':
+                gender = '여성'
+            real_outer_url = get_real_shopping_link(gender + '의류', search_data['outer_query'])
+            real_top_url = get_real_shopping_link(gender + '의류', search_data['top_query'])
+            real_pants_url = get_real_shopping_link(gender + '의류', search_data['pants_query'])
+            real_shoes_url = get_real_shopping_link(gender + '신발', search_data['shoes_query'])
+
+            # 결과를 전역 변수에 저장 (나중에 View가 가져갈 수 있게)
+            temp_storage[session_id] = {
+                'status': 'completed',
+                'image': sd_res.json()['images'][0],
+                'description': description,
+                'descriptionDetail': {
+                    'outer': search_data['outer_query'],
+                    'top': search_data['top_query'],
+                    'pants': search_data['pants_query'],
+                    'shoes': search_data['shoes_query']
+                },
+                'recommendations': [
+                    {'label': '외투', 'url': real_outer_url},
+                    {'label': '상의', 'url': real_top_url},
+                    {'label': '하의', 'url': real_pants_url},
+                    {'label': '신발', 'url': real_shoes_url},
+                ]
+            }
+            # print(real_top_url)
+            # print(real_outer_url)
+            # print(real_shoes_url)
+            # print(real_pants_url)
+            saveImage(request, base64_image)  # 해당 이미지 최근 이미지 테이블에 저장
+    except Exception as e:
+        print(f'이미지 생성 중단 혹은 에러 발생: {e}')
+        return
 
 def get_real_shopping_link(gender, query):
     headers = {
@@ -404,7 +428,6 @@ def get_real_shopping_link(gender, query):
                 elif gender == '여성의류' or gender == '여성신발':
                     if item['category2'] == gender:
                         return item['link']
-            # return items[0]['link']  # 가장 유사한 첫 번째 상품 링크 반환
     return "연결 가능한 상품을 찾지 못했습니다."
 
 # 이미지 저장 로직

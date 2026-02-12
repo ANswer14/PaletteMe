@@ -1,6 +1,6 @@
 // 페이지 로드 시 또는 작업 시작 시 실행
 document.addEventListener('DOMContentLoaded', function() {
-    const pollInterval = setInterval(checkStatus, 800); // 라이브 프리뷰를 위해 주기를 0.8~1초로 짧게 설정
+    const pollInterval = setInterval(checkStatus, 1000); // 라이브 프리뷰를 위해 주기를 0.8~1초로 짧게 설정
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
     const favorBtn = document.getElementById('favorBtn');
     favorBtn.disabled = true
@@ -72,4 +72,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';/*현재 웹사이트가 보안 연결(https) 중인지 일반 연결(http) 중인지 확인함. 보안 사이트에서는 웹소켓도 wss로 받아야 하기 때문*/
+    const socket = new WebSocket(wsProtocol + window.location.host + '/ws/generation/'); /*소켓 주소 설정 및 연결 생성. routing.py에 정의된 경로가 해당 요청을 받게 됨*/
+//     (wss:// OR ws://)127.0.0.1:8000/ws/generation/으로 웹 소켓 연결
+
+    socket.onopen = function() {
+        console.log("서버와 웹소켓 연결이 완료되었습니다. 이제 이탈 감지가 가능합니다.");
+    };
+
+    socket.onclose = function() {
+        console.log("서버와의 연결이 끊겼습니다.");
+    };
 });

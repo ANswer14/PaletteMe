@@ -67,16 +67,15 @@ function handleRowClick(element) {
     console.log(TMN)
 
 
-    let jibunAddress = ''
     // 주소 출력
     searchDetailAddrFromCoords(marker.getPosition(), function(result, status) {
         if (status === kakao.maps.services.Status.OK) {
             // 지번 주소
             jibunAddress = result[0].address.address_name.split(' ');
             console.log('클릭한 위치의 지번 주소 : ' + jibunAddress);
-
-            document.getElementById('locationName').innerText = jibunAddress[0] +  ' ' + jibunAddress[1];
-
+            address = jibunAddress[0] +  ' ' + jibunAddress[1];
+            document.getElementById('locationName').innerText = address;
+            document.querySelector('input[name=address]').value = address;
         }
     });
 
@@ -91,7 +90,6 @@ function handleRowClick(element) {
     document.querySelector('input[name=temp]').value = temp
     document.querySelector('input[name=weather]').value = getPTYText(PTY)
     document.querySelector('input[name=sky]').value = getSKYText(sky)
-    document.querySelector('input[name=address]').value = jibunAddress
 }
 
  function getPTYText(code) {

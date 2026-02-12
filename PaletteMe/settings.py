@@ -36,6 +36,8 @@ SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne', # 장고가 웹소켓과 같은 실시간 통신을 하 수 있게 해주는 전용 서버
+    'channels', # 웹 소켓
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -83,6 +85,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "PaletteMe.wsgi.application"
+ASGI_APPLICATION = "PaletteMe.asgi.application"
 
 
 # Database

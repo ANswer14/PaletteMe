@@ -32,7 +32,7 @@ if first == 0 :
     ro = re * sf / math.pow(ro, sn)
     first = 1
 
-def mapToGrid(lat, lon, code = 0 ):
+def map_to_grid(lat, lon, code = 0 ):
     ra = math.tan(PI * 0.25 + lat * DEGRAD * 0.5)
     ra = re * sf / pow(ra, sn)
     theta = lon * DEGRAD - olon
@@ -47,7 +47,7 @@ def mapToGrid(lat, lon, code = 0 ):
     y = int(y + 1.5)
     return x, y
 
-def gridToMap(x, y, code = 1):
+def grid_to_map(x, y, code = 1):
     x = x - 1
     y = y - 1
     xn = x - xo
@@ -72,9 +72,9 @@ def gridToMap(x, y, code = 1):
 
     return lat, lon
 if __name__ == '__main__':
-    print(mapToGrid(37.579871128849334, 126.98935225645432))
-    print(mapToGrid(35.101148844565955, 129.02478725562108))
-    print(mapToGrid(33.500946412305076, 126.54663058817043))
+    print(map_to_grid(37.579871128849334, 126.98935225645432))
+    print(map_to_grid(35.101148844565955, 129.02478725562108))
+    print(map_to_grid(33.500946412305076, 126.54663058817043))
     ### result :
     #(60, 127)
     #(97, 74)

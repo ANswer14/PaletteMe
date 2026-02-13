@@ -8,11 +8,11 @@
 
     <div class="board-detail-container QnA">
         <h2>QnA</h2>
+
         <!-- 제목줄: 헤더 -->
         <div class="title-header">
             <span class="col-header">No.</span>
-            <span class="col-header">제목</span>
-            <span class="col-header">작성자</span>
+            <span class="col-header">제 목</span>
             <span class="col-header">작성일</span>
             <span class="col-header">조회수</span>
         </div>
@@ -21,7 +21,6 @@
         <div class="title-row">
             <span id="detailNo"></span>
             <span id="detailTitle"></span>
-            <span id="detailWriter"></span>
             <span id="detailDate"></span>
             <span id="detailView"></span>
         </div>
@@ -32,14 +31,10 @@
         </div>
         <hr class="section-divider">
 
-        <!-- 댓글 영역 -->
+        <!-- 운영자 답글 영역 -->
         <div class="comment-section">
-            <h3>댓글</h3>
+            <h3>답변</h3>
             <div id="commentList"></div>
-            <div class="comment-input">
-                <input type="text" id="commentText" placeholder="댓글을 입력하세요">
-                <button onclick="addComment()">등록</button>
-            </div>
         </div>
 
         <div class="detail-nav">

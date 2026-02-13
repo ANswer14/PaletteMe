@@ -22,10 +22,10 @@
         <input type="text" id="postTitle" placeholder="글 제목을 입력하세요">
 
         <label for="postWriter">작성자</label>
-        <input type="text" id="postWriter" value="김주연" readonly>
+        <input type="text" id="postWriter" value="{{ user.nickname }}" readonly>
 
         <label for="postContent">내용</label>
-        <textarea id="postContent" rows="10" placeholder="내용을 입력하세요"></textarea>
+        <textarea id="postContent" rows="30" placeholder="내용을 입력하세요"></textarea>
 
         <div class="file-upload-area">
             <label class="file-label">
@@ -33,6 +33,26 @@
                 <input type="file" id="imageInput" accept="image/*" multiple hidden>
             </label>
             <div id="previewArea" class="preview-area"></div>
+        </div>
+
+        <div id="freeExtraOptions" style="display: none;"> <!-- 자유게시판일때 나타남 -->
+            <label>작성자 설정</label>
+            <div class="radio-group">
+                <input type="radio" id="realname" name="is_anonymous" value="false" checked>
+                <label for="realname">{{ user.nickname }}</label>
+                <input type="radio" id="anonymous" name="is_anonymous" value="true">
+                <label for="anonymous">익명</label>
+            </div>
+        </div>
+
+        <div id="qnaExtraOptions" style="display:none;">   <!-- QnA에서만 나타나기때문에 스타일 여기서 지정 -->
+            <label>공개 여부</label>
+            <div class="radio-group">
+                <input type="radio" id="public" name="is_private" value="false" checked>
+                <label for="public">공개</label>
+                <input type="radio" id="private" name="is_private" value="true">
+                <label for="private">비공개</label>
+            </div>
         </div>
 
         <div class="button-group">

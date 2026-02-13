@@ -22,6 +22,35 @@ body {
     padding-left: 15px;
 }
 
+/* 게시판 선택 영역 스타일 */
+.write-category {
+    margin-bottom: 20px; /* 제목 입력창과의 간격 */
+}
+
+.write-category label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.write-category select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+/* 마우스 클릭 시 강조 효과 */
+.write-category select:focus {
+    border-color: #535252;
+    background-color: #fff;
+}
+
 .board-write-container .write-form label {
     display: block;
     margin-top: 15px;
@@ -95,6 +124,31 @@ body {
     text-align: center;
     line-height: 22px;
     cursor: pointer;
+}
+
+/* boardWrite.css 예시 */
+#qnaExtraOptions {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.qna-privacy-label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.qna-radio-group {
+    display: flex;
+    gap: 20px; /* 라디오 버튼 사이 간격 */
+    align-items: center;
+}
+
+.qna-radio-group input[type="radio"] {
+    cursor: pointer;
+    width: auto !important; /* 기존 input 100% 스타일 방지 */
 }
 
 .button-group {

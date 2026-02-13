@@ -43,7 +43,6 @@ body {
     color: #333;
 }
 
-
 /* 제목줄 헤더와 데이터줄 안의 모든 span들 */
 .board-detail-container .title-header span,
 .board-detail-container .title-row span {
@@ -83,13 +82,6 @@ body {
     text-align: center;
 }
 
-/* 구분선 */
-.section-divider {
-    border: 0;
-    border-top: 1px solid #eee;
-    margin: 20px 0;
-}
-
 /* 내용 영역 */
 .detail-content {
     line-height: 1.8;
@@ -126,7 +118,7 @@ body {
     gap: 10px;          /* 요소 사이 간격 */
 }
 
-/* 좋아요 버튼 */
+/* 좋아요 버튼*/
 .like-area {
     display: flex;
     align-items: center;

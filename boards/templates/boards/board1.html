@@ -17,6 +17,7 @@
         </div>
 
         <div class="board-list">
+            <!-- 여기서부터는 샘플 -->
             <div class="board-row" onclick="goBoardDetail(3)">
                 <div class="col-no">3</div>
                 <div class="col-title">퍼스널컬러 후기 공유합니다 <span class="comment-count">[2]</span>
@@ -39,6 +40,7 @@
                 <div class="col-date">2026-02-02</div>
                 <div class="col-view">12</div>
             </div>
+            <!-- 여기까지 샘플 -->
         </div>
 
         <!-- 구분선 + 글쓰기 버튼 -->
@@ -48,11 +50,23 @@
         </div>
 
         <div class="pagination">
-            <span>1</span>
-            <span>2</span>
-            <span>3</span>
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">이전</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="current-page">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">다음</a>
+            {% endif %}
         </div>
     </div>
 
-<script src="{% static 'boards/js/board1.js' %}" defer></script>
+    <script src="{% static 'boards/js/board1.js' %}" defer></script>
 {% endblock %}

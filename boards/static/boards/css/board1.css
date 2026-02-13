@@ -46,6 +46,7 @@ body {
     cursor: pointer;
 }
 
+
 /* 열 비율 */
 .col-no {
     width: 7%;
@@ -65,10 +66,12 @@ body {
     width: 12%;
     text-align: center;
 }
+
 .col-date {
     width: 15%;
     text-align: center;
 }
+
 .col-view {
     width: 11%;
     text-align: center;
@@ -95,7 +98,7 @@ body {
 
 /* 자유게시판 댓글 수 강조 */
 .comment-count {
-    color: #e37e7e; /* 오렌지/브라운 톤으로 포인트 */
+    color: #e67e22; /* 오렌지/브라운 톤으로 포인트 */
     font-size: 0.9em;
     font-weight: bold;
     margin-left: 5px;
@@ -135,6 +138,11 @@ body {
 
 /* 페이지네이션 현재 페이지 강조 */
 .pagination span:first-child {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.current-page {
     font-weight: bold;
     text-decoration: underline;
 }

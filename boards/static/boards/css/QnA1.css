@@ -22,58 +22,59 @@ body {
     padding-left: 15px;
 }
 
-.board-header {
-    display: flex;
-    padding: 12px 10px;
-    border-top: 2px solid #535252;
-    border-bottom: 1px solid #ddd;
-    background-color: #fcfcfc;
-    color: #333;
-    font-weight: bold;
-    align-items: center;
+/* 1. 레이아웃의 핵심: 줄(row)을 가로로 정렬 */
+.board-header,
+.board-row {
+    display: flex;         /* 가로 정렬을 위해 필수! */
+    align-items: center;   /* 세로 위치를 중앙으로 */
+    padding: 12px 0;       /* 위아래 여백 */
+    border-bottom: 1px solid #eee; /* 줄 구분선 */
+    cursor: pointer;       /* 마우스 올리면 클릭 가능하게 */
 }
 
-.board-row {
-    display: flex;
-    padding: 12px 10px;
-    border-bottom: 1px solid #ddd;
-    align-items: center;
-    transition: background-color 0.2s; /*배경색 전환 천천히*/
+.board-header {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    border-top: 2px solid #535252;
 }
 
 .board-row:hover {
-    background-color: #f0f0f0;
+    background-color: #fcfcfc;
     cursor: pointer;
 }
 
 /* 열 비율 */
 .col-no {
-    width: 7%;
+    width: 10%;
     text-align: center;
 }
 
 .col-title {
-    width: 55%;
+    width: 65%;
     text-align: left;
     padding-left: 20px;
     white-space: nowrap;      /* 줄바꿈 금지 */
     overflow: hidden;         /* 넘치는 부분 숨김 */
     text-overflow: ellipsis;  /* 말줄임표(...) 표시 */
+    display: flex;          /* 자물쇠 아이콘과 정렬 위해 추가 */
+    align-items: center;
 }
 
-.col-writer {
+.col-date {
     width: 15%;
     text-align: center;
 }
 
-.col-date {
-    width: 12%;
+.col-view {
+    width: 10%;
     text-align: center;
 }
 
-.col-view {
-    width: 11%;
-    text-align: center;
+/* 자물쇠 아이콘 스타일 추가 */
+.lock-icon {
+    margin-right: 8px;
+    font-size: 14px;
+    flex-shrink: 0;         /* 제목 길어져도 아이콘 크기 유지 */
 }
 
 /* 정렬: 헤더는 전부 중앙 */
@@ -82,9 +83,8 @@ body {
     padding-left: 0 !important;
 }
 
-/* 정렬: 본문은 번호, 작성자, 날짜, 조회수는 중앙, 제목은 왼쪽 */
+/* 정렬: 본문은 번호, 날짜, 조회수는 중앙, 제목은 왼쪽 */
 .board-row .col-no,
-.board-row .col-writer,
 .board-row .col-date,
 .board-row .col-view {
     text-align: center;
@@ -95,7 +95,7 @@ body {
     padding-left: 20px;
 }
 
-/* 자유게시판 댓글 수 강조 */
+/* 댓글 수 강조 */
 .comment-count {
     color: #e67e22; /* 오렌지/브라운 톤으로 포인트 */
     font-size: 0.9em;
@@ -137,6 +137,11 @@ body {
 
 /* 페이지네이션 현재 페이지 강조 */
 .pagination span:first-child {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.current-page {
     font-weight: bold;
     text-decoration: underline;
 }

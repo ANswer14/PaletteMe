@@ -20,16 +20,27 @@
 
         <!-- 데이터줄: 실제 게시글 -->
         <div class="title-row">
-            <span id="detailNo"></span>
-            <span id="detailTitle"></span>
-            <span id="detailWriter"></span>
-            <span id="detailDate"></span>
-            <span id="detailView"></span>
+            <span id="detailNo">{{ post.id }}</span>
+            <span id="detailTitle">{{ post.title }}</span>
+
+            {% if post.writer %}
+            <span id="detailWriter">{{ post.writer }}</span>
+            {% endif %}
+
+            <span id="detailDate">{{ post.created_at|date:"Y-m-d" }}</span>
+            <span id="detailView">{{ post.views }}</span>
         </div>
         <hr class="section-divider">
 
-        <div class="detail-content" id="detailContent">
-            내용 자리
+        <div class="detail-content">
+            <!-- 작성된 텍스트 자리 -->
+            <div id="detailContentText">{{ post.content|linebreaksbr }}</div>
+            <!-- 첨부된 이미지가 보여지는 자리  -->
+            <div id="detailImages" class="detail-images-area">
+                {% for image in post.images.all %}
+                    <img src="{{ image.url }}" alt="첨부이미지">
+                {% endfor %}
+            </div>
         </div>
         <hr class="section-divider">
 
@@ -52,6 +63,11 @@
         </div>
 
         <div class="detail-nav">
+            <!-- 작성자 본인일 경우 수정, 삭제 버튼 -->
+            <button id="editBtn" onclick="goEdit()" style="display:none;">수정</button>
+            <button id="deleteBtn" onclick="goDelete()" style="display:none;">삭제</button>
+
+            <!-- 이전글|글목록|다음글 -->
             <span id="prevBtn" onclick="goPrev()">이전글</span> |
             <span onclick="goList()">글목록</span> |
             <span id="nextBtn" onclick="goNext()">다음글</span>
@@ -59,5 +75,5 @@
 
     </div>
 
-<script src="{% static 'boards/js/board2.js' %}" defer></script>
+    <script src="{% static 'boards/js/board2.js' %}" defer></script>
 {% endblock %}

@@ -1,105 +1,167 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. 요소 선택 (HTML의 ID와 정확히 일치시킴)
+
+    // 1. 요소 선택
     const nicknameInput = document.getElementById('nickname');
     const nickNameCheckBtn = document.getElementById('nickNameCheckBtn');
     const nickNameStatus = document.getElementById('nickNameStatus');
-
-    const emailInput = document.getElementById('email');
-    const emailDuplicateBtn = document.getElementById('emailDuplicateBtn');
-    const emailStatus = document.getElementById('emailStatus');
-
     const saveInfoBtn = document.getElementById('saveInfoBtn');
-    const selectedDefaultImageInput = document.getElementById("selectedDefaultImage");
 
-    let isNickNameChecked = true; // 이미 저장된 정보이므로 초기값은 true
-    let isEmailChecked = true;
+    // 비밀번호 관련 요소
+    const currentPw = document.getElementById('currentPw');
+    const newPw = document.getElementById('newPw');
+    const newPwCheck = document.getElementById('newPwCheck');
+    const changePwBtn = document.getElementById('changePwBtn');
 
-    // 2. 닉네임 중복 확인
-    nickNameCheckBtn.onclick = function() {
-        const value = nicknameInput.value.trim();
-        const url = this.getAttribute("data-url"); // HTML의 {% url %} 주소 가져오기
+    // 초기값 저장
+    const initialNickname = nicknameInput ? nicknameInput.value.trim() : "";
+    let isNickNameChecked = true;
 
-        if (!value) { alert("닉네임을 입력해주세요."); return; }
+    // 페이지 로드 시 초기 상태: 버튼 비활성화 (원래 닉네임이니까)
+    if (nickNameCheckBtn) {
+        nickNameCheckBtn.disabled = true;
+    }
 
-        fetch(`${url}?nickname=${encodeURIComponent(value)}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.isDuplicate) {
-                    nickNameStatus.innerText = "이미 사용 중인 닉네임입니다.";
-                    nickNameStatus.style.color = "red";
-                    isNickNameChecked = false;
-                } else {
-                    nickNameStatus.innerText = "사용 가능한 닉네임입니다.";
-                    nickNameStatus.style.color = "blue";
-                    isNickNameChecked = true;
-                }
-            });
-    };
+    // --- (3) 닉네임 중복 확인 로직 (AJAX) ---
+    if (nickNameCheckBtn && nicknameInput) {
+        nickNameCheckBtn.onclick = function(e) {
+            e.preventDefault();
 
-    // 3. 이메일 중복 확인
-    emailDuplicateBtn.onclick = function() {
-        const value = emailInput.value.trim();
-        const url = this.getAttribute("data-url");
+            const value = nicknameInput.value.trim();
+            const url = "/accounts/check-username/";
 
-        if (!value) { alert("이메일을 입력해주세요."); return; }
+            if (!value) {
+                alert("닉네임을 입력해주세요.");
+                return;
+            }
 
-        fetch(`${url}?email=${encodeURIComponent(value)}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.isDuplicate) {
-                    emailStatus.innerText = "이미 사용 중인 이메일입니다.";
-                    emailStatus.style.color = "red";
-                    isEmailChecked = false;
-                } else {
-                    emailStatus.innerText = "사용 가능한 이메일입니다.";
-                    emailStatus.style.color = "blue";
-                    isEmailChecked = true;
-                }
-            });
-    };
+            fetch(`${url}?type=nickname&value=${encodeURIComponent(value)}`)
+                .then(res => res.json())
+                .then(data => {
+                    const exists = data.exists || data.isDuplicate;
+                    if (nickNameStatus) {
+                        nickNameStatus.innerText = exists ? "이미 사용 중인 닉네임입니다." : "사용 가능한 닉네임입니다.";
+                        nickNameStatus.style.color = exists ? "red" : "green";
+                    }
+                    isNickNameChecked = !exists;
+                })
+                .catch(err => console.error("중복 확인 에러:", err));
+        };
 
-    // 입력 값이 바뀌면 중복확인 초기화
-    nicknameInput.oninput = () => { isNickNameChecked = false; nickNameStatus.innerText = ""; };
-    emailInput.oninput = () => { isEmailChecked = false; emailStatus.innerText = ""; };
+        // 🔥 입력창 감시: 버튼 활성/비활성 제어
+        nicknameInput.oninput = () => {
+            const currentValue = nicknameInput.value.trim();
 
-    // 4. 정보 수정 저장
-    saveInfoBtn.onclick = function () {
-        if (!isNickNameChecked || !isEmailChecked) {
-            alert("중복 확인을 먼저 완료해주세요.");
-            return;
-        }
-        if (!confirm("수정된 내용을 저장하시겠습니까?")) return;
+            if (currentValue === initialNickname) {
+                // 원래 닉네임으로 돌아오면: 버튼 비활성 + 상태 초기화
+                nickNameCheckBtn.disabled = true;
+                isNickNameChecked = true;
+                if (nickNameStatus) nickNameStatus.innerText = "";
+            } else if (currentValue.length > 0) {
+                // 값이 바뀌고 빈칸이 아니면: 버튼 활성 + 중복확인 필요 상태
+                nickNameCheckBtn.disabled = false;
+                isNickNameChecked = false;
+                if (nickNameStatus) nickNameStatus.innerText = "";
+            } else {
+                // 빈칸이면: 버튼 비활성
+                nickNameCheckBtn.disabled = true;
+                isNickNameChecked = false;
+            }
+        };
+    }
 
-        // 실제 저장은 폼의 submit을 이용하거나 별도의 fetch POST를 사용합니다.
-        // 여기서는 흐름만 보여드립니다.
-        alert("수정이 완료되었습니다!");
-    };
+    // --- (4) 정보 수정 저장 버튼 로직 ---
+    const profileForm = document.querySelector('form[enctype="multipart/form-data"]'); // 프로필 폼 선택
+
+    if (profileForm) {
+        profileForm.onsubmit = function(e) {
+            // 중복 확인 여부 체크
+            if (!isNickNameChecked) {
+                alert("닉네임 중복 확인을 먼저 완료해주세요.");
+                e.preventDefault();
+                return false;
+            }
+
+            // 최종 확인창 (여기서 한 번만 떠야 함)
+            if (!confirm("수정된 내용을 저장하시겠습니까?")) {
+                e.preventDefault();
+                return false;
+            }
+        };
+    }
+
+    // --- (5) 비밀번호 변경 검증 로직 (엔터 지원 버전) ---
+    const pwForm = document.querySelector('form[action="/accounts/change-password/"]');
+
+    if (pwForm) {
+        pwForm.onsubmit = function(e) {
+            // 1. 요소 다시 확인 (입력 시점의 값)
+            const currentPwVal = document.getElementById('currentPw').value.trim();
+            const newPwVal = document.getElementById('newPw').value.trim();
+            const newPwCheckVal = document.getElementById('newPwCheck').value.trim();
+
+            // 2. 빈 칸 검사
+            if (!currentPwVal || !newPwVal || !newPwCheckVal) {
+                alert("비밀번호 필드를 모두 입력해주세요.");
+                e.preventDefault();
+                return false;
+            }
+
+            // 3. 새 비밀번호 일치 검사
+            if (newPwVal !== newPwCheckVal) {
+                alert("새 비밀번호가 서로 일치하지 않습니다.");
+                document.getElementById('newPwCheck').focus();
+                e.preventDefault();
+                return false;
+            }
+
+            // 4. 길이 검사
+            if (newPwVal.length < 8) {
+                alert("새 비밀번호는 최소 8자 이상이어야 합니다.");
+                e.preventDefault();
+                return false;
+            }
+
+            // 5. 최종 확인
+            if (!confirm("비밀번호를 변경하시겠습니까?")) {
+                e.preventDefault();
+                return false;
+            }
+
+            // 여기까지 오면 자동으로 서버로 submit 됩니다.
+        };
+    }
 });
 
-// 5. 프로필 이미지 관련 (Global functions)
+
+/**
+ * [2] 이미지 관련 전역 함수 (Global Functions)
+ */
 function selectImage(imgName) {
-    const staticPath = document.getElementById('static-path').dataset.path;
+    const staticPathEl = document.getElementById('static-path');
+    if (!staticPathEl) return;
+
+    const staticPath = staticPathEl.dataset.path;
     const preview = document.getElementById('profilePreview');
     const selectedInput = document.getElementById("selectedDefaultImage");
     const fileInput = document.getElementById('profileUpload');
 
-    preview.src = staticPath + imgName;
+    if (preview) preview.src = staticPath + imgName;
     if (selectedInput) selectedInput.value = imgName;
-    fileInput.value = ""; // 파일 업로드 초기화
+    if (fileInput) fileInput.value = "";
 }
 
 function previewFile() {
     const preview = document.getElementById('profilePreview');
-    const file = document.getElementById('profileUpload').files[0];
+    const fileInput = document.getElementById('profileUpload');
+    if (!fileInput || !fileInput.files[0]) return;
+
+    const file = fileInput.files[0];
     const selectedInput = document.getElementById("selectedDefaultImage");
     const reader = new FileReader();
 
     reader.onloadend = function () {
-        preview.src = reader.result;
-        if (selectedInput) selectedInput.value = ""; // 기본 이미지 선택 초기화
+        if (preview) preview.src = reader.result;
+        if (selectedInput) selectedInput.value = "";
     }
-
-    if (file) {
-        reader.readAsDataURL(file);
-    }
+    reader.readAsDataURL(file);
 }

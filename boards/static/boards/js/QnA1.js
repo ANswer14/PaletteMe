@@ -1,11 +1,14 @@
 // 꼭 변수이름 확인하기!!!!!!
 
 function goQnADetail(postId, is_private, postWriter) {
-    const currentUserNickname = "{{ user.nickname }}"; // 서버에서 넣어준 현재 유저 이름
+    const params = new URLSearchParams(window.location.search);
+    const currentPage = params.get("page") || 1;
+    //const currentUserNickname = "{{ user.nickname }}"; // 서버에서 넣어준 현재 유저 이름
+    const currentUserNickname = USER_NICKNAME;
 
     // 공개글은 누구나 통과!
     if (!is_private) {
-        location.href = `QnA2.html?no=${postId}`;
+        location.href = `QnA2.html?no=${postId}&page=${currentPage}`;  // 백엔드에서 설정한 실제 상세페이지 주소 넣을것!!!
         return;
     }
 
@@ -16,5 +19,5 @@ function goQnADetail(postId, is_private, postWriter) {
         return;
     }
 
-    location.href = `QnA2.html?no=${postId}`;
+    location.href = `QnA2.html?no=${postId}&page=${currentPage}`;  // 백엔드에서 설정한 실제 상세페이지 주소 넣을것!!!
 }

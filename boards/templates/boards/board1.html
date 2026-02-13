@@ -17,30 +17,23 @@
         </div>
 
         <div class="board-list">
-            <!-- 여기서부터는 샘플 -->
-            <div class="board-row" onclick="goBoardDetail(3)">
-                <div class="col-no">3</div>
-                <div class="col-title">퍼스널컬러 후기 공유합니다 <span class="comment-count">[2]</span>
+            {% if posts %}
+                {% for post in posts %}
+                <div class="board-row" onclick="goBoardDetail({{ post.id }})">
+                    <div class="col-no">{{ forloop.revcounter }}</div> <div class="col-title">
+                        {{ post.title }}
+                        {% if post.comment_count > 0 %}
+                            <span class="comment-count">[{{ post.comment_count }}]</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-writer">{{ post.writer }}</div>
+                    <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
+                    <div class="col-view">{{ post.views }}</div>
                 </div>
-                <div class="col-writer">민수</div>
-                <div class="col-date">2026-02-02</div>
-                <div class="col-view">33</div>
-            </div>
-            <div class="board-row" onclick="goBoardDetail(2)">
-                <div class="col-no">2</div>
-                <div class="col-title">오늘 코디 추천 너무 좋아요 <span class="comment-count">[1]</span></div>
-                <div class="col-writer">홍길동</div>
-                <div class="col-date">2026-02-02</div>
-                <div class="col-view">8</div>
-            </div>
-            <div class="board-row" onclick="goBoardDetail(1)">
-                <div class="col-no">1</div>
-                <div class="col-title">첫 번째 글입니다</div>
-                <div class="col-writer">김주연</div>
-                <div class="col-date">2026-02-02</div>
-                <div class="col-view">12</div>
-            </div>
-            <!-- 여기까지 샘플 -->
+                {% endfor %}
+            {% else %}
+                <div class="board-row" style="justify-content: center; color: #999;">게시글이 없습니다.</div>
+            {% endif %}
         </div>
 
         <!-- 구분선 + 글쓰기 버튼 -->

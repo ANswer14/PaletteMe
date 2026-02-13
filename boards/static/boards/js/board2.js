@@ -17,6 +17,7 @@ function getCookie(name) {
 
 const params = new URLSearchParams(window.location.search);
 const no = parseInt(params.get("no")) || 0;
+const currentPageNum = params.get("page") || 1;    // 원래 보던 페이지 불러오기 선언
 
 let currentPostData = null; // 백엔드에서 받은 전체 데이터를 저장할 빈 주머니
 
@@ -30,16 +31,16 @@ const detailView = document.getElementById("detailView");
 document.addEventListener("DOMContentLoaded", async function () {
     if (no === 0) {
         alert("잘못된 접근입니다.");
-        location.href = "board1.html";
+        location.href = "boards/board1/";   // 실제주소 써넣을것!!!!!!
         return;
     }
 
     try {
         const response = await fetch(`/api/board/detail/${no}/`);
         const data = await response.json();
-        renderDetail(data); 
-    } 
-    
+        renderDetail(data);
+    }
+
     catch (error) {
         console.error("데이터 로드 실패", error);
     }
@@ -49,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 // 데이터를 화면에 그리는 함수
 function renderDetail(data) {
-    
+
     currentPostData = data; // 전달받은 보따리를 나중을 위해 주머니에 저장!
     // const today = new Date().toISOString().split('T')[0]; // 오늘 날짜 계산 - DB에서 날짜 안보낼경우를 대비한 코드(사용할일 없게 하면 좋겠다!!)
 
@@ -61,10 +62,10 @@ function renderDetail(data) {
     document.getElementById("detailView").innerText = data.views || 0;
     document.getElementById("detailContentText").innerText = data.content;
 
-    // 2. 사진 리스트 채우기 
+    // 2. 사진 리스트 채우기
     const imageArea = document.getElementById("detailImages");
-    imageArea.innerHTML = "";         // 사진이 들어갈 게시판 초기화    
-    
+    imageArea.innerHTML = "";         // 사진이 들어갈 게시판 초기화
+
     if (data.images && data.images.length > 0) {     // 이미지 개수가 0보다 많은지 확인
         data.images.forEach(imgUrl => {         //  사진 주소 하나씩 꺼내는 작업
             const imgTag = document.createElement("img");   // js에서 새로운 img 태그 생성(아직 화면에 붙이진 않은 상태)
@@ -73,7 +74,7 @@ function renderDetail(data) {
         });
     }
 
-    // 3. 댓글 채우기 
+    // 3. 댓글 채우기
     const commentList = document.getElementById("commentList");
     commentList.innerHTML = "";          // 댓글 들어갈 자리 초기화
     if (data.comments && data.comments.length > 0) {       // 이 글에 댓글이 달려있는지 확인
@@ -83,7 +84,7 @@ function renderDetail(data) {
             div.innerHTML = `<b>${comment.writer}:</b> ${comment.text}`;    // 글쓴이:내용 형식으로 댓글 작성
             commentList.appendChild(div);               // 댓글 게시판에 다쓴 포스트잇을 순서대로 붙임
         });
-    } 
+    }
     else {
         commentList.innerHTML = "<div class='comment'>아직 댓글이 없습니다.</div>";
     }
@@ -139,7 +140,7 @@ function addComment() {
 function goEdit() {
     // no는 URL에서 가져온 현재 글 번호입니다.(백엔드와 이름 확인!!!!)
     // mode=edit을 붙여서 '수정 모드'임을 알립니다.
-    location.href = `boardWrite.html?no=${no}&mode=edit`;
+    location.href = `boardWrite.html?no=${no}&mode=edit`;   // 백엔드에서 설정한 실제 상세페이지 주소 넣을것!!!
 }
 
 // 게시글 삭제 버튼
@@ -157,12 +158,12 @@ async function goDelete() {
 
             if (response.ok) {
                 alert("삭제되었습니다.");
-                location.href = "board1.html"; // 삭제 후 목록으로
-            } 
+                location.href = "board1.html"; // 삭제 후 목록으로  // 백엔드에서 설정한 실제 상세페이지 주소 넣을것!!!
+            }
             else {
                 alert("삭제 권한이 없거나 오류가 발생했습니다.");
             }
-        } 
+        }
         catch (error) {
             console.error("에러 발생:", error);
             alert("네트워크 문제로 삭제하지 못했습니다.");
@@ -171,26 +172,34 @@ async function goDelete() {
 }
 
 // 목록으로 버튼
-function goList() {   
-    const page = params.get("page") || 1;    // 주소창에 'page' 정보가 있다면 그 페이지로, 없으면 그냥 목록으로!
-    window.location.href = `board1.html?page=${page}`;   // get("page")안의 page, ${page} 안의 page 이름 백엔드와 의논필요
+function goList() {
+    //const params = new URLSearchParams(window.location.search); // params 재선언
+    //const page = params.get("page") || 1;    // 주소창에 'page' 정보가 있다면 그 페이지로, 없으면 그냥 목록으로!
+    window.location.href = `board1.html?page=${currentPageNum}`;   // get("page")안의 page, ${page} 안의 page 이름 백엔드와 의논필요
 }
 
 function goPrev() {
+    //const params = new URLSearchParams(window.location.search); // params 재선언
+    //const page = params.get("page") || 1; // page 정의
+
     // data 보따리에 들어있는 '이전 글 번호'가 있는지 확인
     if (currentPostData && currentPostData.prev_no) {       //currentPostData.prev_no의 prev_no 이름 백엔드와 의논필요
-        window.location.href = "board2.html?no=" + currentPostData.prev_no;
-    } else {
+        window.location.href = `board2.html?no=${currentPostData.prev_no}&page=${currentPageNum}`;
+    }
+    else {
         alert("이전 글이 없습니다.");
     }
 }
 
 function goNext() {
+    //const params = new URLSearchParams(window.location.search); // params 재선언
+    //const page = params.get("page") || 1; // page 정의
+
     // data 보따리에 들어있는 '다음 글 번호'가 있는지 확인
     if (currentPostData && currentPostData.next_no) {       //currentPostData.next_no의 next_no 이름 백엔드와 의논필요
-        window.location.href = "board2.html?no=" + currentPostData.next_no;
-    } 
+        window.location.href = `board2.html?no=${currentPostData.next_no}&page=${currentPageNum}`;
+    }
     else {
         alert("다음 글이 없습니다.");
     }
-}   
+}

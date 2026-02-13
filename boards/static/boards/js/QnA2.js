@@ -1,9 +1,6 @@
 const params = new URLSearchParams(window.location.search);
-const no = params.get("no") || 0;     // URL에서 글 번호 가져오기
-
-const titleParam = params.get("title");
-const contentParam = params.get("content");
-const writerParam = params.get("writer");
+const no = parseInt(params.get("no")) || 0;     // URL에서 글 번호 가져오기
+const currentPageNum = params.get("page") || 1;    // 원래 보던 페이지 불러오기 선언
 
 // HTML 요소 미리 찾아두기
 const detailNo = document.getElementById("detailNo");
@@ -20,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // 글 번호가 없으면 목록으로 튕겨내기
     if (no === 0) {
         alert("잘못된 접근입니다.");
-        location.href = "board1.html";
+        location.href = "boards/QnA1/";    // 실제주소 쓸것!!!!!!!!
         return;
     }
 
@@ -70,20 +67,30 @@ function renderDetail(data) {
 
 // 목록으로 버튼
 function goList() {
-    const page = params.get("page") || 1;
-    window.location.href = `QnA1.html?page=${page}`;
+    //const params = new URLSearchParams(window.location.search); // params 재선언
+    //const page = params.get("page") || 1;
+    window.location.href = `QnA1.html?page=${currentPageNum}`;
 }
 function goPrev() {
+    //const params = new URLSearchParams(window.location.search); // params 재선언
+    //const page = params.get("page") || 1;
+
     if (currentPostData && currentPostData.prev_no) {
-        window.location.href = "QnA2.html?no=" + currentPostData.prev_no;
-    } else {
+        // 백엔드에서 설정한 실제 상세페이지 주소 넣을것!!!
+        window.location.href = `QnA2.html?no=${currentPostData.prev_no}&page=${currentPageNum}`;
+    }
+    else {
         alert("이전 글이 없습니다.");
     }
 }
 function goNext() {
+    //const params = new URLSearchParams(window.location.search); // params 재선언
+    //const page = params.get("page") || 1;
     if (currentPostData && currentPostData.next_no) {
-        window.location.href = "QnA2.html?no=" + currentPostData.next_no;
-    } else {
+        // 백엔드에서 설정한 실제 상세페이지 주소 넣을것!!!
+        window.location.href = `QnA2.html?no=${currentPostData.next_no}&page=${currentPageNum}`;
+    }
+    else {
         alert("다음 글이 없습니다.");
     }
 }

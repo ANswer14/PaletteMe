@@ -38,7 +38,7 @@ system_prompt = f"""
         }}
         """ # 프롬프트
 
-# colorInfo 렌더링 함수
+# colorInfo.html 렌더링 함수
 def get_color_info(request):
     color, date, mood, good_color, bad_color = None, None, None, None, None
     try:
@@ -51,7 +51,7 @@ def get_color_info(request):
         mood = latest_history.mood
         good_color = latest_history.good_color
         bad_color = latest_history.bad_color
-        is_saved = True
+        is_saved = True # 데이터 있는지 없는지 판별용 변수
     except ColorHistory.DoesNotExist:
         # 아직 진단 기록이 없는 경우에 대한 예외 처리
         is_saved = False
@@ -60,7 +60,7 @@ def get_color_info(request):
                                                              'good_color': good_color,
                                                              'bad_color': bad_color,
                                                              'is_saved': is_saved,})
-
+# colorTest.html 렌더링 함수
 def test_color(request):
     user = request.user
     if request.method == 'POST':
@@ -79,6 +79,7 @@ def test_color(request):
                   {'page': 1, 'warm': 0, 'cool': 0, 'light': 0,
                    'dark': 0, 'mute': 0, 'vivid': 0, 'idk': 0})
 
+# 설문 결과 받아온 후 colorResult.html 렌더링 함수
 def get_result_color(request):
     if request.method == 'POST':
         # 설문 결과 받아오기
@@ -88,6 +89,7 @@ def get_result_color(request):
         return render(request, 'personalColors/colorResult.html', {'tone': tone, 'mood': mood, 'good_color': good_color, 'bad_color': bad_color, 'color_codes': color_codes})
     return redirect(request, 'personalColors/infoColor.html')
 
+# 설문 결과 저장 함수(AJAX)
 def save_info(request):
     if request.method == 'POST':
         user_history = request.user.color_history.all() # 유저의 기존 퍼스널 컬러 모두 가져오기
@@ -98,7 +100,7 @@ def save_info(request):
             if oldest_history:
                 oldest_history.delete() # 해당 row 삭제
 
-        # 새로운 결과 저장
+        # 새로운 결과 데이터 지정
         data = json.loads(request.body)
         color_type = data.get('colorType')
         mood = data.get('mood')
@@ -117,10 +119,12 @@ def save_info(request):
         return JsonResponse({'status': 'success', 'message': f'{color_type} 저장 완료!'})
     return JsonResponse({'status': 'fail', 'message': '저장 실패'})
 
+# 지도 화면 렌더링 함수: weatherInfo.html 렌더링 함수
 def get_map(request):
-    KAKAO_MAP_API_KEY = os.getenv('KAKAO_MAP_API_KEY')
+    KAKAO_MAP_API_KEY = os.getenv('KAKAO_MAP_API_KEY') # 카카오 맵 API KEY
     return render(request, 'personalColors/weatherInfo.html', {'KAKAO_MAP_API_KEY': KAKAO_MAP_API_KEY})
 
+# 기상청 API 통한 날씨 데이터 받아오는 AJAX용 함수
 def get_weather(request):
     # print('도착 완료!')
     if request.method == 'POST':
@@ -144,7 +148,7 @@ def get_weather(request):
             base_date = now.strftime('%Y%m%d')
             # base_time = f"{max(last_base_hour):02d}00"
             base_time = '0200'
-        print(base_time)
+        # print(base_time)
 
         url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'
         params = {
@@ -205,30 +209,31 @@ def get_weather(request):
 
         return JsonResponse(jsonRes, safe=False)
 
+# 멀티스레드 작업 시작 및 finalResult.html 렌더링 함수
 def generate_start(request):
     if request.method == 'POST':
-        temp = request.POST['temp']
-        weather = request.POST['weather']
-        sky = request.POST['sky']
-        address = request.POST['address']
+        temp = request.POST['temp'] # 기온
+        weather = request.POST['weather'] # 강수 상태
+        sky = request.POST['sky'] # 하늘 상태
+        address = request.POST['address'] # 주소(대략적 주소)
 
-        session_id = request.session.session_key
+        session_id = request.session.session_key # 현재 유저 세션 id
         print('generateStart POST 방식')
         # [방어 로직] 이미 해당 세션의 작업이 진행 중인지 확인
         if session_id in temp_storage and temp_storage[session_id]['status'] == 'processing':
             return redirect('/personalColors/map')
 
+        # stop_event: 중단 신호용 플래그(Event 객체 저장)
         stop_event = threading.Event()
 
         temp_storage[session_id] = {'status': 'processing', 'image': None, 'stop_event': stop_event}
-        # stop_event: 중단 신호용 플래그(Event 객체 저장)
 
         thread = threading.Thread(
             target=generate_img_thread,
             args=(request, session_id, temp, weather, sky, stop_event)
         )
         thread.daemon = True # 프로세스 종료 시 함께 종료되도록 설정
-        thread.start()
+        thread.start() # 작업 떠넘기기 시작
         temp_storage[session_id]['thread'] = thread  # 스레드 객체 저장
 
 
@@ -236,12 +241,13 @@ def generate_start(request):
 
         return render(request, 'personalColors/finalResult.html', {'temp': temp + '°C', 'weather': weather, 'sky': sky, 'colorType': color_type, 'address': address})
     elif request.method == 'GET':
-        print('generateStart GET')
+        # print('generateStart GET')
         return redirect('/personalColors/map')
 
+# livepreview 기능 활용 위한 주기적인 이미지 상태 확인 함수
 def check_status(request):
     session_id = request.session.session_key
-    auth = HTTPBasicAuth(os.getenv("SD_API_USER"), os.getenv("SD_API_PASSWORD"))
+    auth = HTTPBasicAuth(os.getenv("SD_API_USER"), os.getenv("SD_API_PASSWORD")) # SD_API 인증용 변수
     result = temp_storage.get(session_id)
 
     if not result or (result.get('stop_event') and result['stop_event'].is_set()):
@@ -263,6 +269,7 @@ def check_status(request):
                          'current_image': prog_data['current_image'] # Base64 미리보기 이미지
                          })
 
+# 떠넘겨진 작업
 @retry(
     retry=retry_if_exception_type(ServerError),
     wait=wait_random_exponential(min=1, max=60),
@@ -313,6 +320,7 @@ def generate_img_thread(request, session_id, temp, weather, sky, stop_event):
     # --- [단계 2] 실제 이미지 생성 요청 ---
     generate_img(request, session_id, stop_event, optimized_prompt, url_txt2img, auth, description)
 
+# 실제 이미지 생성 요청 함수
 def generate_img(request, session_id, stop_event, optimized_prompt, url_txt2img, auth, description):
 
     try:
@@ -423,6 +431,7 @@ def generate_img(request, session_id, stop_event, optimized_prompt, url_txt2img,
         print(f'이미지 생성 중단 혹은 에러 발생: {e}')
         return
 
+# 네이버 검색 API 활용한 쇼핑 링크 반환 함수
 def get_real_shopping_link(gender, query):
     headers = {
         "X-Naver-Client-Id": os.getenv('NAVER_CLIENT_ID'),
@@ -463,6 +472,7 @@ def save_image(request, image_url):
 
     result_instance.result_image.save(file_name, image_data, save=True) # 저장
 
+# 즐겨찾기 저장 로직(AJAX)
 def save_favorite(request):
     session_id = request.session.session_key
     img = temp_storage[session_id]['image']

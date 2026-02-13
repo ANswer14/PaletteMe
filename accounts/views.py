@@ -63,11 +63,27 @@ def profile_view(request):  # 저장, 중복확인 버튼을 눌렀을 때 (POST
                 form.save()  # 변경된 내용 실제로 DB에 저장
                 messages.success(request, "정보가 성공적으로 수정되었습니다.")
                 return redirect('profile')
-
     else:  # 처음 프로필 페이지에 접속했을 때 (GET)
         form = MyPageForm(instance=request.user)  # 현재 로그인한 유저의 정보를 폼에 채워서 생성
 
-    return render(request, "accounts/mypage.html", {'form': form})
+    # 1. 먼저 RecentImages 객체 리스트를 최신순으로 가져옵니다.
+    recent_records = request.user.recent_images.order_by('-created_at')
+
+    # 2. (선택사항) 만약 '이미지 파일 주소'만 담긴 리스트가 필요하다면 리스트 컴프리헨션을 씁니다.
+    image_urls = [record.result_image.url for record in recent_records if record.result_image]
+
+    # 진단 전적
+    test_histories = request.user.color_history.order_by('-executed_at')
+    histories = []
+    for history in test_histories:
+        histories.append({'date': history.executed_at, 'color_type': history.color_type})
+
+    favorites = request.user.favorite_images.order_by('-favorite_id')
+    favorite_img_urls = [favorite.favorite_image.url for favorite in favorites if favorite.favorite_image]
+
+
+
+    return render(request, "accounts/mypage.html", {'form': form, 'images': image_urls, 'histories': histories, 'favorites': favorite_img_urls})
 
 
 #  소셜 로그인 후 추가 정보를 입력받을 커스텀 뷰

@@ -102,9 +102,5 @@ document.addEventListener("DOMContentLoaded", function() {
             password2.focus();
             return; // ✨ 이 return이 있어야 아래 성공 alert가 안 뜹니다!
         }
-
-         // 회원 정보 저장
-
-        alert("회원가입 성공! 로그인 페이지로 이동합니다.");
     });
 });

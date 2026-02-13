@@ -19,10 +19,10 @@
             // 3. 부모 창에 포커스 주기
             window.opener.focus();
         }
-        // 4. 약간의 시간차(0.2초)를 두고 팝업창 닫기 (세션 동기화 보장)
+        // 4. 약간의 시간차(0.5초)를 두고 팝업창 닫기 (세션 동기화 보장)
         setTimeout(function() {
             window.close();
-        }, 200);
+        }, 500);
     </script>
 </body>
 </html>

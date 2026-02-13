@@ -12,14 +12,16 @@ from .forms import CustomSignupForm
 from allauth.account.utils import perform_login
 from django.urls import reverse
 
-# 소셜 로그인 시 로그인 창이 닫히지 않아 추가한 로직
-def login_success_view(request):
-    # render를 사용하여 만든 html을 띄워줍니다.
-    return render(request, 'accounts/login_success.html')
 
-# 회원가입 페이지 로드 함수
+# 회원가입 약관동의 페이지 로드 함수
 def agreement_view(request):
     return render(request, "accounts/agreement.html")
+
+
+# 약관 동의 없이 회원가입 페이지 강제이동 방지
+class MySignupView(SignupView):
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
 
 # 아이디/닉네임 중복확인 로직 (1차, 2차는 forms.py에서)
@@ -68,12 +70,6 @@ def profile_view(request):  # 저장, 중복확인 버튼을 눌렀을 때 (POST
     return render(request, "accounts/mypage.html", {'form': form})
 
 
-# 약관 동의 없이 회원가입 페이지 강제이동 방지
-class MySignupView(SignupView):
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-
 #  소셜 로그인 후 추가 정보를 입력받을 커스텀 뷰
 class MySocialSignupView(SocialSignupView):
     template_name = "accounts/social_signup.html"  # 템플릿 경로를 accounts 폴더 안으로 지정 (allauth 기본과 겹치지 않게)
@@ -108,6 +104,12 @@ class MySocialSignupView(SocialSignupView):
         # complete_social_signup을 호출하는 대신, 직접 login_success로 보냅니다.
         from django.shortcuts import redirect
         return redirect('login_success')
+
+
+# 소셜 로그인 시 로그인 창이 닫히지 않아 추가한 로직
+def login_success_view(request):
+    # render를 사용하여 만든 html을 띄워줍니다.
+    return render(request, 'accounts/login_success.html')
 
 
 # 프로필 페이지의 회원 탈퇴 로직 함수

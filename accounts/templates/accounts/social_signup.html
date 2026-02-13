@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>구글 최초 가입 - PaletteMe</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/addSocialLogin.css' %}">
+</head>
+<body>
+    <div class="mypage add-info-popup"> <div class="card"> <h2>PaletteMe 구글 최초 가입</h2>
+            <p class="desc">개인 맞춤형 서비스 제공을 위해 최초 1회 추가 정보를 수집합니다.</p>
+
+            <form id="addInfoForm" method="post" action="{% url 'socialaccount_signup' %}">
+                {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <p style="color: red; font-size: 0.9em;">{{ form.non_field_errors.0 }}</p>
+            {% endif %}
+
+                <div class="form-group">
+                    <label>닉네임</label>
+                    <div class="input-group">
+                        <input type="text" name="nickname" id="id_nickname"
+                               value="{{ form.nickname.value|default:form.initial.nickname|default:'' }}" required>
+                        <button type="button" id="nickNameCheckBtn">중복 확인</button>
+                    </div>
+                    <span id="nickNameStatus" class="status-msg"></span>
+
+                    {% if form.nickname.errors %}
+                        <span class="status error">
+                            {{ form.nickname.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label>휴대폰 번호</label>
+                    <input type="text" name="phone_number" value="{{ form.phone_number.value|default:'' }}" placeholder="010-0000-0000" required>
+                    {% if form.phone_number.errors %}
+                        <span class="status error">
+                            {{ form.phone_number.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label>성별</label>
+                    <div class="gender-selection">
+                        <label class="radio-label">
+                            <input type="radio" name="gender" value="M" {% if form.gender.value == "M" %}checked{% endif %}> 남성
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="gender" value="F" {% if form.gender.value == "F" %}checked{% endif %}> 여성
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" id="saveInfoBtn" class="signup-submit-btn">정보 저장 및 가입하기</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="{% static 'accounts/js/addSocialLogin.js' %}"></script>
+    <script>
+        {% if form.errors %}
+            // Django 폼 에러가 있을 경우 실행
+            let errorMsg = "";
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    // 휴대폰 번호(phone_number) 필드 에러를 포함해 모든 에러 수집
+                    errorMsg += "{{ error|escapejs }}\n";
+                {% endfor %}
+            {% endfor %}
+
+            if (errorMsg) {
+                alert(errorMsg); // 사용자에게 alert로 에러 알림
+            }
+        {% endif %}
+        {% if messages %}
+            {% for message in messages %}
+                alert("{{ message|escapejs }}");
+            {% endfor %}
+        {% endif %}
+    </script>
+</body>
+</html>

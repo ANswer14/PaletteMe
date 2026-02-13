@@ -5,18 +5,26 @@ document.addEventListener("DOMContentLoaded", function() {
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const colors = ["#FFD1B3", "#FFE5A3", "#FFB3B3"]; //임시
+    let colors = document.getElementById('color_codes').value
     const palette = document.getElementById("palette");
     const colorType = document.getElementById('personalColorResult').innerText;
     const mood = document.getElementById('description').innerText;
     const goodColor = document.getElementById('goodColor').innerText;
     const badColor = document.getElementById('badColor').innerText;
 
+    console.log(typeof(colors))
+    console.log((colors))
+    console.log(colors.replace('[[', '').replace(']]', '').split(', '))
+    colors = colors.replace('[[', '').replace(']]', '').replace(/'/g, "").split(', ')
+    console.log(colors[1])
+    console.log(colors)
+
     colors.forEach(color => {
         const circle = document.createElement("div");
         circle.className = "color-circle";
         circle.style.backgroundColor = color;
         circle.title = color; // 마우스 올리면 색 코드 보임
+        console.log(color)
         palette.appendChild(circle);
     });
 

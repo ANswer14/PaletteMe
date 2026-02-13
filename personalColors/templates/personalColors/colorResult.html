@@ -15,14 +15,15 @@
         <div class="right">
             <h1>당신의 퍼스널컬러는...</h1>
             {% if tone != '응답 수가 부족하여 정확한 진단이 어렵습니다.' %}
+                <input type="hidden" id="color_codes" value="{{ color_codes }}">
                 <div id="personalColorResult">{{ tone }}</div>
                 <p id="description">{{ mood }}</p>
                 <div class="palette-row">
                     <p>컬러팔레트:</p>
                     <div id="palette"></div>
                 </div>
-                <p id="goodColor">{{ goodColor }}</p>
-                <p id="badColor">{{ badColor }}</p>
+                <p id="goodColor">{{ good_color }}</p>
+                <p id="badColor">{{ bad_color }}</p>
 
                 <div class="buttons mt-20">
                     <button id="retryBtn" onclick="location.href='/personalColors/check/'">다시하기</button>

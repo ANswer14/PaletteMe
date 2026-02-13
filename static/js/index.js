@@ -66,3 +66,11 @@ function openImagePopup(imgUrl) {
         alert('팝업이 차단되었습니다. 브라우저 설정에서 팝업을 허용해주세요.');
     }
 }
+
+// 소셜 로그인 성공 시 index.html에서 새로고침
+window.addEventListener('storage',(e) => {
+    if (e.key === 'refreshParent' && e.newValue === 'true') {
+        localStorage.removeItem('refreshParent');
+        location.reload();
+    }
+});

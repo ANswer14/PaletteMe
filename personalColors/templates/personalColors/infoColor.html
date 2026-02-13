@@ -23,7 +23,7 @@
         <div class="right">
             <h2>유저 정보</h2>
             <!-- 저장된 정보가 있으면 렌더링 -->
-            {% if isSaved == True %}
+            {% if is_saved == True %}
                 <div id="userColorInfo">
                     <h3>{{ color }}</h3>
                     <h3>시행 날짜:{{ date }}</h3>
@@ -37,7 +37,7 @@
                 </div>
             {% endif %}
             <!-- 저장된 정보가 없으면 렌더링 -->
-            {% if isSaved == False %}
+            {% if is_saved == False %}
                 <div id="userColorInfo">
                     <h3> 저장된 정보가 없습니다.</h3>
                 </div>

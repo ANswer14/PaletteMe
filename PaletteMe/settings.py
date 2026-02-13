@@ -198,6 +198,7 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
+            'prompt': 'select_account',  # 이 줄이 있으면 무조건 계정 선택 창이 뜹니다.
         }
     }
 }

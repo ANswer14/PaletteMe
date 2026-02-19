@@ -19,7 +19,7 @@
         <div class="board-list">
             {% if posts %}
                 {% for post in posts %}
-                <div class="board-row" onclick="goBoardDetail({{ post.id }})">
+                <div class="board-row" onclick="goBoardDetail({{ post.post_id }})">
                     <div class="col-no">{{ forloop.revcounter }}</div> <div class="col-title">
                         {{ post.title }}
                         {% if post.comment_count > 0 %}

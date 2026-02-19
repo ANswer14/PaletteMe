@@ -139,7 +139,7 @@ async function submitPost() {
 
     try {
         // 백엔드 API 서버 주소로 전송
-        const res = await fetch('/api/board/write/', {
+        const res = await fetch('/boards/api/board/write/', {
             method: 'POST',
             body: formData,
             headers: { 'X-CSRFToken': getCookie('csrftoken') } // 보안 토큰 동봉
@@ -147,7 +147,7 @@ async function submitPost() {
 
         if (res.ok) {
             alert("게시글이 등록되었습니다.");
-            location.href = "board1.html"; // 성공 시 목록 페이지로 이동
+            location.href = "/boards/boardList/"; // 성공 시 목록 페이지로 이동
         } else {
             alert("등록에 실패했습니다.");
             isSubmitting = false;

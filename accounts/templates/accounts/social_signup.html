@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>구글 최초 가입 - PaletteMe</title>
-    <link rel="stylesheet" href="{% static 'accounts/css/addSocialLogin.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/social_signup.css' %}">
 </head>
 <body>
     <div class="mypage add-info-popup"> <div class="card"> <h2>PaletteMe 구글 최초 가입</h2>
@@ -21,10 +21,10 @@
                     <label>닉네임</label>
                     <div class="input-group">
                         <input type="text" name="nickname" id="id_nickname"
-                               value="{{ form.nickname.value|default:form.initial.nickname|default:'' }}" required>
-                        <button type="button" id="nickNameCheckBtn">중복 확인</button>
+                               value="{{ form.nickname.value|default:form.initial.nickname|default:'' }}" placeholder="닉네임을 입력하세요" required>
+                        <button type="button" id="nickNameCheckBtn" class="check-btn">중복 확인</button>
                     </div>
-                    <span id="nickNameStatus" class="status-msg"></span>
+                    <span id="nickNameStatus" class="status"></span>
 
                     {% if form.nickname.errors %}
                         <span class="status error">
@@ -35,7 +35,7 @@
 
                 <div class="form-group">
                     <label>휴대폰 번호</label>
-                    <input type="text" name="phone_number" value="{{ form.phone_number.value|default:'' }}" placeholder="010-0000-0000" required>
+                    <input type="text" name="phone_number" value="{{ form.phone_number.value|default:'' }}" placeholder="연락처 입력 (- 제외)" required>
                     {% if form.phone_number.errors %}
                         <span class="status error">
                             {{ form.phone_number.errors.0 }}
@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <script src="{% static 'accounts/js/addSocialLogin.js' %}"></script>
+    <script src="{% static 'accounts/js/social_signup.js' %}"></script>
     <script>
         {% if form.errors %}
             // Django 폼 에러가 있을 경우 실행

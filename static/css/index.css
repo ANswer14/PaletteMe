@@ -7,23 +7,32 @@
 
 /* ===== HEADER ===== */
 .header {
-    display: flex;
-    justify-content: center; /*가로중앙정렬*/
-    align-items: center;
-    padding: 30px 30px;
+    width: 100%;
+    background-color: #fff;
     border-bottom: 1px solid #cdcbcb;
+    padding: 10px 0; /* 위아래 여백만 살짝 */
 }
 
-.header-left {
-    width: 33%;
+.header-content {
+    display: flex;
+    justify-content: space-between; /* 왼쪽 그룹과 오른쪽 auth를 양 끝으로 벌리기 */
+    align-items: center;
+    max-width: 1400px; /* 전체 최대 너비 제한 (선택) */
+    margin: 0 auto;
+    padding: 0 50px;
+    width: 100%; /* 너비 확보 */
+}
+
+.header-left-group {
+    display: flex;
+    align-items: center; /* 로고와 메뉴 높이 맞춤 */
+    gap: 15px; /* 로고와 메뉴 사이 간격 */
 }
 
 .logo {
-    width: 34%;
-    text-align: center;
-    font-size: 70px;
-    font-weight: bold;
+    text-align: left;
 }
+
 .logo a {
     color: inherit;        /* .logo 색상 따라감 */
     text-decoration: none; /* 밑줄 제거 */
@@ -31,8 +40,33 @@
     font-weight: inherit;  /* .logo 굵기 따라감 */
 }
 .header-logo-img {
-    max-height: 50px; /* 로고 높이를 헤더에 맞춰 제한 */
+    max-height: 75px; /* 로고 높이를 헤더에 맞춰 제한 */
     width: auto;
+    display: block;
+}
+
+/* 헤더 내비게이션 스타일 */
+.header-nav {
+    display: flex;
+    align-items: center;
+    font-size: 19px; /* 게시판용 보다는 조금 작게 조절 */
+    font-weight: 600;
+}
+
+.header-nav a {
+    text-decoration: none;
+    color: #675f5f; /* 팔레트미 테마색 */
+    margin: 0 10px;
+    transition: color 0.2s;
+}
+
+.header-nav a:hover {
+    color: #afaeae;
+}
+
+.header-nav .divider {
+    color: #675f5f;
+    font-weight: lighter;
 }
 
 /* 프로필 이미지 스타일 */
@@ -54,7 +88,6 @@
 }
 
 .auth {
-    width: 33%;
     display: flex;
     align-items: center; /* 이미지와 텍스트를 한 줄에 중앙 정렬 */
     justify-content: flex-end;
@@ -67,42 +100,6 @@
     color: #333;
     font-size: 14px; /* 로그인/회원가입 글자는 조금 작게 하는 것이 추세입니다 */
     display: inline-flex;
-}
-
-/* ===== BOARD ===== */
-.board {
-    padding: 30px 0;
-    text-align: center;
-}
-
-.board-line {
-    width: 90%;
-    height: 3px;
-    background-color: #e19b9b;
-    margin: 0 auto;
-}
-
-.board-nav {
-    margin: 15px 0;
-    font-size: 20px;
-}
-
-.board-nav a {
-    text-decoration: none;
-    color: #e19b9b;
-    margin: 0 8px;
-}
-
-.board-nav .divider {
-    color: #e19b9b;
-}
-
-.board-nav a:hover {
-    color: #afaeae;
-}
-
-.board {
-    margin-bottom: 40px;
 }
 
 /* ===== FOOTER ===== */

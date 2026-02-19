@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from .models import Post
 
@@ -43,14 +43,23 @@ def notice2(request):
     return render(request, 'boards/notice2.html')
 
 def get_notice_detail(request):
-    post = Post.objects.get(post_id=request.GET.get('no'))
-    data = {
-        'no': post.post_id,
-        'title': post.title,
-        'content': post.body,
-        'date': post.created_at,
-    }
-    return JsonResponse(data, safe=False)
+    try:
+        post = Post.objects.get(post_id=request.GET.get('no'))
+        data = {
+            'title': post.title,
+            'content': post.body,
+            'category': post.category,
+            'created_at': post.created_at.strftime('%Y-%m-%d'),
+            'is_secret': post.is_secret,
+            'is_anonymous': post.is_anonymous,
+            'view_count': post.view_count,
+            'thumbs_up_count': post.thumbs_up_count,
+            'author': post.author.nickname,
+            'post_id': post.post_id,
+        }
+    except:
+        data = None
+    return JsonResponse(data=data, safe=False)
 
 def boardWrite(request):
     return render(request, 'boards/boardWrite.html')

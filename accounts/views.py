@@ -11,6 +11,8 @@ from django.contrib.auth import update_session_auth_hash
 from .forms import CustomSignupForm
 from allauth.account.utils import perform_login
 from django.urls import reverse
+from django.core.files import File
+import os
 
 
 # 회원가입 약관동의 페이지 로드 함수

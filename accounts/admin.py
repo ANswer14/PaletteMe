@@ -18,7 +18,7 @@ class CustomUserAdmin(UserAdmin):  # 커스텀 정보 (연락처, 성별, 닉네
         }),
     )
 
-    # 목록에서 이미지를 그려주는 함수 (클래스 내부 메서드)
+    # 목록에서 미리보기 이미지를 그려주는 함수 (클래스 내부 메서드)
     def profile_tag(self, obj):
         # 우리가 만든 모델의 profile_url은 static/media를 이미 구분함
         if obj.profile_url:

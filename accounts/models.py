@@ -25,9 +25,9 @@ class CustomUser(AbstractUser):
         if self.profile_image:
             # 유저가 직접 업로드한 사진인 경우
             if 'profiles/' in self.profile_image.name:
-                return self.profile_image.url
+                return self.profile_image.url  # 장고의 미디어 저장소 규칙에 따라 /media/profiles/파일명.jpg 같은 전체 URL 주소를 반환
             # 기본 이미지 문자열(img/profileImg1.png)인 경우
-            return static(self.profile_image.name)
+            return static(self.profile_image.name)  # static 태그를 이용해 /static/img/profileImg1.png라는 주소를 만들어 반환
         # 필드가 아예 비어있는 경우
         return static('img/profileImg1.png')
 

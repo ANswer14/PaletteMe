@@ -27,31 +27,21 @@
                     <a href="javascript:void(0);" onclick="loginRequired()">자유게시판</a>
                 {% endif %}
 
-                <span class="divider">|</span>
-
-                {% if user.is_authenticated %}
-                    <a href="/boards/qnaList">QnA</a>
-                {% else %}
-                    <a href="javascript:void(0);" onclick="loginRequired()">QnA</a>
-                {% endif %}
-            </nav>
-        </div>
-
-        <div class="auth">
-            {% if user.is_authenticated %}
-                <!-- 이미지 클릭하면 새창으로 이미지가 더 크게 보이게 함 -->
-                <span class="user-nickname">{{ user.nickname }}님</span>
-                <a href="javascript:void(0);"
-                    onclick="openImagePopup('{{ user.profile_image.url|default:'/static/img/main1.png' }}')">
-                <img src="{{ user.profile_image.url|default:'/static/img/main1.png' }}" alt="프로필" class="header-profile-img">
-                </a>
-                <a href="{% url 'profile' %}">회원정보</a>
-                <a href="{% url 'account_logout' %}">로그아웃</a>
-            {% else %}
-                <a href="javascript:void(0);" onclick="openLoginPopup('{% url 'account_login' %}')">로그인</a>
-                <a href="{% url 'agreement' %}">회원가입</a>
-            {% endif %}
-        </div>
+      <div class="auth">
+          {% if user.is_authenticated %}
+              <!-- 이미지 클릭하면 새창으로 이미지가 더 크게 보이게 함 -->
+              <span class="user-nickname">{{ user.nickname }}님</span>
+              <a href="javascript:void(0);"
+                 onclick="openImagePopup('{{ user.profile_url }}')">
+              <img src="{{ user.profile_url }}" alt="프로필" class="header-profile-img">
+              </a>
+              <a href="{% url 'profile' %}">회원정보</a>
+              <a href="{% url 'account_logout' %}">로그아웃</a>
+          {% else %}
+              <a href="javascript:void(0);" onclick="openLoginPopup('{% url 'account_login' %}')">로그인</a>
+              <a href="{% url 'agreement' %}">회원가입</a>
+          {% endif %}
+      </div>
     </div>
 </header>
 

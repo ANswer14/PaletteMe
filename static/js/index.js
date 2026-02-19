@@ -71,6 +71,6 @@ function openImagePopup(imgUrl) {
 window.addEventListener('storage',(e) => {
     if (e.key === 'refreshParent' && e.newValue === 'true') {
         localStorage.removeItem('refreshParent');
-        location.reload();
+        location.href="/";
     }
 });

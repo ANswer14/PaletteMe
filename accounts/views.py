@@ -11,6 +11,8 @@ from django.contrib.auth import update_session_auth_hash
 from .forms import CustomSignupForm
 from allauth.account.utils import perform_login
 from django.urls import reverse
+from django.core.files import File
+import os
 
 
 # 회원가입 약관동의 페이지 로드 함수
@@ -60,7 +62,25 @@ def profile_view(request):  # 저장, 중복확인 버튼을 눌렀을 때 (POST
 
         if 'save_info' in request.POST:  # '정보 수정 저장' 버튼을 눌렀을 때
             if form.is_valid():
-                form.save()  # 변경된 내용 실제로 DB에 저장
+                user = form.save(commit=False)
+                default_image = request.POST.get('default_image_name')
+
+                # Case 1: 직접 파일을 업로드한 경우 (form.save가 자동 처리)
+                if request.FILES.get('profile_image'):
+                    pass  # 아무것도 안 해도 form.save()가 파일을 media/profiles/에 저장함
+
+                # Case 2: 직접 업로드는 안 했지만, 기본 이미지를 선택한 경우
+                elif default_image:
+                    # 'static/img/파일'에 있는 걸 'profiles/파일'로 저장하는 대신
+                    # DB에는 그냥 그 파일명만 남기는 방식입니다.
+                    user.profile_image = f"img/{default_image}"
+
+                # Case 3: 아무것도 선택 안 했고 기존에 저장된 값도 없다면?
+                # 새로고침이나 예외 상황 대비용
+                elif not user.profile_image:
+                    user.profile_image = "img/profileImg1.png"
+
+                user.save()  # 이제 DB에 'img/profileImg1.png' 식으로 저장됩니다.
                 messages.success(request, "정보가 성공적으로 수정되었습니다.")
                 return redirect('profile')
 

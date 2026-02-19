@@ -62,9 +62,11 @@
             </div>
 
             <div class="form-group profile-section">
-                <label>프로필 사진</label>
+                <label>프로필 사진</label>12312
                 <div class="profile-main">
-                    <img id="profilePreview" src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'accounts/images/main1.png' %}{% endif %}" alt="프로필" class="profile-circle large">
+                    <img id="profilePreview"
+                         src="{{ user.profile_url }}"
+                         alt="프로필" class="profile-circle large">
                     <button type="button" class="custom-file-btn" onclick="document.getElementById('profileUpload').click()">
                         내 PC에서 사진 선택
                     </button>

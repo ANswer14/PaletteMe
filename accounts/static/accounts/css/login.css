@@ -158,3 +158,42 @@ body {
     border-color: #e19b9b;
     box-shadow: 0 0 0 2px rgba(225, 155, 155, 0.1);
 }
+
+/* 비밀번호 초기화 컨테이너 */
+.password-reset-container {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed #eee; /* 소셜 로그인과 구분되는 절취선 느낌 */
+}
+
+/* 비밀번호 초기화 버튼 (텍스트 링크 스타일) */
+.password-reset-btn {
+    display: inline-block;
+    color: #888;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 15px;
+    border: 1px solid #eee;
+    border-radius: 20px; /* 둥근 캡슐 모양 */
+    transition: all 0.2s ease;
+}
+
+.password-reset-btn:hover {
+    background-color: #f9f9f9;
+    color: #535252;
+    border-color: #ccc;
+}
+
+/* 입력창 에러 시 시각적 효과 추가 (선택) */
+.login-inputs input::placeholder {
+    color: #ccc;
+}
+
+/* 모바일 대응: 화면이 작아질 때 박스 여백 조절 */
+@media (max-width: 480px) {
+    #login-box {
+        width: 90%;
+        padding: 20px;
+    }
+}

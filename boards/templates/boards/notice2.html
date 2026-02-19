@@ -5,6 +5,7 @@
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'boards/css/notice2.css' %}">
+    <input type="hidden" value="{{  }}">
 
     <div class="board-detail-container notice">
         <h2>공지사항</h2>
@@ -31,6 +32,11 @@
             <span onclick="goPrev()">이전글</span> |
             <span onclick="goList()">글목록</span> |
             <span onclick="goNext()">다음글</span>
+        </div>
+        <div class="like">
+            <span id="like-btn">
+
+            </span>
         </div>
     </div>
 

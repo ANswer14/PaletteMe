@@ -10,13 +10,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (no === 0) {
         alert("잘못된 접근입니다.");
         // 목록으로 튕겨내기
-        location.href = "/boards/notice1/"; // 실제주소 쓸것!!!!!
+        location.href = "/boards/noticeList/"; // 실제주소 쓸것!!!!!
         return;
     }
 
     try {
         // [중요] 백엔드와 상의한 공지사항 상세 API 주소
-        const response = await fetch(`/api/notice/detail/${no}/`);
+        const response = await fetch(`/boards/getNoticeDetail?no=${no}`);
         if (!response.ok) throw new Error("공지사항을 찾을 수 없습니다.");
 
         const data = await response.json();
@@ -33,8 +33,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 function renderNotice(data) {
     document.getElementById("detailNo").innerText = no;
     document.getElementById("detailTitle").innerText = data.title;
-    document.getElementById("detailDate").innerText = data.created_at;
+    document.getElementById("detailDate").innerText = data.date;
     document.getElementById("detailContent").innerText = data.content;
+    document.getElementById()
 }
 
 // 목록으로 버튼
@@ -45,13 +46,13 @@ function goList() {
     //const page = params.get("page") || 1;
 
     // 보던 페이지로 정확히 리다이렉트!
-    window.location.href = `notice1.html?page=${currentPageNum}`;
+    window.location.href = `/boards/noticeList?page=${currentPageNum}`;
 }
 function goPrev() {
     //const page = params.get("page") || 1; // 현재 페이지 유지
     if (currentNoticeData && currentNoticeData.prev_no) {
         // notice2.html로 다시 이동하면서 번호만 바꿉니다.
-        window.location.href = `notice2.html?no=${currentNoticeData.prev_no}&page=${currentPageNum}`;
+        window.location.href = `/boards/getNoticeDetail?no=${currentNoticeData.prev_no}&page=${currentPageNum}`;
     }
     else {
         alert("이전 글이 없습니다.");
@@ -61,7 +62,7 @@ function goPrev() {
 function goNext() {
     //const page = params.get("page") || 1; // 현재 페이지 유지
     if (currentNoticeData && currentNoticeData.next_no) {
-        window.location.href = `notice2.html?no=${currentNoticeData.next_no}&page=${currentPageNum}`;
+        window.location.href = `/boards/getNoticeDetail?no=${currentNoticeData.next_no}&page=${currentPageNum}`;
     }
     else {
         alert("다음 글이 없습니다.");

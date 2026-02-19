@@ -7,8 +7,7 @@ boards/forms.py
 
 from django import forms
 from django.utils.html import strip_tags
-
-from .models import Post, Qna, Comment
+from .models import Post, Comment
 
 
 class PostForm(forms.ModelForm):
@@ -46,14 +45,6 @@ class PostForm(forms.ModelForm):
         if category == "FREE":
             cleaned["qna_type"] = ""
         return cleaned
-
-
-class QnaForm(forms.ModelForm):
-    """QnA 글 작성/수정 폼"""
-
-    class Meta:
-        model = Qna
-        fields = ["title", "body_html"]
 
 
 class CommentForm(forms.ModelForm):

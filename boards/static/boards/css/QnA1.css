@@ -1,147 +1,126 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: white;
+/* 전체 컨테이너: 자유게시판과 동일한 여백과 패딩 */
+body .board-container.QnA {
+    width: 80% !important;
+    margin: 40px auto !important;
+    background: white !important;
+    padding: 30px !important;
+    border-radius: 10px !important;
+    display: block !important;
 }
 
-.board-container {
-    width: 80%;
-    margin: 40px auto;
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
+/* 게시판 제목: 왼쪽 굵은 선 포인트 */
+body .board-container.QnA h2 {
+    font-size: 26px !important;
+    margin-bottom: 20px !important;
+    border-left: 5px solid #535252 !important;
+    padding-left: 15px !important;
+    color: #333 !important;
+    text-align: left !important;
 }
 
-/* 모든 게시판 제목 공통 스타일 */
-.board-container h2,
-.board-detail-container h2,
-.board-write-container h2 {
-    font-size: 26px;
-    margin-bottom: 20px;
-    border-left: 5px solid #535252;
-    padding-left: 15px;
+/* 헤더: 자유게시판의 #fcfcfc 배경과 폰트 설정 */
+body .board-container.QnA .board-header {
+    display: flex !important;
+    padding: 12px 10px !important;
+    border-top: 2px solid #535252 !important;
+    border-bottom: 1px solid #ddd !important;
+    background-color: #fcfcfc !important;
+    color: #333 !important;
+    font-weight: bold !important;
+    align-items: center !important;
 }
 
-/* 1. 레이아웃의 핵심: 줄(row)을 가로로 정렬 */
-.board-header,
-.board-row {
-    display: flex;         /* 가로 정렬을 위해 필수! */
-    align-items: center;   /* 세로 위치를 중앙으로 */
-    padding: 12px 0;       /* 위아래 여백 */
-    border-bottom: 1px solid #eee; /* 줄 구분선 */
-    cursor: pointer;       /* 마우스 올리면 클릭 가능하게 */
+/* 리스트 줄: 마우스 호버 효과 포함 */
+body .board-container.QnA .board-row {
+    display: flex !important;
+    padding: 12px 10px !important;
+    border-bottom: 1px solid #ddd !important;
+    align-items: center !important;
+    transition: background-color 0.2s !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    color: #333 !important;
 }
 
-.board-header {
-    background-color: #f9f9f9;
-    font-weight: bold;
-    border-top: 2px solid #535252;
+body .board-container.QnA .board-row:hover {
+    background-color: #f0f0f0 !important;
 }
 
-.board-row:hover {
-    background-color: #fcfcfc;
-    cursor: pointer;
-}
-
-/* 열 비율 */
-.col-no {
-    width: 10%;
-    text-align: center;
-}
-
-.col-title {
-    width: 65%;
-    text-align: left;
-    padding-left: 20px;
-    white-space: nowrap;      /* 줄바꿈 금지 */
-    overflow: hidden;         /* 넘치는 부분 숨김 */
-    text-overflow: ellipsis;  /* 말줄임표(...) 표시 */
-    display: flex;          /* 자물쇠 아이콘과 정렬 위해 추가 */
-    align-items: center;
-}
-
-.col-date {
-    width: 15%;
-    text-align: center;
-}
-
-.col-view {
-    width: 10%;
-    text-align: center;
-}
-
-/* 자물쇠 아이콘 스타일 추가 */
-.lock-icon {
-    margin-right: 8px;
-    font-size: 14px;
-    flex-shrink: 0;         /* 제목 길어져도 아이콘 크기 유지 */
-}
-
-/* 정렬: 헤더는 전부 중앙 */
-.board-header > div {
+/* 열 비율 조정 (자유게시판 55%에서 작성자 12%를 더해 제목을 67%로 확장) */
+body .board-container.QnA .col-no {
+    width: 7% !important;
     text-align: center !important;
-    padding-left: 0 !important;
 }
 
-/* 정렬: 본문은 번호, 날짜, 조회수는 중앙, 제목은 왼쪽 */
-.board-row .col-no,
-.board-row .col-date,
-.board-row .col-view {
-    text-align: center;
+body .board-container.QnA .col-title {
+    width: 67% !important; /* 자유게시판보다 제목 칸을 넓게 잡음 */
+    text-align: left !important;
+    padding-left: 20px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: flex !important;
+    align-items: center !important;
 }
 
-.board-row .col-title {
-    text-align: left;
-    padding-left: 20px;
+body .board-container.QnA .col-date {
+    width: 15% !important;
+    text-align: center !important;
 }
 
-/* 댓글 수 강조 */
-.comment-count {
-    color: #e67e22; /* 오렌지/브라운 톤으로 포인트 */
-    font-size: 0.9em;
-    font-weight: bold;
-    margin-left: 5px;
+body .board-container.QnA .col-view {
+    width: 11% !important;
+    text-align: center !important;
+}
+
+/* 자물쇠 및 댓글 수 아이콘 스타일 */
+body .board-container.QnA .lock-icon {
+    margin-right: 8px !important;
+    font-size: 14px !important;
+}
+
+body .board-container.QnA .comment-count {
+    color: #e67e22 !important; /* 자유게시판과 동일한 오렌지 톤 */
+    font-size: 0.9em !important;
+    font-weight: bold !important;
+    margin-left: 5px !important;
 }
 
 /* 글쓰기 버튼 */
-.board-footer {
-    display: flex;
-    justify-content: flex-end; /* 오른쪽에 배치 */
-    margin-top: 10px;
+body .board-container.QnA .board-footer {
+    display: flex !important;
+    justify-content: flex-end !important;
+    margin-top: 10px !important;
 }
 
-.write-btn {
-    padding: 8px 16px;
-    background-color: #535252;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
+body .board-container.QnA .write-btn {
+    padding: 8px 16px !important;
+    background-color: #535252 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    font-weight: bold !important;
 }
 
-.write-btn:hover {
-    background-color: #333333;
+body .board-container.QnA .write-btn:hover {
+    background-color: #333 !important;
 }
 
 /* 페이지네이션 */
-.pagination {
-    text-align: center;
-    margin-top: 30px;
+body .board-container.QnA .pagination {
+    text-align: center !important;
+    margin-top: 30px !important;
 }
 
-.pagination span {
-    margin: 0 8px;
-    cursor: pointer;
+body .board-container.QnA .pagination a,
+body .board-container.QnA .pagination span {
+    margin: 0 8px !important;
+    text-decoration: none !important;
+    color: #333 !important;
 }
 
-/* 페이지네이션 현재 페이지 강조 */
-.pagination span:first-child {
-    font-weight: bold;
-    text-decoration: underline;
-}
-
-.current-page {
-    font-weight: bold;
-    text-decoration: underline;
+body .board-container.QnA .current-page {
+    font-weight: bold !important;
+    text-decoration: underline !important;
 }

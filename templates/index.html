@@ -27,7 +27,17 @@
                     <a href="javascript:void(0);" onclick="loginRequired()">자유게시판</a>
                 {% endif %}
 
-      <div class="auth">
+                <span class="divider">|</span>
+
+                {% if user.is_authenticated %}
+                    <a href="/boards/qnaList">QnA</a>
+                {% else %}
+                    <a href="javascript:void(0);" onclick="loginRequired()">QnA</a>
+                {% endif %}
+            </nav>
+        </div>
+
+        <div class="auth">
           {% if user.is_authenticated %}
               <!-- 이미지 클릭하면 새창으로 이미지가 더 크게 보이게 함 -->
               <span class="user-nickname">{{ user.nickname }}님</span>
@@ -41,7 +51,7 @@
               <a href="javascript:void(0);" onclick="openLoginPopup('{% url 'account_login' %}')">로그인</a>
               <a href="{% url 'agreement' %}">회원가입</a>
           {% endif %}
-      </div>
+        </div>
     </div>
 </header>
 

@@ -1,35 +1,53 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow: hidden;
+    overflow-y: auto; /* 내용이 많아지면 스크롤이 가능하게 해서 잘림 방지 */
+    height: 100%;
+}
+
 /* 상위 레이아웃: index.html의 헤더와 푸터 사이 중앙 정렬 */
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* 화면 높이에 맞춰 중앙 배치 */
+    min-height: 100vh; /* 화면 높이에 맞춰 중앙 배치 */
     background-color: #fff;
     overflow: hidden;
+    padding: 20px 0; /* 위아래 최소 여백 */
+    box-sizing: border-box;
 }
 
 #login-box {
-    width: 350px;
+    width: 400px;
     text-align: center;
     border: 1px solid #ddd;
     border-radius: 12px;
-    padding: 40px 30px;
+    padding: 25px 35px 30px;
     color: #333;
     background: #fff;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    /* 박스 모델 설정 (패딩이 너비/높이에 포함되도록) */
+    box-sizing: border-box;
+    /* 박스가 컨테이너를 뚫고 나가지 않도록 설정 */
+    margin: auto 0;
 }
 
 #login-box h1 {
-    font-size: 24px;
-    margin-bottom: 30px;
-    color: #000;
+    font-size: 30px;
+    letter-spacing: -1px;
+    margin-bottom: 25px;
+    color: #535252;
+    font-weight: 800;
+    margin-top: 0;   /* 위쪽 마진 제거 */
 }
 
 /* 아이디, 비번 입력창 스타일 */
 .login-inputs {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 4px;
 }
 
 .login-inputs input {
@@ -46,12 +64,12 @@
     height: 50px;
     background-color: #535252;
     color: white;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    margin-top: 25px;
+    margin-top: 12px;
     transition: background-color 0.2s;
 }
 
@@ -81,14 +99,14 @@
 .login-divider {
     border: none;
     border-top: 1px solid #eee;
-    margin: 30px 0 20px;
+    margin: 15px 0 10px;
 }
 
 .social-login-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 }
 
 .social-text {
@@ -130,7 +148,7 @@
 #login-box h1 {
     font-size: 26px;
     letter-spacing: -0.5px;
-    color: #e19b9b; /* PaletteMe의 메인 포인트 컬러 */
+    color: #535252; /* PaletteMe의 메인 포인트 컬러 */
     font-weight: 800;
 }
 

@@ -26,7 +26,8 @@
                 <span id="nickNameStatus" class="status"></span>
             </div>
 
-            {% load socialaccount %} <div class="form-group">
+            {% load socialaccount %}
+            <div class="form-group">
                 <label>이메일</label>
                 <div class="input-group">
                     <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
@@ -73,17 +74,17 @@
                 </div>
                 <input type="file" id="profileUpload" name="profile_image" accept="image/*" onchange="previewFile()" style="display:none;">
 
-            <div class="default-images">
-                <p>기본 이미지 선택</p>
-                <div class="img-list">
-                    <img src="{% static 'img/profileImg1.png' %}" class="selectable-img" onclick="selectImage('profileImg1.png')">
-                    <img src="{% static 'img/profileImg2.png' %}" class="selectable-img" onclick="selectImage('profileImg2.png')">
-                    <img src="{% static 'img/profileImg3.png' %}" class="selectable-img" onclick="selectImage('profileImg3.png')">
-                    <img src="{% static 'img/profileImg4.png' %}" class="selectable-img" onclick="selectImage('profileImg4.png')">
-                    <img src="{% static 'img/profileImg5.png' %}" class="selectable-img" onclick="selectImage('profileImg5.png')">
+                <div class="default-images">
+                    <p>기본 이미지 선택</p>
+                    <div class="img-list">
+                        <img src="{% static 'img/profileImg1.png' %}" class="selectable-img" onclick="selectImage('profileImg1.png')">
+                        <img src="{% static 'img/profileImg2.png' %}" class="selectable-img" onclick="selectImage('profileImg2.png')">
+                        <img src="{% static 'img/profileImg3.png' %}" class="selectable-img" onclick="selectImage('profileImg3.png')">
+                        <img src="{% static 'img/profileImg4.png' %}" class="selectable-img" onclick="selectImage('profileImg4.png')">
+                        <img src="{% static 'img/profileImg5.png' %}" class="selectable-img" onclick="selectImage('profileImg5.png')">
+                    </div>
                 </div>
             </div>
-        </div>
         <input type="hidden" id="selectedDefaultImage" name="default_image_name">
         <button type="submit" id="saveInfoBtn" name="save_info" class="signup-submit-btn">정보 수정 저장</button>
         </form></section>
@@ -122,8 +123,8 @@
     <section class="card">
         <h3>최근 생성 이미지</h3>
         <div id="recentImages" class="image-box">
-            {% for image in recent_images %}
-            <img src="{{ image.file.url }}" alt="생성 이미지">
+            {% for image in images %}
+            <img src="{{ image }}" alt="생성 이미지">
             {% empty %}
                 <p class="empty-msg">최근 생성한 이미지가 없습니다.</p>
             {% endfor %}
@@ -140,10 +141,10 @@
                 </tr>
             </thead>
             <tbody>
-                {% for record in diagnosis_history %}
+                {% for record in histories %}
                 <tr>
-                    <td>{{ record.created_at|date:"Y-m-d" }}</td>
-                    <td>{{ record.result_name }}</td>
+                    <td>{{ record.date|date:"Y-m-d" }}</td>
+                    <td>{{ record.color_type }}</td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -153,10 +154,14 @@
             </tbody>
         </table>
     </section>
-
     <section class="card">
         <h3>즐겨찾기</h3>
-        <div id="favoriteImages" class="image-box"></div>
+
+        <div id="favoriteImages" class="image-box">
+            {% for favorite in favorites %}
+                <img src="{{ favorite }}" alt="">
+            {% endfor %}
+        </div>
     </section>
 
     <!-- 탈퇴 -->

@@ -1,0 +1,98 @@
+body .auth-container {
+    max-width: 400px !important;
+    margin: 100px auto !important; /* 상하 여백 넉넉히 */
+    padding: 40px !important;
+    background: white !important;
+    border: 1px solid #eee !important;
+    border-radius: 15px !important;
+    text-align: center !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+}
+
+body .auth-container h2 {
+    font-size: 24px !important;
+    margin-bottom: 15px !important;
+    color: #333 !important;
+}
+
+body .auth-guide {
+    font-size: 14px !important;
+    color: #666 !important;
+    line-height: 1.5 !important;
+    margin-bottom: 25px !important;
+}
+
+body .auth-form input {
+    width: 100% !important;
+    height: 45px !important;
+    margin-bottom: 15px !important;
+    padding: 0 15px !important;
+    border: 1px solid #ddd !important;
+    border-radius: 5px !important;
+    box-sizing: border-box !important;
+}
+
+body .auth-submit-btn {
+    width: 100% !important;
+    height: 48px !important;
+    background-color: #535252 !important; /* 헤더/게시판 테마색 */
+    color: white !important;
+    border: none !important;
+    border-radius: 5px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    margin-top: 10px !important;
+}
+
+body .auth-submit-btn:hover {
+    background-color: #333 !important;
+}
+
+/* 안내 문구 스타일 */
+body .password-guidelines {
+    text-align: left !important;
+    font-size: 12px !important;
+    color: #888 !important;
+    padding-left: 20px !important;
+    margin: 10px 0 20px 0 !important;
+    line-height: 1.6 !important;
+}
+
+/* 레이블 스타일 */
+body .input-group {
+    text-align: left !important;
+    margin-bottom: 15px !important;
+}
+
+body .input-group label {
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    margin-bottom: 5px !important;
+    color: #333 !important;
+}
+
+/* 하단 연락 안내 문구 */
+body .auth-footer-text {
+    margin-top: 25px !important;
+    font-size: 13px !important;
+    color: #999 !important;
+}
+
+/* 버튼 그룹 (변경/취소 나란히) */
+body .btn-group {
+    display: flex !important;
+    gap: 10px !important;
+}
+
+body .auth-cancel-btn {
+    width: 30% !important;
+    height: 48px !important;
+    background-color: #eee !important;
+    color: #666 !important;
+    border: none !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    margin-top: 10px !important;
+}

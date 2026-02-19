@@ -20,8 +20,8 @@
         <div class="board-list">
             {% if posts %}
                 {% for post in posts %}
-                <div class="board-row" onclick="goNoticeDetail({{ post.id }})">
-                    <div class="col-no">{{ forloop.revcounter }}</div>
+                <div class="board-row" onclick="goNoticeDetail({{ post.post_id }})">
+                    <div class="col-no">{{ post.post_id }}</div>
                     <div class="col-title">{{ post.title }}</div>
                     <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
                 </div>
@@ -47,6 +47,11 @@
 
             {% if page_obj.has_next %}
                 <a href="?page={{ page_obj.next_page_number }}">다음</a>
+            {% endif %}
+        </div>
+        <div class="write-btn">
+            {% if user.is_staff %}
+                <button onclick="location.href='/boards/boardWrite/'">글쓰기</button>
             {% endif %}
         </div>
     </div>

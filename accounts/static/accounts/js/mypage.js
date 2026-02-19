@@ -136,32 +136,43 @@ document.addEventListener("DOMContentLoaded", function() {
 /**
  * [2] 이미지 관련 전역 함수 (Global Functions)
  */
+/**
+ * [1] 기본 이미지 리스트에서 선택 시
+ */
 function selectImage(imgName) {
-    const staticPathEl = document.getElementById('static-path');
-    if (!staticPathEl) return;
-
-    const staticPath = staticPathEl.dataset.path;
     const preview = document.getElementById('profilePreview');
     const selectedInput = document.getElementById("selectedDefaultImage");
     const fileInput = document.getElementById('profileUpload');
 
-    if (preview) preview.src = staticPath + imgName;
-    if (selectedInput) selectedInput.value = imgName;
-    if (fileInput) fileInput.value = "";
+    // 1. 프리뷰 이미지를 static 경로로 변경
+    preview.src = "/static/img/" + imgName;
+
+    // 2. 히든 인풋에 파일명 저장 (서버 전송용)
+    selectedInput.value = imgName;
+
+    // 3. 직접 올린 파일이 있다면 초기화 (충돌 방지)
+    fileInput.value = "";
 }
 
+/**
+ * [2] 내 PC에서 사진 선택(파일 업로드) 시
+ */
 function previewFile() {
     const preview = document.getElementById('profilePreview');
     const fileInput = document.getElementById('profileUpload');
+    const selectedInput = document.getElementById("selectedDefaultImage");
+
     if (!fileInput || !fileInput.files[0]) return;
 
     const file = fileInput.files[0];
-    const selectedInput = document.getElementById("selectedDefaultImage");
     const reader = new FileReader();
 
     reader.onloadend = function () {
-        if (preview) preview.src = reader.result;
-        if (selectedInput) selectedInput.value = "";
+        // 1. 읽어온 파일을 프리뷰 src에 넣음 (Base64 데이터)
+        preview.src = reader.result;
+
+        // 2. 기본 이미지 선택값은 초기화 (직접 업로드가 우선순위)
+        selectedInput.value = "";
     }
     reader.readAsDataURL(file);
 }

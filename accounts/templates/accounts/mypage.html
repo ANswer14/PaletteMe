@@ -121,8 +121,8 @@
     <section class="card">
         <h3>최근 생성 이미지</h3>
         <div id="recentImages" class="image-box">
-            {% for image in recent_images %}
-            <img src="{{ image.file.url }}" alt="생성 이미지">
+            {% for image in images %}
+            <img src="{{ image }}" alt="생성 이미지">
             {% empty %}
                 <p class="empty-msg">최근 생성한 이미지가 없습니다.</p>
             {% endfor %}
@@ -139,10 +139,10 @@
                 </tr>
             </thead>
             <tbody>
-                {% for record in diagnosis_history %}
+                {% for record in histories %}
                 <tr>
-                    <td>{{ record.created_at|date:"Y-m-d" }}</td>
-                    <td>{{ record.result_name }}</td>
+                    <td>{{ record.date|date:"Y-m-d" }}</td>
+                    <td>{{ record.color_type }}</td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -152,10 +152,14 @@
             </tbody>
         </table>
     </section>
-
     <section class="card">
         <h3>즐겨찾기</h3>
-        <div id="favoriteImages" class="image-box"></div>
+
+        <div id="favoriteImages" class="image-box">
+            {% for favorite in favorites %}
+                <img src="{{ favorite }}" alt="">
+            {% endfor %}
+        </div>
     </section>
 
     <!-- 탈퇴 -->

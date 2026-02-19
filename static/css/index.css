@@ -6,76 +6,81 @@
 }
 
 /* ===== HEADER ===== */
-.header {
-    width: 100%;
-    background-color: #fff;
-    border-bottom: 1px solid #cdcbcb;
-    padding: 10px 0; /* 위아래 여백만 살짝 */
+body .header {
+    width: 100% !important;
+    background-color: #fff !important;
+    border-bottom: 1px solid #cdcbcb !important;
+    padding: 20px 0 !important; /* 위아래 여백 */
 }
 
-.header-content {
-    display: flex;
-    justify-content: space-between; /* 왼쪽 그룹과 오른쪽 auth를 양 끝으로 벌리기 */
-    align-items: center;
-    max-width: 1400px; /* 전체 최대 너비 제한 (선택) */
-    margin: 0 auto;
-    padding: 0 50px;
+body .header-content {
+    display: flex !important;
+    justify-content: space-between !important; /* 왼쪽 그룹과 오른쪽 auth를 양 끝으로 벌리기 */
+    align-items: center !important;
+    max-width: 100% !important; /* 전체 최대 너비 제한 (선택) */
+    margin: 0 !important;
+    padding: 0 30px !important;
     width: 100%; /* 너비 확보 */
+    box-sizing: border-box !important;
 }
 
-.header-left-group {
-    display: flex;
-    align-items: center; /* 로고와 메뉴 높이 맞춤 */
-    gap: 15px; /* 로고와 메뉴 사이 간격 */
+body .header-left-group {
+    display: flex !important;
+    align-items: center !important; /* 로고와 메뉴 높이 맞춤 */
+    gap: 40px !important; /* 로고와 메뉴 사이 간격 */
 }
 
 .logo {
     text-align: left;
+    display: flex;
+    align-items: center;
 }
 
 .logo a {
-    color: inherit;        /* .logo 색상 따라감 */
+    /* color: inherit;   */     /* .logo 색상 따라감 */
     text-decoration: none; /* 밑줄 제거 */
-    font-size: inherit;    /* .logo 크기 따라감 */
-    font-weight: inherit;  /* .logo 굵기 따라감 */
-}
-.header-logo-img {
-    max-height: 75px; /* 로고 높이를 헤더에 맞춰 제한 */
-    width: auto;
+    /* font-size: inherit;    */ /* .logo 크기 따라감 */
+    /*font-weight: inherit; */ /* .logo 굵기 따라감 */
     display: block;
 }
 
+body .header-logo-img {
+    max-height: 90px !important; /* 로고 높이를 헤더에 맞춰 제한 */
+    width: auto !important;
+    display: block !important;
+}
+
 /* 헤더 내비게이션 스타일 */
-.header-nav {
-    display: flex;
-    align-items: center;
-    font-size: 19px; /* 게시판용 보다는 조금 작게 조절 */
-    font-weight: 600;
+body .header-nav {
+    display: flex !important;
+    align-items: center !important;
+    font-size: 20px !important; /* 게시판용 보다는 조금 작게 조절 */
+    font-weight: 700 !important;
 }
 
-.header-nav a {
-    text-decoration: none;
-    color: #675f5f; /* 팔레트미 테마색 */
-    margin: 0 10px;
-    transition: color 0.2s;
+body .header-nav a {
+    text-decoration: none !important;
+    color: #333 !important; /* 팔레트미 테마색 */
+    margin: 0 15px !important;
+    transition: color 0.2s ease !important;
 }
 
-.header-nav a:hover {
-    color: #afaeae;
+body .header-nav a:hover {
+    color: #e67e22 !important;
 }
 
-.header-nav .divider {
-    color: #675f5f;
-    font-weight: lighter;
+body .header-nav .divider {
+    color: #ddd !important;
+    font-weight: 300 !important;
 }
 
 /* 프로필 이미지 스타일 */
-.header-profile-img {
-    width: 38px;         /* 헤더 높이에 맞게 조절 */
-    height: 38px;
-    border-radius: 50%;  /* 동그랗게 */
-    object-fit: cover;   /* 이미지 비율 유지 */
-    border: 1px solid #dbdbdb; /* 배경이 밝을 때 이미지를 돋보이게 함 */
+body .header-profile-img {
+    width: 45px !important;         /* 헤더 높이에 맞게 조절 */
+    height: 45px !important;
+    border-radius: 50% !important;  /* 동그랗게 */
+    object-fit: cover !important;   /* 이미지 비율 유지 */
+    border: 1px solid #dbdbdb !important; /* 배경이 밝을 때 이미지를 돋보이게 함 */
     transition: transform 0.2s; /* 살짝 커지는 효과 */
 }
 .header-profile-img:hover {
@@ -87,19 +92,20 @@
     font-weight: bold;
 }
 
-.auth {
-    display: flex;
-    align-items: center; /* 이미지와 텍스트를 한 줄에 중앙 정렬 */
-    justify-content: flex-end;
-    gap: 15px;
+body .auth {
+    display: flex !important;
+    align-items: center !important; /* 이미지와 텍스트를 한 줄에 중앙 정렬 */
+    /*justify-content: flex-end;*/
+    gap: 20px !important;
 }
 
-.auth a {
-    margin-left: 0;
-    text-decoration: none;
-    color: #333;
-    font-size: 14px; /* 로그인/회원가입 글자는 조금 작게 하는 것이 추세입니다 */
-    display: inline-flex;
+body .auth a {
+    /* margin-left: 0; */
+    text-decoration: none !important;
+    color: #555 !important;
+    font-size: 15px !important; /* 로그인/회원가입 글자는 조금 작게 하는 것이 추세입니다 */
+    font-weight: 500 !important;
+    /* display: inline-flex; */
 }
 
 /* ===== FOOTER ===== */

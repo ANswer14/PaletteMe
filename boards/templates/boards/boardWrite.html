@@ -4,63 +4,79 @@
 {% block title %} 게시글 작성 - PaletteMe {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'boards/css/boardWrite.css' %}">
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<link rel="stylesheet" href="{% static 'boards/css/boardWrite.css' %}">
 
-<div class="board-write-container">
-    <h2>게시글 작성</h2>
+<div class="board-write-wrapper">
+    <div class="board-write-container">
+        <header class="write-header">
+            <h2>새 게시글 작성</h2>
+            <p>당신의 소중한 이야기를 PaletteMe에 공유해 보세요.</p>
+        </header>
 
-    <div class="write-category">
-        <label for="boardCategory">게시판 선택</label>
-        <select id="boardCategory">
-            <option value="free">자유게시판</option>
-            <option value="qna">Q&A 게시판</option>
-        </select>
-    </div>
-
-    <div class="write-form">
-        <label for="postTitle">제목</label>
-        <input type="text" id="postTitle" placeholder="글 제목을 입력하세요">
-
-        <label for="postWriter">작성자</label>
-        <input type="text" id="postWriter" value="{{ user.nickname }}" readonly>
-
-        <label for="postContent">내용</label>
-        <textarea id="postContent" rows="30" placeholder="내용을 입력하세요"></textarea>
-
-        <div class="file-upload-area">
-            <label class="file-label">
-                사진첨부
-                <input type="file" id="imageInput" accept="image/*" multiple hidden>
-            </label>
-            <div id="previewArea" class="preview-area"></div>
-        </div>
-
-        <div id="freeExtraOptions" style="display: none;"> <!-- 자유게시판일때 나타남 -->
-            <label>작성자 설정</label>
-            <div class="radio-group">
-                <input type="radio" id="realname" name="is_anonymous" value="false" checked>
-                <label for="realname">{{ user.nickname }}</label>
-                <input type="radio" id="anonymous" name="is_anonymous" value="true">
-                <label for="anonymous">익명</label>
+        <section class="write-section">
+            <div class="input-row">
+                <div class="input-group select-group">
+                    <label>게시판</label>
+                    <select id="boardCategory">
+                        <option value="free">자유게시판</option>
+                        <option value="qna">Q&A 게시판</option>
+                    </select>
+                </div>
+                <div class="input-group title-group">
+                    <label>제목</label>
+                    <input type="text" id="postTitle" placeholder="제목을 입력하세요" maxlength="100">
+                </div>
             </div>
-        </div>
 
-        <div id="qnaExtraOptions" style="display:none;">   <!-- QnA에서만 나타나기때문에 스타일 여기서 지정 -->
-            <label>공개 여부</label>
-            <div class="radio-group">
-                <input type="radio" id="public" name="is_private" value="false" checked>
-                <label for="public">공개</label>
-                <input type="radio" id="private" name="is_private" value="true">
-                <label for="private">비공개</label>
+            <div class="input-group">
+                <label>내용</label>
+                <div id="editor-outer">
+                    <div id="editor-container"></div>
+                </div>
+                <div class="editor-footer">
+                    <span id="contentCount">0 / 2000자</span>
+                </div>
             </div>
-        </div>
 
-        <div class="button-group">
-            <button onclick="submitPost()">등록</button>
-            <button onclick="cancelPost()">취소</button>
-        </div>
+            <div class="upload-section">
+                <label class="upload-btn">
+                    <span class="icon">📷</span> 사진 추가
+                    <input type="file" id="imageInput" accept="image/*" multiple hidden>
+                </label>
+                <div id="previewArea" class="preview-grid"></div>
+            </div>
+
+            <div class="extra-options-area">
+                <div id="freeExtraOptions" class="option-box" style="display: none;">
+                    <span class="option-label">작성자 설정</span>
+                    <div class="toggle-group">
+                        <input type="radio" id="realname" name="is_anonymous" value="false" checked>
+                        <label for="realname">실명({{ user.nickname }})</label>
+                        <input type="radio" id="anonymous" name="is_anonymous" value="true">
+                        <label for="anonymous">익명</label>
+                    </div>
+                </div>
+                <div id="qnaExtraOptions" class="option-box" style="display: none;">
+                    <span class="option-label">공개 여부</span>
+                    <div class="toggle-group">
+                        <input type="radio" id="public" name="is_private" value="false" checked>
+                        <label for="public">전체 공개</label>
+                        <input type="radio" id="private" name="is_private" value="true">
+                        <label for="private">비공개</label>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="write-footer">
+                <button class="btn-cancel" onclick="cancelPost()">취소</button>
+                <button class="btn-submit" onclick="submitPost()">등록하기</button>
+            </footer>
+        </section>
     </div>
 </div>
 
-<script src="{% static 'boards/js/boardWrite.js' %}" defer></script>
+<input type="hidden" id="postWriter" value="{{ user.nickname }}">
+<script src="{% static 'boards/js/boardWrite.js' %}"></script>
 {% endblock %}

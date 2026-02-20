@@ -5,8 +5,8 @@ app_name = 'boards'
 
 urlpatterns = [
     # 목록 및 상세 페이지
-    path('boardList/', views.board1, name='board1'),
-    path('boardDetail/', views.board2, name='board2'),
+    path('freeList/', views.board1, name='board1'),
+    path('freeDetail/', views.board2, name='board2'),
     path('boardWrite/', views.boardWrite, name='boardWrite'),
     path('noticeList/', views.notice1, name='notice1'),
     path('noticeDetail/', views.notice2, name='notice2'),

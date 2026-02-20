@@ -113,9 +113,27 @@
     <!-- 부가 정보 -->
     <section class="card">
         <h3>나의 활동</h3>
-        <div class="link-buttons">
-            <button class="activity-btn" onclick="location.href='#'">내 게시글 보기</button>
-            <button class="activity-btn" onclick="location.href='#'">내 댓글 보기</button>
+        <div class="board-header">
+            <span class="col-no">번호</span>
+            <span class="col-title">제목</span>
+            <span class="col-date">날짜</span>
+            <span class="col-view">조회수</span>
+            <span class="col-view">글 유형</span>
+        </div>
+        <div class="scroll-box">
+            {% if posts %}
+                {% for post in posts %}
+                <div class="board-row" onclick="location.href='/boards/{{ post.category }}Detail?no={{ post.post_id }}'">
+                    <span class="col-no">{{ post.post_id }}</span>
+                    <span class="col-title">{{ post.title }}</span>
+                    <span class="col-date">{{ post.created_at|date:"Y-m-d" }}</span>
+                    <span class="col-view">{{ post.view_count }}</span>
+                    <span class="col-title">{{ post.category }}</span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="board-row" style="justify-content: center; color: #999;">게시글이 없습니다.</div>
+            {% endif %}
         </div>
     </section>
 

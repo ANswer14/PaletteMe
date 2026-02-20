@@ -5,8 +5,7 @@
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'boards/css/notice2.css' %}">
-    <input type="hidden" value="{{  }}">
-
+    {% csrf_token %}
     <div class="board-detail-container notice">
         <h2>공지사항</h2>
         <!-- 제목줄: 헤더 -->
@@ -17,14 +16,26 @@
         </div>
 
         <!-- 데이터줄: 실제 게시글 -->
-        <div class="title-row">
-            <span id="detailNo"></span>
-            <span id="detailTitle"></span>
-            <span id="detailDate"></span>
-        </div>
-        <hr class="section-divider">
+        <form method="post" action="/boards/boardWrite/">
+            {% csrf_token %}
+            <input type="hidden" name="post_id">
+            <div class="title-row">
+                <span id="detailNo"></span>
+                <span id="detailTitle"></span>
+                <span id="detailDate"></span>
+            </div>
+            <hr class="section-divider">
 
-        <div class="detail-content" id="detailContent">
+            <div class="detail-content" id="detailContent">
+            </div>
+            {% if user.is_staff == True %}
+            <div class="staff-btns">
+                <button id="fixNotice">수정</button>
+            </div>
+            {% endif %}
+        </form>
+        <div id="imageContainer">
+
         </div>
         <hr class="section-divider">
 
@@ -32,11 +43,6 @@
             <span onclick="goPrev()">이전글</span> |
             <span onclick="goList()">글목록</span> |
             <span onclick="goNext()">다음글</span>
-        </div>
-        <div class="like">
-            <span id="like-btn">
-
-            </span>
         </div>
     </div>
 

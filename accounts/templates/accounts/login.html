@@ -32,7 +32,14 @@
                     구글로 로그인하기
                 </a>
             </div>
-       </div>
+            <div class="password-reset-container">
+                <p class="social-text">비밀번호가 기억나지 않으신가요?</p>
+                <!-- [중요!!!!] 링크 주소 확인 -->
+                <a href="{% url 'account_reset_password' %}" class="password-reset-btn">
+                    비밀번호 찾기
+                </a>
+            </div>
+        </div>
     </div>
 
     <script src="{% static 'accounts/js/login.js' %}"></script>

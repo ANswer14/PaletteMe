@@ -1,28 +1,35 @@
-# account/urls.py
-from django.urls import path, include
-from . import views  # views.py에 있는 기능 불러옴
-from allauth.account.views import LoginView, LogoutView  # allauth의 회원가입, 로그인, 로그아웃 기능 불러옴
+from django.urls import path, re_path, include
+from . import views  # 본인 앱의 views
+from allauth.account import views as allauth_views  # allauth의 views를 별칭으로 구분
 
 urlpatterns = [
-    path('login-success/', views.login_success_view, name='login_success'),  # 추가: /accounts/login-success/ 주소로 접속하면 login_success_view 실행
+    # 일반/소셜 회원가입 관련 url
+    path('login-success/', views.login_success_view, name='login_success'),  # 소셜 로그인 시 로그인 창이 닫히지 않는 오류 방지용
+    path('3rdparty/signup/', views.MySocialSignupView.as_view(), name='custom_social_signup'),  # 소셜 회원가입 추가정보 입력 페이지
+    path("agreement/", views.agreement_view, name="agreement"),  # 약관동의 페이지
+    path('signup/', views.MySignupView.as_view(template_name="accounts/signup.html"), name='account_signup'),  # 약관동의 페이지 무시하지 않고 불러오는 일반 회원가입 페이지
+    path('check-username/', views.check_username, name='check_username'),  # 아이디/닉네임 중복확인 로직용
 
-    path('3rdparty/signup/', views.MySocialSignupView.as_view(), name='custom_social_signup'),
+    # 로그인/로그아웃 관련 url (allauth 기본 뷰 사용 + 커스텀 템플릿)
+    path('login/', allauth_views.LoginView.as_view(template_name="accounts/login.html"), name='account_login'),  # 로그인 페이지
+    path('logout/', allauth_views.LogoutView.as_view(), name='account_logout'),  #로그아웃 (탬플릿 없이 바로 로그아웃)
 
-    path("agreement/", views.agreement_view, name="agreement"),  # url에서 accounts/agreement/ 찾으면 views.py에 있는 agreement.view 함수 실행하기
+    # 회원정보 페이지 관련 url
+    path("profile/", views.profile_view, name="profile"),  # 회원정보 페이지
+    path('delete/', views.delete_account, name='delete_account'),  # 회원탈퇴 (탬플릿 없이 바로 메인페이지로)
+    path('change-password/', views.change_password_custom, name='change_password_custom'), # 회원정보 페이지 비밀번호 변경 로직용
 
-    path('signup/', views.MySignupView.as_view(template_name="accounts/signup.html"), name='account_signup'),  # 경로 찾으면 views.py의 커스텀 로직을 사용하며 탬플릿은 내 accounts앱 안에 signup.html사용
+    # --- 비밀번호 재설정 (allauth 로직 + 커스텀 템플릿 연결) ---
+    path("password/reset/",  # 이메일 입력 페이지
+         views.MyPasswordResetView.as_view(template_name="accounts/password_reset.html"),
+         name="account_reset_password"),
+    re_path(r"^password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$",  # 이메일 링크 클릭 시 들어오는 '새 비밀번호 입력' 페이지
+         allauth_views.PasswordResetFromKeyView.as_view(template_name="accounts/password_reset_key.html"),
+         name="account_reset_password_from_key"),
+    path("password/reset/key/done/",  # 비밀번호 변경 완료 페이지
+         allauth_views.PasswordResetFromKeyDoneView.as_view(template_name="accounts/password_reset_key_done.html"),
+         name="account_reset_password_from_key_done"),
 
-    path('check-username/', views.check_username, name='check_username'),
-
-    path('login/', LoginView.as_view(template_name="accounts/login.html"), name='account_login'),  # 경로 찾으면 allauth가 제공하는 로그인 로직을 사용하며 탬플릿은 내 accounts앱 안에 login.html사용
-
-    path('logout/', LogoutView.as_view(), name='account_logout'),   # url에서 accounts/logout/ 찾으면 allauth가 제공하는 로그아웃 로직을 사용
-
-    path("profile/", views.profile_view, name="profile"),  # url에서 accounts/profile/ 찾으면 함수 실행하기
-
-    path('delete/', views.delete_account, name='delete_account'),  # 회원 탈퇴 경로
-
-    path('change-password/', views.change_password_custom, name='change_password_custom'),  # 비밀번호 변경 경로
-
-    path('', include('allauth.urls')),  # allauth의 나머지 기능들(이메일 인증..etc)은 무조건 마지막에 지정. (overriding 때문)
+    # allauth 나머지 기능 (이메일 인증 등)
+    path('', include('allauth.urls')),
 ]

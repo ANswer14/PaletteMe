@@ -32,14 +32,25 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
         # 이미 정상 연결된 구글 계정이면 통과 후 로그인 진행
         if sociallogin.is_existing:
             return
+
+        # 소셜 계정에서 이메일 추출
+        social_email = sociallogin.account.extra_data.get('email')
+
         # 현재 유저가 이미 로그인 상태인지 확인 (즉, 마이페이지에서 연동하기를 누른 경우)
         if request.user.is_authenticated:
-            # 이미 로그인된 유저가 구글연동을 시도 -> 이메일 중복 체크를 하지 않고 넘김.(allauth가 알아서 연동)
+            # 로그인된 유저의 이메일과 구글 이메일이 다른지 비교
+            if social_email and request.user.email != social_email:
+                messages.error(
+                    request,
+                    f"현재 계정의 이메일({request.user.email})과 연동하려는 구글 이메일({social_email})이 일치하지 않습니다."
+                )
+                # 연동을 중단하고 프로필 페이지로 리다이렉트
+                raise ImmediateHttpResponse(redirect('profile'))
+            # 이미 로그인된 유저가 구글연동을 시도 -> 이메일 중복 체크를 하지 않고 넘김.(allauth가 알아서 연동처리)
             return
-        # 이메일 추출
-        email = sociallogin.account.extra_data.get('email')
-        if email:
-            if User.objects.filter(email=email).exists():  # 일반로그인으로 생성한 이메일과 중복되는지 체크
+
+        if social_email:
+            if User.objects.filter(email=social_email).exists():  # 일반로그인으로 생성한 이메일과 중복되는지 체크
                 messages.error(request, "해당 이메일로 이미 가입된 계정이 있습니다. \n일반 로그인 후 연동해주세요.")
                 raise ImmediateHttpResponse(redirect('account_login'))
 

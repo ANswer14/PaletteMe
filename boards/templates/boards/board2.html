@@ -1,15 +1,10 @@
 {% extends "index.html" %}
 {% load static %}
-
 {% block title %} 자유게시판 - PaletteMe {% endblock %}
-
 {% block content %}
     <link rel="stylesheet" href="{% static 'boards/css/board2.css' %}">
-
     <div class="board-detail-container free">
         <h2>자유게시판</h2>
-
-        <!-- 제목줄: 헤더 -->
         <div class="title-header">
             <span class="col-header">No.</span>
             <span class="col-header">제 목</span>
@@ -17,63 +12,43 @@
             <span class="col-header">작성일</span>
             <span class="col-header">조회수</span>
         </div>
-
-        <!-- 데이터줄: 실제 게시글 -->
         <div class="title-row">
-            <span id="detailNo">{{ post.id }}</span>
-            <span id="detailTitle">{{ post.title }}</span>
-
-            {% if post.writer %}
-            <span id="detailWriter">{{ post.writer }}</span>
-            {% endif %}
-
-            <span id="detailDate">{{ post.created_at|date:"Y-m-d" }}</span>
-            <span id="detailView">{{ post.views }}</span>
+            <span>{{ post.post_id }}</span>
+            <span>{{ post.title }}</span>
+            <span>{% if post.is_anonymous %}익명{% else %}{{ post.author.nickname }}{% endif %}</span>
+            <span>{{ post.created_at|date:"Y-m-d" }}</span>
+            <span>{{ post.view_count }}</span>
         </div>
         <hr class="section-divider">
-
         <div class="detail-content">
-            <!-- 작성된 텍스트 자리 -->
-            <div id="detailContentText">{{ post.content|linebreaksbr }}</div>
-            <!-- 첨부된 이미지가 보여지는 자리  -->
-            <div id="detailImages" class="detail-images-area">
-                {% for image in post.images.all %}
-                    <img src="{{ image.url }}" alt="첨부이미지">
+            <div id="detailContentText">{{ post.body|linebreaksbr }}</div>
+            <div class="detail-images-area">
+                {% for img in images %}
+                    <img src="{{ img.image.url }}" alt="첨부이미지" style="max-width:100%;">
                 {% endfor %}
             </div>
         </div>
         <hr class="section-divider">
-
-        <!-- 댓글 영역 -->
         <div class="comment-section">
-            <h3>댓글</h3>
-            <div id="commentList"></div>
-            <div class="comment-input">
-                <!-- 좋아요 -->
-                <div class="like-area">
-                    <button class="like-btn" id="likeBtn">❤️ 좋아요</button>
-                    <!--임시-->
-                    <span class="like-count" id="likeCount">0</span>
-                </div>
-                <div class="comment-write">
-                    <input type="text" id="commentText" placeholder="댓글을 입력하세요">
-                    <button onclick="addComment()">등록</button>
-                </div>
+            <h3>댓글 ({{ comments.count }})</h3>
+            <div id="commentList">
+                {% for comment in comments %}
+                    <div style="margin-bottom: 10px; border-bottom: 1px solid #eee;">
+                        <strong>{{ comment.author.nickname }}</strong>: {{ comment.body }}
+                        <div style="font-size: 0.8em; color: #888;">{{ comment.created_at|date:"Y-m-d H:i" }}</div>
+                    </div>
+                {% endfor %}
             </div>
+            <form method="POST" class="comment-input">
+                {% csrf_token %}
+                <div class="comment-write">
+                    <input type="text" name="content" placeholder="댓글을 입력하세요" required>
+                    <button type="submit">등록</button>
+                </div>
+            </form>
         </div>
-
         <div class="detail-nav">
-            <!-- 작성자 본인일 경우 수정, 삭제 버튼 -->
-            <button id="editBtn" onclick="goEdit()" style="display:none;">수정</button>
-            <button id="deleteBtn" onclick="goDelete()" style="display:none;">삭제</button>
-
-            <!-- 이전글|글목록|다음글 -->
-            <span id="prevBtn" onclick="goPrev()">이전글</span> |
-            <span onclick="goList()">글목록</span> |
-            <span id="nextBtn" onclick="goNext()">다음글</span>
+            <span onclick="location.href='{% url 'boards:board1' %}'">글목록</span>
         </div>
-
     </div>
-
-    <script src="{% static 'boards/js/board2.js' %}" defer></script>
 {% endblock %}

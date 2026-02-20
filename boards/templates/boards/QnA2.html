@@ -1,49 +1,69 @@
 {% extends "index.html" %}
 {% load static %}
 
-{% block title %} QnA - PaletteMe {% endblock %}
+{% block title %} QnA 상세 - PaletteMe {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'QnA/css/QnA2.css' %}">
+    <link rel="stylesheet" href="{% static 'boards/css/QnA2.css' %}">
 
-    <div class="board-detail-container QnA">
-        <h2>QnA</h2>
-
-        <!-- 제목줄: 헤더 -->
-        <div class="title-header">
-            <span class="col-header">No.</span>
-            <span class="col-header">제 목</span>
-            <span class="col-header">작성일</span>
-            <span class="col-header">조회수</span>
+    <div class="qna-upgrade-container">
+        <div class="qna-header-section">
+            <span class="qna-label">No. {{ post.post_id }}</span>
+            <h1 class="qna-main-title">{{ post.title }}</h1>
+            <div class="qna-meta-info">
+                <span><b>작성일</b> {{ post.created_at|date:"Y-m-d" }}</span>
+                <span><b>조회수</b> {{ post.view_count }}</span>
+            </div>
         </div>
 
-        <!-- 데이터줄: 실제 게시글 -->
-        <div class="title-row">
-            <span id="detailNo"></span>
-            <span id="detailTitle"></span>
-            <span id="detailDate"></span>
-            <span id="detailView"></span>
-        </div>
-        <hr class="section-divider">
+        <div class="qna-body-section">
+            <div class="qna-text-content">
+                {{ post.body|safe }}
+            </div>
 
-        <div class="detail-content" id="detailContent">
-            내용 자리
-        </div>
-        <hr class="section-divider">
+            {% if images %}
+            <div class="qna-image-gallery">
+                {% for img in images %}
+                    <img src="{{ img.image.url }}" alt="첨부이미지">
+                {% endfor %}
+            </div>
+            {% endif %}
 
-        <!-- 운영자 답글 영역 -->
-        <div class="comment-section">
-            <h3>답변</h3>
-            <div id="commentList"></div>
-        </div>
-
-        <div class="detail-nav">
-            <span id="prevBtn" onclick="goPrev()">이전글</span> |
-            <span onclick="goList()">글목록</span> |
-            <span id="nextBtn" onclick="goNext()">다음글</span>
+            <div class="qna-like-wrapper">
+                <button type="button" class="qna-btn-like">
+                    ❤️ 좋아요 <span>{{ post.like_users.count|default:0 }}</span>
+                </button>
+            </div>
         </div>
 
+        <hr class="qna-divider">
+
+        <div class="qna-comments-wrapper">
+            <h3 class="qna-comments-count">답변/댓글 ({{ comments.count }})</h3>
+
+            <div class="qna-comment-list">
+                {% for comment in comments %}
+                <div class="qna-comment-item {% if comment.author.is_staff %}admin-reply{% endif %}">
+                    <span class="user-name">{% if comment.author.is_staff %}운영자 답변{% else %}{{ comment.author.nickname }}{% endif %}</span>
+                    <p class="comment-text">{{ comment.body }}</p>
+                    <span class="comment-date">{{ comment.created_at|date:"Y-m-d H:i" }}</span>
+                </div>
+                {% empty %}
+                <p class="qna-empty">아직 등록된 답변이 없습니다.</p>
+                {% endfor %}
+            </div>
+
+            <form method="POST" class="qna-comment-form-box">
+                {% csrf_token %}
+                <textarea name="content" placeholder="궁금한 점을 남겨주세요." required></textarea>
+                <div class="qna-form-actions">
+                    <button type="submit">등록하기</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="qna-bottom-nav">
+            <button onclick="location.href='{% url 'boards:qna1' %}'" class="qna-list-btn">목록으로 돌아가기</button>
+        </div>
     </div>
-
-    <script src="{% static 'boards/js/QnA2.js' %}" defer></script>
 {% endblock %}

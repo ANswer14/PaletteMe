@@ -4,7 +4,6 @@
 {% block title %} QnA - PaletteMe {% endblock %}
 
 {% block content %}
-
     <link rel="stylesheet" href="{% static 'boards/css/QnA1.css' %}">
 
     <div class="board-container QnA">
@@ -19,19 +18,17 @@
         <div class="board-list">
             {% if posts %}
                 {% for post in posts %}
-                <div class="board-row" onclick="goQnADetail({{ post.id }}, {{ post.is_private|yesno:'true,false' }}, '{{ post.writer.nickname }}')">
+                <div class="board-row" onclick="location.href='{% url 'boards:qna2' %}?no={{ post.post_id }}'">
                     <div class="col-no">{{ forloop.revcounter }}</div>
                     <div class="col-title">
-                        {% if post.is_private %}
-                            <span class="lock-icon">🔒</span>
-                        {% endif %}
+                        {% if post.is_secret %}<span class="lock-icon">🔒</span>{% endif %}
                         <span class="title-text">{{ post.title }}</span>
-                        {% if post.comment_count > 0 %}
-                            <span class="comment-count">[{{ post.comment_count }}]</span>
+                        {% if post.comments.count > 0 %}
+                            <span class="comment-count">[{{ post.comments.count }}]</span>
                         {% endif %}
                     </div>
                     <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
-                    <div class="col-view">{{ post.views }}</div>
+                    <div class="col-view">{{ post.view_count }}</div>
                 </div>
                 {% endfor %}
             {% else %}
@@ -42,9 +39,5 @@
         <div class="board-footer">
             <button class="write-btn" onclick="location.href='{% url 'boards:boardWrite' %}?type=qna'">글쓰기</button>
         </div>
-
-        </div>
-
-    <script>const USER_NICKNAME = "{{ user.nickname|escapejs }}";</script>
-    <script src="{% static 'QnA/js/QnA1.js' %}" defer></script>
+    </div>
 {% endblock %}

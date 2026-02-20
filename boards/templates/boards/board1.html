@@ -19,16 +19,17 @@
         <div class="board-list">
             {% if posts %}
                 {% for post in posts %}
-                <div class="board-row" onclick="goBoardDetail({{ post.post_id }})">
-                    <div class="col-no">{{ forloop.revcounter }}</div> <div class="col-title">
+                <div class="board-row" onclick="location.href='{% url 'boards:board2' %}?no={{ post.post_id }}'">
+                    <div class="col-no">{{ forloop.revcounter }}</div>
+                    <div class="col-title">
                         {{ post.title }}
-                        {% if post.comment_count > 0 %}
-                            <span class="comment-count">[{{ post.comment_count }}]</span>
+                        {% if post.comments.count > 0 %}
+                            <span class="comment-count">[{{ post.comments.count }}]</span>
                         {% endif %}
                     </div>
-                    <div class="col-writer">{{ post.writer }}</div>
+                    <div class="col-writer">{% if post.is_anonymous %}익명{% else %}{{ post.author.nickname }}{% endif %}</div>
                     <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
-                    <div class="col-view">{{ post.views }}</div>
+                    <div class="col-view">{{ post.view_count }}</div>
                 </div>
                 {% endfor %}
             {% else %}
@@ -36,30 +37,20 @@
             {% endif %}
         </div>
 
-        <!-- 구분선 + 글쓰기 버튼 -->
         <div class="board-footer">
-            <!-- 글쓰기 페이지에서 선택박스 타입 위해서 버튼에 타입 적용 -->
-            <button class="write-btn" onclick="location.href='/boards/boardWrite/'">글쓰기</button>
+            <button class="write-btn" onclick="location.href='{% url 'boards:boardWrite' %}'">글쓰기</button>
         </div>
 
         <div class="pagination">
             {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}">이전</a>
             {% endif %}
-
             {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <span class="current-page">{{ num }}</span>
-                {% else %}
-                    <a href="?page={{ num }}">{{ num }}</a>
-                {% endif %}
+                <a href="?page={{ num }}" class="{% if page_obj.number == num %}current-page{% endif %}">{{ num }}</a>
             {% endfor %}
-
             {% if page_obj.has_next %}
                 <a href="?page={{ page_obj.next_page_number }}">다음</a>
             {% endif %}
         </div>
     </div>
-
-    <script src="{% static 'boards/js/board1.js' %}" defer></script>
 {% endblock %}

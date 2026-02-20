@@ -18,7 +18,7 @@ def board1(request):
     return render(request, 'boards/board1.html', {'posts': page_obj.object_list, 'page_obj': page_obj})
 
 
-def qna1(request):
+def get_qna_list(request):
     """QnA 게시판 목록 페이지"""
     # 1. QnA 글만 최신순으로 가져오기
     posts_list = Post.objects.filter(category='QNA').order_by('-created_at')
@@ -27,7 +27,7 @@ def qna1(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'boards/QnA1.html', {'posts': page_obj, 'page_obj': page_obj})
+    return render(request, 'boards/QnA1.html', {'posts': page_obj.object_list, 'page_obj': page_obj})
 
 
 def notice1(request):
@@ -100,7 +100,8 @@ def boardWrite(request):
         is_edit = True
         return render(request, 'boards/boardWrite.html', {'data': data, 'is_edit': is_edit})
     else:
-        return render(request, 'boards/boardWrite.html', {'is_edit': is_edit})
+        write_type = request.GET.get('type')
+        return render(request, 'boards/boardWrite.html', {'is_edit': is_edit, 'type': write_type})
 
 
 # 상세 페이지 함수들 (필요시 로직 추가)

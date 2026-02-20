@@ -135,7 +135,7 @@ async function submitPost() {
     // 게시판 종류별 라디오 버튼 값(익명/비공개) 주머니에 추가
     const category = document.getElementById("boardCategory").value;
     if(category === 'qna') {
-        formData.append('is_private', document.querySelector('input[name="is_private"]:checked').value);
+        formData.append('is_secret', document.querySelector('input[name="is_private"]:checked').value);
     } else if(category === 'free') {
         formData.append('is_anonymous', document.querySelector('input[name="is_anonymous"]:checked').value);
     }

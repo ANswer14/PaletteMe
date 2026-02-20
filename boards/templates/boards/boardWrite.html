@@ -20,10 +20,10 @@
                 <div class="input-group select-group">
                     <label>게시판</label>
                     <select id="boardCategory">
-                        <option value="free"{% if data.category == 'FREE' %} selected {% endif %}>자유게시판</option>
-                        <option value="qna"{% if data.category == 'QNA' %} selected {% endif %}>Q&A 게시판</option>
+                        <option value="free"{% if type == 'FREE' or data.category == 'FREE' %} selected {% endif %}>자유게시판</option>
+                        <option value="qna"{% if type == 'QNA' or data.category == 'QNA' %} selected {% endif %}>Q&A 게시판</option>
                         {% if user.is_staff %}
-                            <option value="notice" {% if data.category == 'NOTICE' %} selected {% endif %}>Notice</option>
+                            <option value="notice" {% if type == 'NOTICE' or data.category == 'NOTICE' %} selected {% endif %}>Notice</option>
                         {% endif %}
                     </select>
                 </div>

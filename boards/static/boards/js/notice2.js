@@ -53,7 +53,6 @@ function renderNotice(data) {
             imgTag.src = img.url;
             imgTag.alt = "게시글 이미지";
             imgTag.style.maxWidth = "100%"; // 화면에 맞춰 크기 조절
-            imgTag.style.display = "block";
             imgTag.style.marginBottom = "10px";
             imageContainer.appendChild(imgTag);
         });

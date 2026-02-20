@@ -20,13 +20,16 @@
                 <div class="input-group select-group">
                     <label>게시판</label>
                     <select id="boardCategory">
-                        <option value="free">자유게시판</option>
-                        <option value="qna">Q&A 게시판</option>
+                        <option value="free"{% if data.category == 'FREE' %} selected {% endif %}>자유게시판</option>
+                        <option value="qna"{% if data.category == 'QNA' %} selected {% endif %}>Q&A 게시판</option>
+                        {% if user.is_staff %}
+                            <option value="notice" {% if data.category == 'NOTICE' %} selected {% endif %}>Notice</option>
+                        {% endif %}
                     </select>
                 </div>
                 <div class="input-group title-group">
                     <label>제목</label>
-                    <input type="text" id="postTitle" placeholder="제목을 입력하세요" maxlength="100">
+                    <input type="text" id="postTitle" placeholder="제목을 입력하세요" maxlength="100" value="{{ data.title }}">
                 </div>
             </div>
 
@@ -39,12 +42,26 @@
                     <span id="contentCount">0 / 2000자</span>
                 </div>
             </div>
-
+            {% if data.images %}
+                <div class="image-edit-section">
+                    <h4>기존 이미지 관리 (삭제하려면 체크하세요)</h4>
+                    {% for img in data.images %}
+                    <span class="image-item">
+                        <img src="{{ img.image.url }}" width="150">
+                        <label>
+                            <input type="checkbox" name="delete_images" value="{{ img.post_img_id }}"> 삭제하기
+                        </label>
+                    </span>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <div class="upload-section">
+
                 <label class="upload-btn">
                     <span class="icon">📷</span> 사진 추가
                     <input type="file" id="imageInput" accept="image/*" multiple hidden>
                 </label>
+
                 <div id="previewArea" class="preview-grid"></div>
             </div>
 
@@ -72,11 +89,21 @@
             <footer class="write-footer">
                 <button class="btn-cancel" onclick="cancelPost()">취소</button>
                 <button class="btn-submit" onclick="submitPost()">등록하기</button>
+                {% if is_edit %}
+                    <form method='post' action="/boards/delete/">
+                        {% csrf_token %}
+                        <button class="btn-delete" onclick="">삭제</button>
+                        <input type="hidden" name="post_id" value="{{ data.no }}">
+                    </form>
+                {% endif %}
             </footer>
         </section>
     </div>
 </div>
 
+<input type="hidden" id="is_edit" value="{{ is_edit }}">
+<input type="hidden" id="post_id" value="{{ data.no }}">
+<input type="hidden" id="body" value="{{ data.body }}">
 <input type="hidden" id="postWriter" value="{{ user.nickname }}">
 <script src="{% static 'boards/js/boardWrite.js' %}"></script>
 {% endblock %}

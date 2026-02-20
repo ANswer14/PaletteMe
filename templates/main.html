@@ -31,7 +31,7 @@
                 {% for notice in recent_notices %}
                 <li>
                     <!-- [중요] 경로 확인할것!!!!!! -->
-                    <a href="/boards/noticeDetail/{{ notice.id }}">{{ notice.title }}</a>
+                    <a href="/boards/noticeDetail?no={{ notice.post_id }}">{{ notice.title }}</a>
                     <span class="summary-date">{{ notice.created_at|date:"m-d" }}</span>
                 </li>
                 {% endfor %}

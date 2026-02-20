@@ -16,7 +16,9 @@
         </div>
 
         <!-- 데이터줄: 실제 게시글 -->
-        <form method="post" action="/boards/goFixNotice/">
+        <form method="post" action="/boards/boardWrite/">
+            {% csrf_token %}
+            <input type="hidden" name="post_id">
             <div class="title-row">
                 <span id="detailNo"></span>
                 <span id="detailTitle"></span>
@@ -32,6 +34,9 @@
             </div>
             {% endif %}
         </form>
+        <div id="imageContainer">
+
+        </div>
         <hr class="section-divider">
 
         <div class="detail-nav">

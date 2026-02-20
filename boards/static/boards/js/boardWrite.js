@@ -23,6 +23,7 @@ let uploadedFiles = [];
 let isSubmitting = false;
 // Quill 에디터 객체 변수
 let quill;
+const body = document.getElementById('body').value || '';
 
 /**
  * 2. 페이지 로드 직후 실행될 설정
@@ -89,6 +90,7 @@ window.onload = function() {
             reader.readAsDataURL(file); // 파일을 읽어 URL 형식으로 변환
         });
     });
+    quill.root.innerHTML = body;
 };
 
 /**
@@ -110,6 +112,7 @@ async function submitPost() {
     const title = document.getElementById("postTitle").value.trim();
     const content = quill.root.innerHTML; // 에디터의 HTML 내용(서식 포함) 추출
     const textLength = quill.getText().trim().length;
+    const delFiles = document.querySelectorAll('input[name=delete_images]:checked');
 
     // 제목 또는 내용이 비어있는지 확인
     if (!title || textLength === 0) return alert("제목과 내용을 모두 작성해주세요.");
@@ -125,6 +128,9 @@ async function submitPost() {
     formData.append('content', content);
     formData.append('category', document.getElementById("boardCategory").value);
     formData.append('writer', document.getElementById("postWriter").value);
+    formData.append('is_edit', document.getElementById('is_edit').value);
+    formData.append('post_id', document.getElementById('post_id').value);
+    delFiles.forEach(f => formData.append('delImages', f.value));
 
     // 게시판 종류별 라디오 버튼 값(익명/비공개) 주머니에 추가
     const category = document.getElementById("boardCategory").value;

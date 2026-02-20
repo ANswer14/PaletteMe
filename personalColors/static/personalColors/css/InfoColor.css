@@ -26,15 +26,15 @@ h2 {
 
 .intro-header {
     display: flex;
-    align-items: flex-start; /* 그림과 텍스트 상단 정렬 */
-    gap: 15px; /* 그림과 텍스트 사이 간격 */
+    align-items: center; /* 그림과 텍스트 상단 정렬 */
+    gap: 30px; /* 그림과 텍스트 사이 간격 */
 }
 
 .intro-img {
-    width: 180px;  /* 그림 크기 */
+    width: 250px;  /* 그림 크기 */
     height: auto;
-    padding-left: 20px;
-    padding-right: 18px;
+    object-fit: cover; /* 이미지가 비율에 맞게 꽉 차도록 설정 */
+    padding : 0;
     border-radius: 12px;
 }
 

@@ -62,6 +62,9 @@
         </div>
     </div>
 
-    <script>const USER_NICKNAME = "{{ user.nickname|escapejs }}";</script>
-    <script src="{% static 'QnA/js/QnA1.js' %}" defer></script>
+    <script>
+        const USER_NICKNAME = "{{ user.nickname|escapejs }}";
+        const IS_STAFF = "{{ user.is_staff|escapejs }}";
+    </script>
+    <script src="{% static 'boards/js/QnA1.js' %}" defer></script>
 {% endblock %}

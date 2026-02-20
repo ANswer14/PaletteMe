@@ -57,13 +57,17 @@ def notice2(request):
     # post = Post.objects.filter(category = 'Notice', post_id = request.GET.get('no'))
     return render(request, 'boards/notice2.html')
 
-def get_notice_detail(request):
+def get_detail(request):
     try:
         post = Post.objects.get(post_id=request.GET.get('no'))
         all_ids = list(Post.objects.values_list('post_id', flat=True).order_by('post_id'))
         image_list = [
             {'id': img.post_img_id, 'url': img.image.url}
             for img in post.images.all()
+        ]
+        comment_list = [
+            {'id': comment.comment_id, 'author_name': comment.author.username, 'comment_body': comment.body}
+            for comment in post.comments.all()
         ]
         data = {
             'title': post.title,
@@ -78,6 +82,7 @@ def get_notice_detail(request):
             'post_id': post.post_id,
             'images': image_list,
             'numbers': all_ids,
+            'comment_list': comment_list,
         }
     except:
         data = None
@@ -119,13 +124,14 @@ def board_create_api(request):
             title = request.POST.get('title')
             content = request.POST.get('content')
             category = request.POST.get('category').upper()  # 'free' -> 'FREE'
-            is_secret = request.POST.get('is_private') == 'true'
+            is_secret = request.POST.get('is_secret') == 'true'
             is_anonymous = request.POST.get('is_anonymous') == 'true'
             del_images = request.POST.getlist('delImages')
             is_edit = request.POST.get('is_edit') == 'True'
             images = request.FILES.getlist('images')
             post_id = request.POST.get('post_id')
-
+            print('결과 이전:', request.POST.get('is_secret'))
+            print('결과:', is_secret)
             print('is_edit 값:', is_edit)
             print('is_edit 값:', request.POST.get('is_edit'))
 

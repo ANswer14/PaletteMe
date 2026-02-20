@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from allauth.account.views import SignupView, PasswordResetView, PasswordResetFromKeyView
+from allauth.account.views import SignupView, PasswordResetView
 from allauth.socialaccount.views import SignupView as SocialSignupView # allauth의 소셜 회원가입을 SocialSignupView로 명시.
 from django.http import JsonResponse
 from .forms import MyPageForm
@@ -193,9 +193,35 @@ def change_password_custom(request):
     return redirect('profile')
 
 
+# 비밀번호 재설정 (비밀번호 찾기) 페이지
 class MyPasswordResetView(PasswordResetView):
+    template_name = "accounts/password_reset.html"
+    success_url = reverse_lazy('account_reset_password')
+
+    def form_valid(self, form):
+        email = form.cleaned_data["email"]
+        try:
+            user = User.objects.get(email=email)
+
+            # 1. 소셜 로그인 유저(비밀번호가 없는 유저)인지 확인
+            if not user.has_usable_password():
+                messages.error(
+                    self.request,
+                    "해당 이메일은 소셜 로그인으로 최초가입된 계정입니다. \n소셜 로그인을 이용해 주세요."
+                )
+                # 메일을 보내지 않고 다시 입력 폼이 있는 페이지를 보여줌
+                return render(self.request, self.template_name, {'form': form})
+
+        except User.DoesNotExist:
+            # 존재하지 않는 이메일일 경우, 보안상 그냥 진행하거나 별도 처리를 합니다.
+            # 여기서는 아무것도 하지 않고 아래의 기존 로직으로 넘깁니다.
+            pass
+
+        # 2. 일반 유저라면 기존의 성공 로직(메일 발송 및 리다이렉트) 실행
+        return super().form_valid(form)
+
     def get_success_url(self):
         # 성공 메시지 강제 주입
         messages.success(self.request, "입력하신 이메일로 재설정 링크를 보냈습니다.")
         # 다시 입력 페이지(자신)로 리다이렉트
-        return reverse_lazy('account_reset_password')
+        return self.success_url

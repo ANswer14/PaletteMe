@@ -1,42 +1,51 @@
 /* 결과 화면 섹션 */
 #resultSection {
     display: flex;
-    margin-top: 150px;
-    width: 80%;
+    margin-top: 120px;
+    margin-bottom: 120px;
+    width: 1200px;
+    align-items: stretch;
     margin-left: auto;
     margin-right: auto;
-    padding: 20px;
+    padding: 40px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .left {
-    width: 30%;
-    padding-right: 20px;
+    width: 45%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .result-img {
-    width: 100%;
+    width: 70%;
+    max-width: 380px;
     height: auto;
     border-radius: 10px;
 }
 
 .right {
-    width: 70%;
+    width: 55%;
+    height: 100%;
     color: #675f5f;
     font-size: 25px;
+    text-align: left;
+    padding-left: 60px;
+    display: flex;
+    flex-direction: column;   /* 세로 배치 */
 }
 
 .right h1 {
-    font-size: 40px;
+    font-size: 30px;
     margin-bottom: 10px;
 }
 
 #personalColorResult {
-    font-size: 80px;
+    font-size: 50px;
     font-weight: bold;
-    color: #e37e7e;
     margin-bottom: 40px;
 }
 
@@ -53,36 +62,39 @@
 
 #palette {
     display: flex;
-    gap: 8px;
+    gap: 12px;
 }
 
 .color-circle {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;   /* 동그라미 */
     border: 1px solid #ccc;
 }
 
 .buttons {
-    margin-top: 80px;
-    margin-bottom: 80px;
+    margin-top: auto;
+    margin-left: 40px;
     display: flex;
-    gap: 50px;
+    gap: 30px;
+    justify-content: flex-start;
 }
 
 .buttons button {
-    width: 130px;
+    width: 120px;
+    height: 50px;
     padding: 10px 20px;
     background-color: #535252;
     color: white;
     border: none;
-    border-radius: 3px;
+    border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
+    font-size: 16px;
 }
 
 .buttons button:hover {
-    background-color: #333333;
+    background-color: #333;
 }
 
 /* 팝업 전체 배경 (어둡게 처리) */
@@ -133,15 +145,15 @@
     background-color: #333;
 }
 
-/* '아니오' 버튼 커스텀 (구분하기 쉽게 회색으로) */
-#noBtn {
-    background-color: #ccc;
-    color: #333;
-}
+/*!* '아니오' 버튼 커스텀 (구분하기 쉽게 회색으로) *!*/
+/*#noBtn {*/
+/*    background-color: #ccc;*/
+/*    color: #333;*/
+/*}*/
 
-#noBtn:hover {
-    background-color: #bbb;
-}
+/*#noBtn:hover {*/
+/*    background-color: #bbb;*/
+/*}*/
 
 /* 1. 진단 실패 시 (응답 부족) 스타일 */
 #failedResult {

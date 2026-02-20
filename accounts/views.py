@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from allauth.account.views import SignupView
+from allauth.account.views import SignupView, PasswordResetView, PasswordResetFromKeyView
 from allauth.socialaccount.views import SignupView as SocialSignupView # allauth의 소셜 회원가입을 SocialSignupView로 명시.
 from django.http import JsonResponse
 from .forms import MyPageForm
@@ -10,7 +10,10 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from .forms import CustomSignupForm
 from allauth.account.utils import perform_login
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 # 회원가입 약관동의 페이지 로드 함수
@@ -188,3 +191,11 @@ def change_password_custom(request):
         return redirect('profile')
 
     return redirect('profile')
+
+
+class MyPasswordResetView(PasswordResetView):
+    def get_success_url(self):
+        # 성공 메시지 강제 주입
+        messages.success(self.request, "입력하신 이메일로 재설정 링크를 보냈습니다.")
+        # 다시 입력 페이지(자신)로 리다이렉트
+        return reverse_lazy('account_reset_password')

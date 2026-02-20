@@ -1,6 +1,6 @@
 body .auth-container {
     max-width: 400px !important;
-    margin: 100px auto !important; /* 상하 여백 넉넉히 */
+    margin: 75px auto !important; /* 상하 여백 넉넉히 */
     padding: 40px !important;
     background: white !important;
     border: 1px solid #eee !important;

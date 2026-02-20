@@ -21,56 +21,30 @@
                 {% for post in posts %}
                 <div class="board-row" onclick="goQnADetail({{ post.id }}, {{ post.is_private|yesno:'true,false' }}, '{{ post.writer.nickname }}')">
                     <div class="col-no">{{ forloop.revcounter }}</div>
-
                     <div class="col-title">
                         {% if post.is_private %}
                             <span class="lock-icon">🔒</span>
                         {% endif %}
-                        {{ post.title }}
+                        <span class="title-text">{{ post.title }}</span>
                         {% if post.comment_count > 0 %}
                             <span class="comment-count">[{{ post.comment_count }}]</span>
                         {% endif %}
                     </div>
-
                     <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
-
                     <div class="col-view">{{ post.views }}</div>
                 </div>
                 {% endfor %}
             {% else %}
-                <div class="board-row" style="justify-content: center; color: #999;">
-                    게시글이 없습니다.
-                </div>
+                <div class="no-posts">게시글이 없습니다.</div>
             {% endif %}
         </div>
 
-        <!-- 글쓰기 버튼 -->
         <div class="board-footer">
-            <button class="write-btn" onclick="location.href='boardWrite.html?type=qna'">글쓰기</button>
+            <button class="write-btn" onclick="location.href='{% url 'boards:boardWrite' %}?type=qna'">글쓰기</button>
         </div>
 
-        <div class="pagination">
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">이전</a>
-            {% endif %}
-
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <span class="current-page">{{ num }}</span>
-                {% else %}
-                    <a href="?page={{ num }}">{{ num }}</a>
-                {% endif %}
-            {% endfor %}
-
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">다음</a>
-            {% endif %}
         </div>
-    </div>
 
-    <script>
-        const USER_NICKNAME = "{{ user.nickname|escapejs }}";
-    </script>
-
+    <script>const USER_NICKNAME = "{{ user.nickname|escapejs }}";</script>
     <script src="{% static 'QnA/js/QnA1.js' %}" defer></script>
 {% endblock %}

@@ -19,7 +19,7 @@
         <div class="board-list">
             {% if posts %}
                 {% for post in posts %}
-                <div class="board-row" onclick="goBoardDetail({{ post.id }})">
+                <div class="board-row" onclick="goBoardDetail({{ post.post_id }})">
                     <div class="col-no">{{ forloop.revcounter }}</div> <div class="col-title">
                         {{ post.title }}
                         {% if post.comment_count > 0 %}
@@ -39,7 +39,7 @@
         <!-- 구분선 + 글쓰기 버튼 -->
         <div class="board-footer">
             <!-- 글쓰기 페이지에서 선택박스 타입 위해서 버튼에 타입 적용 -->
-            <button class="write-btn" onclick="location.href='boardWrite.html?type=free'">글쓰기</button>
+            <button class="write-btn" onclick="location.href='/boards/boardWrite/'">글쓰기</button>
         </div>
 
         <div class="pagination">

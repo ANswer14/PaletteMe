@@ -18,7 +18,7 @@ def board1(request):
     return render(request, 'boards/board1.html', {'posts': page_obj.object_list, 'page_obj': page_obj})
 
 
-def get_qna_list(request):
+def qna1(request):
     """QnA 게시판 목록 페이지"""
     # 1. QnA 글만 최신순으로 가져오기
     posts_list = Post.objects.filter(category='QNA').order_by('-created_at')
@@ -27,7 +27,7 @@ def get_qna_list(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'boards/QnA1.html', {'posts': page_obj.object_list, 'page_obj': page_obj})
+    return render(request, 'boards/QnA1.html', {'posts': page_obj, 'page_obj': page_obj})
 
 
 def notice1(request):
@@ -57,17 +57,13 @@ def notice2(request):
     # post = Post.objects.filter(category = 'Notice', post_id = request.GET.get('no'))
     return render(request, 'boards/notice2.html')
 
-def get_detail(request):
+def get_notice_detail(request):
     try:
         post = Post.objects.get(post_id=request.GET.get('no'))
         all_ids = list(Post.objects.values_list('post_id', flat=True).order_by('post_id'))
         image_list = [
             {'id': img.post_img_id, 'url': img.image.url}
             for img in post.images.all()
-        ]
-        comment_list = [
-            {'id': comment.comment_id, 'author_name': comment.author.username, 'comment_body': comment.body}
-            for comment in post.comments.all()
         ]
         data = {
             'title': post.title,
@@ -82,7 +78,6 @@ def get_detail(request):
             'post_id': post.post_id,
             'images': image_list,
             'numbers': all_ids,
-            'comment_list': comment_list,
         }
     except:
         data = None
@@ -105,8 +100,7 @@ def boardWrite(request):
         is_edit = True
         return render(request, 'boards/boardWrite.html', {'data': data, 'is_edit': is_edit})
     else:
-        write_type = request.GET.get('type')
-        return render(request, 'boards/boardWrite.html', {'is_edit': is_edit, 'type': write_type})
+        return render(request, 'boards/boardWrite.html', {'is_edit': is_edit})
 
 
 # 상세 페이지 함수들 (필요시 로직 추가)
@@ -124,14 +118,13 @@ def board_create_api(request):
             title = request.POST.get('title')
             content = request.POST.get('content')
             category = request.POST.get('category').upper()  # 'free' -> 'FREE'
-            is_secret = request.POST.get('is_secret') == 'true'
+            is_secret = request.POST.get('is_private') == 'true'
             is_anonymous = request.POST.get('is_anonymous') == 'true'
             del_images = request.POST.getlist('delImages')
             is_edit = request.POST.get('is_edit') == 'True'
             images = request.FILES.getlist('images')
             post_id = request.POST.get('post_id')
-            print('결과 이전:', request.POST.get('is_secret'))
-            print('결과:', is_secret)
+
             print('is_edit 값:', is_edit)
             print('is_edit 값:', request.POST.get('is_edit'))
 

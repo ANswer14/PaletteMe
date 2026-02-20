@@ -4,9 +4,8 @@
 {% block title %} QnA - PaletteMe {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'boards/css/QnA2.css' %}">
-    <input type="hidden" id="userName" value="{{ user.nickname }}">
-    {% csrf_token %}
+    <link rel="stylesheet" href="{% static 'QnA/css/QnA2.css' %}">
+
     <div class="board-detail-container QnA">
         <h2>QnA</h2>
 
@@ -32,16 +31,10 @@
         </div>
         <hr class="section-divider">
 
-        <div id="fix-btn">
-        </div>
-
         <!-- 운영자 답글 영역 -->
         <div class="comment-section">
             <h3>답변</h3>
             <div id="commentList"></div>
-<!--            {% if user.is_staff == True %}-->
-<!--                <button id="comment-btn">댓글 추가</button>-->
-<!--            {% endif %}-->
         </div>
 
         <div class="detail-nav">

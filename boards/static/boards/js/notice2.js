@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     try {
         // [중요] 백엔드와 상의한 공지사항 상세 API 주소
-        const response = await fetch(`/boards/getNoticeDetail?no=${no}`);
+        const response = await fetch(`/boards/getDetail?no=${no}`);
         if (!response.ok) {
             throw new Error("공지사항을 찾을 수 없습니다.");
         }

@@ -19,10 +19,10 @@
         <div class="board-list">
             {% if posts %}
                 {% for post in posts %}
-                <div class="board-row" onclick="goQnADetail({{ post.id }}, {{ post.is_private|yesno:'true,false' }}, '{{ post.writer.nickname }}')">
-                    <div class="col-no">{{ forloop.revcounter }}</div>
+                <div class="board-row" onclick="goQnADetail({{ post.post_id }}, {{ post.is_secret|yesno:'true,false' }}, '{{ post.author.nickname }}')">
+                    <div class="col-no">{{ post.post_id }}</div>
                     <div class="col-title">
-                        {% if post.is_private %}
+                        {% if post.is_secret %}
                             <span class="lock-icon">🔒</span>
                         {% endif %}
                         <span class="title-text">{{ post.title }}</span>
@@ -31,7 +31,7 @@
                         {% endif %}
                     </div>
                     <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
-                    <div class="col-view">{{ post.views }}</div>
+                    <div class="col-view">{{ post.view_count }}</div>
                 </div>
                 {% endfor %}
             {% else %}
@@ -39,12 +39,32 @@
             {% endif %}
         </div>
 
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">이전</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="current-page">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">다음</a>
+            {% endif %}
+        </div>
+
         <div class="board-footer">
-            <button class="write-btn" onclick="location.href='{% url 'boards:boardWrite' %}?type=qna'">글쓰기</button>
+            <button class="write-btn" onclick="location.href='{% url 'boards:boardWrite' %}?type=QNA'">글쓰기</button>
         </div>
+    </div>
 
-        </div>
-
-    <script>const USER_NICKNAME = "{{ user.nickname|escapejs }}";</script>
-    <script src="{% static 'QnA/js/QnA1.js' %}" defer></script>
+    <script>
+        const USER_NICKNAME = "{{ user.nickname|escapejs }}";
+        const IS_STAFF = "{{ user.is_staff|escapejs }}";
+    </script>
+    <script src="{% static 'boards/js/QnA1.js' %}" defer></script>
 {% endblock %}

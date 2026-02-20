@@ -163,4 +163,4 @@ def delete(request):
     if request.method == 'POST':
         post = get_object_or_404(Post, post_id=request.POST.get('post_id'))
         post.delete()
-        return redirect('/boards/boardList/')
+        return redirect('/boards/freeList/')

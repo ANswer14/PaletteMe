@@ -14,52 +14,124 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* 왼쪽 30% */
 .left {
-    width: 30%;
+    width: 55%;
     padding: 30px;
     border-right: 1px solid #cdcbcb;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;   /* 전체는 세로 유지 */
 }
 
-/* 오른쪽 70% */
 .right {
-    width: 70%;
+    width: 45%;
     padding: 40px;
     box-sizing: border-box;
-    position: relative; /* 버튼 배치를 위해 */
+    /* position: relative; /* 버튼 배치를 위해 */
+}
+
+h2 {
+    color: #333333;
+    font-size: 28px;
+    margin-bottom: 15px;
+    border-left: 5px solid #333333; /* 왼쪽에 선을 넣어 더 강조 */
+    padding-left: 12px;
 }
 
 /* 검색 영역 */
-.left input {
-    width: 100%;
-    padding: 10px;
+.search-box {
+    display: flex;
+    align-items: center;   /* 세로 중앙 정렬 */
+    gap: 10px;
     margin: 15px 0;
+}
+
+/* 입력창 */
+.search-box input {
+    flex: 1;               /* 남는 공간 채우기 */
+    height: 40px;
+    padding: 0 10px;
     box-sizing: border-box;
 }
 
-.left button {
-    width: auto;
-    padding: 6px 14px;
-    font-size: 14px;
+/* 검색 버튼 */
+.search-box button {
+    width: 120px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+
+    font-size: 16px;
     color: white;
-    background-color: #676565;
+    background-color: #535252;
     border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
 }
-.left button:hover {
+
+.search-box button:hover {
     background-color: #333333;
 }
 
 /* 날씨 정보 */
-.right p {
-    font-size: 16px;
-    margin: 15px 0;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+
+.right h1 {
+    color: #333333;
+    font-size: 28px;
+    margin-bottom: 40px;
+    border-left: 5px solid #333333; /* 왼쪽에 선을 넣어 더 강조 */
+    padding-left: 12px;
 }
 
-.weather-line {
+.right p {
+    font-size: 18px;
+    /*margin: 12px 0;*/
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    /*padding-bottom: 6px;*/
+    font-weight: bold;
+    /*line-height: 1.4;*/
+    color: #675f5f;
+}
+
+/*.right p span {*/
+/*    width: 120px;*/
+/*    text-align: right;*/
+/*    font-weight: bold;*/
+/*    font-size: 20px;*/
+/*    color: #675f5f;*/
+/*    margin-left: auto;  !* 오른쪽으로 밀기 *!*/
+/*    margin-right: 20px;*/
+/*}*/
+
+.weather-result {
+    max-width: 400px;          /* 폭 줄이기 */
+    margin-left: 30px ;      /* 가운데 배치 */
+}
+
+.weather-result p {
+    font-size: 18px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: #675f5f;
+    /*display: flex;*/
+    justify-content: space-between;
+}
+
+.weather-result p span {
+    width: 120px;
+    text-align: right;
+    font-weight: bold;
+    font-size: 20px;
+    color: #445f7a;
+    margin-left: auto;
+    margin-right: 20px;
     display: flex;
     align-items: flex-start;  /* 텍스트 위 기준 */
     gap: 10px;
@@ -80,13 +152,16 @@
 }
 
 .btn {
-    width: auto;
-    padding: 6px 14px;
-    font-size: 14px;
+    width: 120px;
+    height: 50px;
+    padding: 10px 20px;
+    background-color: #535252;
     color: white;
-    background-color: #676565;
     border: none;
+    border-radius: 5px;
+    font-weight: bold;
     cursor: pointer;
+    font-size: 16px;
 }
 
 .btn:hover {

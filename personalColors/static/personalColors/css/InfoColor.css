@@ -6,13 +6,22 @@
 }
 
 .left, .right {
-    width: 50%;
-    padding: 40px;
+    padding: 80px;
     box-sizing: border-box;
 }
 
 .left {
     border-right: 1px solid #ddd;
+    width: 60%;
+}
+
+/* h2 공통 스타일 */
+h2 {
+    color: #5A7B9A; /* 추천 색상 중 하나 선택 */
+    font-size: 28px;
+    margin-bottom: 15px;
+    border-left: 5px solid #5A7B9A; /* 왼쪽에 선을 넣어 더 강조 */
+    padding-left: 12px;
 }
 
 .intro-header {
@@ -22,22 +31,28 @@
 }
 
 .intro-img {
-    width: 80px;  /* 그림 크기 작게 */
+    width: 180px;  /* 그림 크기 */
     height: auto;
+    padding-left: 20px;
+    padding-right: 18px;
+    border-radius: 12px;
 }
 
-.intro-text h1 {
+.intro-text h2 {
     margin: 0;
-    font-size: 24px;
 }
 
 .intro-text p {
-    margin-top: 5px;
-    font-size: 16px;
-    line-height: 1.5;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 20px;
+    line-height: 1.8;
+    color: #444;
 }
 
 .right {
+    width: 40%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -49,20 +64,57 @@
 }
 
 #userColorInfo h3 {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     font-size: 18px;
-}
-.buttons button {
-    margin-right: 10px;
-    padding: 10px 20px;
-    background-color: #535252;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
+    color: #4F4F4F;
+    font-weight: 500;
 }
 
+.info-value {
+    color : #4F4F4F;
+    font-weight: 500;
+}
+
+/* 버튼들을 감싸는 부모 컨테이너 */
+.buttons {
+    display: flex;          /* 가로로 나열 */
+    flex-direction: row;    /* 기본값이 가로(row)지만 명시적으로 설정 */
+    justify-content: flex-start; /* 왼쪽부터 차례대로 배치 */
+    margin-top: 30px;       /* 유저 정보 텍스트와의 간격 */
+}
+
+.buttons button {
+    /* 크기 고정 */
+    width: 120px;
+    height: 50px;
+
+    /* 내부 정렬 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* 배경 및 글자 스타일 */
+    background-color: #535252;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+
+    /* 외형 */
+    border: none;
+    border-radius: 5px; /* start-btn과 동일 */
+    cursor: pointer;
+
+    /* 버튼 사이의 간격 */
+    margin-right: 15px;
+}
+
+/* 호버 효과 통일 (살짝 위로 올라가는 효과 포함) */
 .buttons button:hover {
-    background-color: #333333;
+    background-color: #333;
+    transform: translateY(-3px);
+}
+
+/* 마지막 버튼은 오른쪽 마진 제거 */
+.buttons button:last-child {
+    margin-right: 0;
 }

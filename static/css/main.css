@@ -2,35 +2,56 @@
 /* ===== MAIN ===== */
 .main {
     display: flex;
-    height: 70vh; /* 화면의 대부분 차지 */
-    padding: 40px;
+    width: 100%;
+    /* 1. 높이 줄이기: 기존 100vh나 큰 값 대신 적절한 높이(예: 600px)로 고정 */
+    height: 600px;
+    align-items: center;
+    overflow: hidden;
+    background-color: #fff;
 }
 
 .main-left {
-    width: 50%;
+    flex: 0 0 65%; /* 너비를 65%로 고정 */
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .main-left img {
-    width: 70%;
-    max-width: 400px;
-    height: auto;
+    max-width: 90%;
+    max-height: 85%; /* 이미지 높이도 메인 높이에 맞춰 제한 */
+    object-fit: contain;
 }
 
 .main-right {
-    width: 50%;
+    flex: 0 0 35%; /* 너비를 35%로 고정 */
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    /* 텍스트와 버튼을 오른쪽으로 보내기 위해 오른쪽 패딩 적용 */
+    padding-right: 40px;
+    padding-left: 0; /* 왼쪽 패딩 제거 */
+    box-sizing: border-box;
+    text-align: left; /* 내부 텍스트 및 인라인 요소 오른쪽 정렬 */
+}
+
+/* 텍스트와 버튼을 감싸는 박스 */
+.main-content-wrap {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: -20px;
 }
 
 .main-right h1 {
-    font-size: clamp(30px, 5vw, 50px); /* 화면 크기에 따라 30px~50px 사이로 조절됨 */
-    line-height: 1.5; /* 줄간격 */
-    margin-bottom: 30px; /* 시작하기 버튼과의 간격을 벌려줌 */
-    color: #675f5f; /* 제목 색상 */
+    font-size: 44px;
+    line-height: 1.6; /* 줄간격 */
+    margin-bottom: 60px; /* 시작하기 버튼과의 간격을 벌려줌 */
+    color: #333; /* 제목 색상 */
+    font-weight: 800;
+    text-align: left;
     animation: floatUp 1.3s ease-out forwards; /* 글자 스르륵 효과 */
     word-break: keep-all; /* 한글 단어가 중간에 끊기지 않게 함 */
 }
@@ -38,22 +59,42 @@
 @keyframes floatUp {
     0% {
         opacity: 0;
+        transform: translateY(20px); /* 아래에서 위로 올라오는 느낌 */
         filter: blur(4px);
     }
     100% {
         opacity: 1;
+        transform: translateY(0);
         filter: blur(0);
     }
 }
 
 .start-btn {
-    align-self: flex-end;
-    padding: 12px 30px;
-    font-size: 16px;
+    width: 120px;
+    height: 50px;
+
+    /* 정렬: 버튼만 오른쪽으로 밀기 */
+    align-self: center;
+    margin-right: 60px;
+    margin-top: 60px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     background-color: #535252;
-    color: #ffffff;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.start-btn:hover {
+    background-color: #333;
+    transform: translateY(-3px);
 }
 
 .fade-delay {

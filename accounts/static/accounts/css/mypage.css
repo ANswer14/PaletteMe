@@ -413,3 +413,15 @@ tbody tr:hover {
     flex: 1;
     min-width: 0;
 }
+
+.scroll-box {
+    width: 100%;        /* 가로 너비 */
+    height: 200px;      /* 세로 높이 고정 */
+    padding: 15px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+
+    /* 핵심 속성 */
+    overflow-y: auto;   /* 세로 내용이 넘치면 자동으로 스크롤바 생성 */
+    overflow-x: hidden; /* 가로 스크롤은 방지 */
+}

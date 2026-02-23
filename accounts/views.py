@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from allauth.account.views import SignupView, PasswordResetView
 from allauth.socialaccount.views import SignupView as SocialSignupView # allauth의 소셜 회원가입을 SocialSignupView로 명시.
 from django.http import JsonResponse
 from .forms import MyPageForm
 from .models import CustomUser
+from boards.models import Post
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
@@ -99,12 +100,17 @@ def profile_view(request):  # 저장, 중복확인 버튼을 눌렀을 때 (POST
     for history in test_histories:
         histories.append({'date': history.executed_at, 'color_type': history.color_type})
 
+    # 즐겨찾기
     favorites = request.user.favorite_images.order_by('-favorite_id')
     favorite_img_urls = [favorite.favorite_image.url for favorite in favorites if favorite.favorite_image]
 
+    # 내 게시글
+    posts = Post.objects.filter(author=request.user).all().order_by('-created_at')
+    for post in posts:
+        post.category = post.category.lower()
 
 
-    return render(request, "accounts/mypage.html", {'form': form, 'images': image_urls, 'histories': histories, 'favorites': favorite_img_urls})
+    return render(request, "accounts/mypage.html", {'form': form, 'images': image_urls, 'histories': histories, 'favorites': favorite_img_urls, 'posts': posts})
 
 
 #  소셜 로그인 후 추가 정보를 입력받을 커스텀 뷰

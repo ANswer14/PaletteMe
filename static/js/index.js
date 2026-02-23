@@ -74,6 +74,7 @@ window.addEventListener('storage',(e) => {
     }
 });
 
+// index.html 이 켜질때 refreshParent가 존재하면 삭제
 window.onload = function () {
     if (localStorage.getItem('refreshParent')){
         localStorage.removeItem('refreshParent')

@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',  # 소셜 로그인 구글 공급자
     'boards',
     'personalColors',
-    'django_cleanup.apps.CleanupConfig' # DB 행 삭제 시 해당 파일도 자동 삭제
+    'django_cleanup.apps.CleanupConfig', # DB 행 삭제 시 해당 파일도 자동 삭제
 ]
 
 MIDDLEWARE = [
@@ -215,3 +215,10 @@ SOCIALACCOUNT_FORMS = {  # 소셜 회원가입용 폼
 
 # 이메일 발송 후 이동할 페이지를 다시 '이메일 입력 페이지'로 지정
 ACCOUNT_PASSWORD_RESET_DONE_URL = "account_reset_password"
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+# 일꾼(Worker)이 한 번에 하나만 처리하도록 제한 (가장 중요!)
+CELERY_WORKER_CONCURRENCY = 1

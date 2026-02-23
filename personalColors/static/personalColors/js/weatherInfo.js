@@ -217,7 +217,7 @@ kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
 
     // 마커 위치를 클릭한 곳으로 이동시킵니다
     marker.setPosition(latlng);
-    // console.log("클릭한 위치의 위도: " + lat + ", 경도: " + lng);
+    console.log("클릭한 위치의 위도: " + lat + ", 경도: " + lng);
 });
 // ---------------------------------------------------------
 

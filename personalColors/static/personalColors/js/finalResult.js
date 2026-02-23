@@ -1,5 +1,23 @@
 // 페이지 로드 시 또는 작업 시작 시 실행
 document.addEventListener('DOMContentLoaded', function() {
+    // 퍼스널 컬러 결과 명칭 색상 (봄, 여름, 가을, 겨울 키워드별)
+    const resultElement = document.querySelector('.result-name');
+    if (resultElement) {
+        const resultText = resultElement.innerText.trim();
+
+        console.log("퍼스널컬러 값:", resultText);
+
+        if (resultText.includes('봄')) {
+            resultElement.classList.add('spring');
+        } else if (resultText.includes('여름')) {
+            resultElement.classList.add('summer');
+        } else if (resultText.includes('가을')) {
+            resultElement.classList.add('autumn');
+        } else if (resultText.includes('겨울')) {
+            resultElement.classList.add('winter');
+        }
+    }
+
     const pollInterval = setInterval(checkStatus, 1000); // 라이브 프리뷰를 위해 주기를 0.8~1초로 짧게 설정
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
     const favorBtn = document.getElementById('favorBtn');
@@ -31,28 +49,35 @@ document.addEventListener('DOMContentLoaded', function() {
                     imgElement.src = `data:image/png;base64,${data.image}`;
                     document.getElementById('loading').innerText = '';
                     document.getElementById('description').innerText = data.description;
-                    document.getElementById('outerItem').innerHTML = `<a href=${data.recommendations[0].url} target='blank'>${data.descriptionDetail.outer}</a>`
-                    document.getElementById('topItem').innerHTML = `<a href=${data.recommendations[1].url} target='blank'>${data.descriptionDetail.top}</a>`
-                    document.getElementById('bottomItem').innerHTML = `<a href=${data.recommendations[2].url} target='blank'>${data.descriptionDetail.pants}</a>`
-                    document.getElementById('shoesItem').innerHTML = `<a href=${data.recommendations[3].url} target='blank'>${data.descriptionDetail.shoes}</a>`
+
+                    // document.getElementById('outerItem').innerHTML = `<a href=${data.recommendations[0].url} target='blank'>${data.descriptionDetail.outer}</a>`
+                    // document.getElementById('topItem').innerHTML = `<a href=${data.recommendations[1].url} target='blank'>${data.descriptionDetail.top}</a>`
+                    // document.getElementById('bottomItem').innerHTML = `<a href=${data.recommendations[2].url} target='blank'>${data.descriptionDetail.pants}</a>`
+                    // document.getElementById('shoesItem').innerHTML = `<a href=${data.recommendations[3].url} target='blank'>${data.descriptionDetail.shoes}</a>`
+
+                    document.getElementById('outerItem').innerHTML = `<a href="${data.recommendations[0].url}" target="_blank" rel="noopener noreferrer">${data.descriptionDetail.outer}</a>`;
+                    document.getElementById('topItem').innerHTML = `<a href="${data.recommendations[1].url}" target="_blank" rel="noopener noreferrer">${data.descriptionDetail.top}</a>`;
+                    document.getElementById('bottomItem').innerHTML = `<a href="${data.recommendations[2].url}" target="_blank" rel="noopener noreferrer">${data.descriptionDetail.pants}</a>`;
+                    document.getElementById('shoesItem').innerHTML = `<a href="${data.recommendations[3].url}" target="_blank" rel="noopener noreferrer">${data.descriptionDetail.shoes}</a>`;
+
                     favorBtn.disabled = false
                 }
             });
     }
 
-    function displayResult(data) {
-        // 로딩창 숨기기
-        document.getElementById('loading-container').style.display = 'none';
-        
-        // 결과 채우기 및 보여주기
-        const imgElement = document.getElementById('output-image');
-        // Base64 데이터를 이미지 소스로 넣기 (data:image/png;base64, 형태)
-        imgElement.src = `data:image/png;base64,${data.image}`;
-        
-        document.getElementById('output-description').innerText = data.description;
-        document.getElementById('result-container').style.display = 'block';
-        document.getElementById('startAI').submit();
-    }
+    // function displayResult(data) {
+    //     // 로딩창 숨기기
+    //     document.getElementById('loading-container').style.display = 'none';
+    //
+    //     // 결과 채우기 및 보여주기
+    //     const imgElement = document.getElementById('output-image');
+    //     // Base64 데이터를 이미지 소스로 넣기 (data:image/png;base64, 형태)
+    //     imgElement.src = `data:image/png;base64,${data.image}`;
+    //
+    //     document.getElementById('output-description').innerText = data.description;
+    //     document.getElementById('result-container').style.display = 'block';
+    //     document.getElementById('startAI').submit();
+    // }
 
     favorBtn.addEventListener('click', async function() {
         if(confirm('즐겨찾기로 등록 하시겠습니까?')) {

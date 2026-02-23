@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
+
     const retryBtn = document.getElementById("retryBtn");
     const nextBtn = document.getElementById("nextBtn");
     const savePopup = document.getElementById("savePopup");

@@ -153,7 +153,7 @@ async function submitPost() {
 
         if (res.ok) {
             alert("게시글이 등록되었습니다.");
-            location.href = "/boards/boardList/"; // 성공 시 목록 페이지로 이동
+            location.href = "/boards/freeList/"; // 성공 시 목록 페이지로 이동
         } else {
             alert("등록에 실패했습니다.");
             isSubmitting = false;

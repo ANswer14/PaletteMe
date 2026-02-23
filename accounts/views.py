@@ -1,16 +1,20 @@
-from django.shortcuts import render, redirect
-from allauth.account.views import SignupView
+from django.shortcuts import render, redirect, get_object_or_404
+from allauth.account.views import SignupView, PasswordResetView
 from allauth.socialaccount.views import SignupView as SocialSignupView # allauth의 소셜 회원가입을 SocialSignupView로 명시.
 from django.http import JsonResponse
 from .forms import MyPageForm
 from .models import CustomUser
+from boards.models import Post
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from .forms import CustomSignupForm
 from allauth.account.utils import perform_login
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 # 회원가입 약관동의 페이지 로드 함수
@@ -96,12 +100,17 @@ def profile_view(request):  # 저장, 중복확인 버튼을 눌렀을 때 (POST
     for history in test_histories:
         histories.append({'date': history.executed_at, 'color_type': history.color_type})
 
+    # 즐겨찾기
     favorites = request.user.favorite_images.order_by('-favorite_id')
     favorite_img_urls = [favorite.favorite_image.url for favorite in favorites if favorite.favorite_image]
 
+    # 내 게시글
+    posts = Post.objects.filter(author=request.user).all().order_by('-created_at')
+    for post in posts:
+        post.category = post.category.lower()
 
 
-    return render(request, "accounts/mypage.html", {'form': form, 'images': image_urls, 'histories': histories, 'favorites': favorite_img_urls})
+    return render(request, "accounts/mypage.html", {'form': form, 'images': image_urls, 'histories': histories, 'favorites': favorite_img_urls, 'posts': posts})
 
 
 #  소셜 로그인 후 추가 정보를 입력받을 커스텀 뷰
@@ -188,3 +197,37 @@ def change_password_custom(request):
         return redirect('profile')
 
     return redirect('profile')
+
+
+# 비밀번호 재설정 (비밀번호 찾기) 페이지
+class MyPasswordResetView(PasswordResetView):
+    template_name = "accounts/password_reset.html"
+    success_url = reverse_lazy('account_reset_password')
+
+    def form_valid(self, form):
+        email = form.cleaned_data["email"]
+        try:
+            user = User.objects.get(email=email)
+
+            # 1. 소셜 로그인 유저(비밀번호가 없는 유저)인지 확인
+            if not user.has_usable_password():
+                messages.error(
+                    self.request,
+                    "해당 이메일은 소셜 로그인으로 최초가입된 계정입니다. \n소셜 로그인을 이용해 주세요."
+                )
+                # 메일을 보내지 않고 다시 입력 폼이 있는 페이지를 보여줌
+                return render(self.request, self.template_name, {'form': form})
+
+        except User.DoesNotExist:
+            # 존재하지 않는 이메일일 경우, 보안상 그냥 진행하거나 별도 처리를 합니다.
+            # 여기서는 아무것도 하지 않고 아래의 기존 로직으로 넘깁니다.
+            pass
+
+        # 2. 일반 유저라면 기존의 성공 로직(메일 발송 및 리다이렉트) 실행
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # 성공 메시지 강제 주입
+        messages.success(self.request, "입력하신 이메일로 재설정 링크를 보냈습니다.")
+        # 다시 입력 페이지(자신)로 리다이렉트
+        return self.success_url

@@ -51,22 +51,35 @@ body {
 }
 
 /* 각 열 폭 지정 */
-/* No */
-.board-detail-container span:nth-child(1) {
-    width: 10%;
+/* 1번째 칸: No. */
+.title-header span:nth-child(1),
+.title-row span:nth-child(1) {
+    width: 10% !important;
     text-align: center;
 }
 
-/* 제목 */
-.board-detail-container span:nth-child(2) {
-    width: 70%;
-    text-align: left;
-    padding-left: 10px;
+/* 2번째 칸: 제목 */
+.title-header span:nth-child(2),
+.title-row span:nth-child(2) {
+    width: 70% !important;
 }
 
- /* 작성일 */
-.board-detail-container span:nth-child(3) {
-    width: 20%;
+/* 헤더의 '제목' 글자만 중앙 정렬 */
+.title-header span:nth-child(2) {
+    text-align: center;
+    padding-left: 0;
+}
+
+/* 목록의 실제 제목 글자만 왼쪽 정렬 */
+.title-row span:nth-child(2) {
+    text-align: left;
+    padding-left: 15px;
+}
+
+/* 3번째 칸: 작성일 */
+.title-header span:nth-child(3),
+.title-row span:nth-child(3) {
+    width: 20% !important;
     text-align: center;
 }
 
@@ -88,18 +101,32 @@ body {
 /* 이전글 | 글목록 | 다음글 중앙정렬 */
 .detail-nav {
     text-align: center;
-    margin-top: 30px;
-    color: #888;
+    margin-top: 50px;
+    font-size: 0;
+    display: block;
 }
 
 .detail-nav span {
+    /* ★ 위에서 적용된 모든 width 설정을 무시하고 글자 크기만큼만 차지하게 함 */
+    width: auto !important;
+    display: inline-block;
+    vertical-align: middle;
     cursor: pointer;
-    margin: 0 10px;
     color: #333;
-    font-size: 15px;
+    font-size: 16px;
+    padding: 0 10px;
+    margin: 0;
 }
 
-.detail-nav span:hover {
+.detail-nav .divider {
+    color: #ccc !important; /* 투명해지지 않게 색상 강제 */
+    cursor: default;
+    padding: 0;
+    font-size: 14px;
+    display: inline-block !important; /* 사라지지 않게 강제 */
+}
+
+.detail-nav span:not(.divider):hover {
     text-decoration: underline;
-    color: #535252; /* 버튼과 동일한 강조색 */
+    color: #5A7B9A;
 }

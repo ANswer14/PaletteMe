@@ -54,13 +54,48 @@ body .board-container.QnA .col-no {
 
 body .board-container.QnA .col-title {
     width: 67% !important; /* 자유게시판보다 제목 칸을 넓게 잡음 */
-    text-align: left !important;
+    /*text-align: left !important;*/
     padding-left: 20px !important;
-    white-space: nowrap !important;
+    /*white-space: nowrap !important;*/
     overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    /*text-overflow: ellipsis !important;*/
     display: flex !important;
     align-items: center !important;
+}
+
+/*!* 헤더의 "제목" 글자만 중앙으로 강제 조준 *!*/
+/*body .board-container.QnA .board-header .col-title {*/
+/*    justify-content: center !important; !* 가로 중앙 정렬 *!*/
+/*    text-align: center !important;*/
+/*    padding-left: 0 !important;        !* 헤더는 패딩 제거해야 정확히 중앙 *!*/
+/*}*/
+
+/*!* 3. 리스트 데이터 줄의 제목은 왼쪽 정렬 유지 *!*/
+/*body .board-container.QnA .board-row .col-title {*/
+/*    justify-content: flex-start !important; !* 왼쪽 정렬 *!*/
+/*    text-align: left !important;*/
+/*}*/
+
+/* 헤더의 "제목" 글자만 중앙으로 강제 조준 (선택자를 더 길게 강화함) */
+html body .board-container.QnA .board-header div.col-title {
+    display: flex !important;
+    justify-content: center !important; /* 가로 중앙 */
+    align-items: center !important;     /* 세로 중앙 */
+    text-align: center !important;
+    padding-left: 0 !important;         /* 왼쪽 여백 제거 (중요!) */
+    margin-left: 0 !important;
+    width: 67% !important;
+    flex: 0 0 67% !important;
+}
+
+/* 리스트 데이터 줄의 제목은 왼쪽 정렬 유지 */
+html body .board-container.QnA .board-row div.col-title {
+    display: flex !important;
+    justify-content: flex-start !important; /* 왼쪽 정렬 */
+    text-align: left !important;
+    padding-left: 20px !important;
+    width: 67% !important;
+    flex: 0 0 67% !important;
 }
 
 body .board-container.QnA .col-date {

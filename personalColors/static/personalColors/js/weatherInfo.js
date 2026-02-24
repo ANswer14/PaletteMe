@@ -1,3 +1,4 @@
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 var mapContainer = document.getElementById('map'),
     mapOption = {
         center: new kakao.maps.LatLng(37.566826, 126.9786567), // 초기 중심좌표
@@ -18,22 +19,6 @@ var infoWindow = new kakao.maps.InfoWindow({
 // 좌표 to 주소 변환기
 function searchDetailAddrFromCoords(coords, callback) {
     geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
-}
-
-// csrf token 받아오는 함수
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
 }
 
 // 주소 검색 함수 (기존 기능 유지)
@@ -130,7 +115,7 @@ async function fetchWeather(lat, lng) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'), // CSRF 토큰 함수 필요
+                'X-CSRFToken': csrftoken, // CSRF 토큰 함수 필요
             },
             body: JSON.stringify(requestData)
         });

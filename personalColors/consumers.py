@@ -1,5 +1,4 @@
 # consumers.py
-import json
 import requests
 import os
 from channels.generic.websocket import JsonWebsocketConsumer

@@ -151,7 +151,7 @@ class MySocialSignupView(SocialSignupView):
 
 # 소셜 로그인 시 로그인 창이 닫히지 않아 추가한 로직
 def login_success_view(request):
-    # render를 사용하여 만든 html을 띄워줍니다.
+    # render를 사용하여 만든 html을 띄워줍니다. 이 html 내에 새 로그인 창을 닫게하는 로직이 존재.
     return render(request, 'accounts/login_success.html')
 
 

@@ -14,7 +14,7 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
 
     # allauth 내부에서 작동하는 아이디 중복방지 하는 아이디 생성 로직 (중복확인, 랜덤 숫자 생성)
     def generate_unique_username(self, txts, regex=None):
-        # 소셜 어댑터 부모에게 묻지 말고, 일반 계정 어댑터를 불러와서 실행하여 아이디 생성
+        # 소셜 어댑터 부모에게 묻지 말고, 일반 계정 어댑터를 불러와서 실행하여 63번줄 코드 토대로 아이디 실제로 생성
         return get_account_adapter().generate_unique_username(txts, regex)
 
     # 소셜 회원가입 폼 화면 초기값 설정 (닉네임)
@@ -60,7 +60,7 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
         email = data.get('email') or sociallogin.user.email  # 구글 이메일 주소 가져오기
         if email:
             base_name = email.split('@')[0]  # 이메일의 @앞부분만 가져옴
-            # 중복을 피한 새로운 아이디 생성한걸 unique_username 변수에 입력
+            # 중복을 피한 새로운 아이디 생성 로직 -> unique_username 변수에 입력
             unique_username = self.generate_unique_username([base_name, email, 'user'])  # [1순위,2순위,3순위]
             # 생성된 "안 겹치는 아이디"를 유저 객체에 직접 할당
             user.username = unique_username

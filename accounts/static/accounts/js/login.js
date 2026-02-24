@@ -34,7 +34,8 @@ document.addEventListener("DOMContentLoaded", function() {
             if (response.ok) {
                 // 로그인 성공 시 부모 창 새로고침 후 팝업 닫기
                 if (window.opener && !window.opener.closed) {
-                    window.opener.location.reload();
+                    // 부모 창의 위치를 메인 페이지('/')로 변경
+                    window.opener.location.href = "/";
                 }
                 window.close();
             }

@@ -70,7 +70,13 @@ function openImagePopup(imgUrl) {
 // 소셜 로그인 성공 시 index.html에서 새로고침
 window.addEventListener('storage',(e) => {
     if (e.key === 'refreshParent' && e.newValue === 'true') {
-        localStorage.removeItem('refreshParent');
         location.href="/";
     }
 });
+
+// index.html 이 켜질때 refreshParent가 존재하면 삭제
+window.onload = function () {
+    if (localStorage.getItem('refreshParent')){
+        localStorage.removeItem('refreshParent')
+    }
+};

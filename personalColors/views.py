@@ -226,7 +226,7 @@ def generate_start(request):
         address = request.POST['address'] # 주소(대략적 주소)
 
         session_id = request.session.session_key # 현재 유저 세션 id
-        print('generateStart POST 방식')
+        # print('generateStart POST 방식')
         # [방어 로직] 이미 해당 세션의 작업이 진행 중인지 확인
         if session_id in temp_storage and temp_storage[session_id]['status'] == 'processing':
             return redirect('/personalColors/map')
@@ -291,7 +291,7 @@ def generate_img_thread(request, session_id, temp, weather, sky, stop_event):
     url_options = os.getenv('SD_API_URL') + "options"
     url_txt2img = os.getenv('SD_API_URL') + "txt2img"
     auth = HTTPBasicAuth(os.getenv("SD_API_USER"), os.getenv("SD_API_PASSWORD"))
-    print('generate_img_thread 진입!!')
+    # print('generate_img_thread 진입!!')
 
     color_list = request.user.color_history.all().values('color_type', 'good_color', 'bad_color').order_by('-executed_at').first()
     print(color_list) # 해당 유저의 퍼스널 컬러 정보 갖고오기
@@ -311,18 +311,18 @@ def generate_img_thread(request, session_id, temp, weather, sky, stop_event):
                  f"어울리지 않는 색 - {color_list['bad_color']}\n"
                  f"위 정보를 바탕으로잘 어울리는 의상을 입은 사진을 만들어줘"
     )
-    print('gemini 연동!')
+    # print('gemini 연동!')
 
     option_payload = {"sd_model_checkpoint": 'majicmixRealistic_v7.safetensors'}
 
     if stop_event.is_set(): return # SD 모델 설정 전 중단 요청이 들어왔는지 확인
     requests.post(url_options, json=option_payload, auth=auth)
-    print('SD 연결!! ')
+    # print('SD 연결!! ')
 
     json_text = response.text.replace('```json', '').replace('```', '').strip()
     data = json.loads(json_text)
 
-    print(data)
+    # print(data)
     # 2. 추출된 데이터 활용
     optimized_prompt = data.get('sd_prompt')
     print('sd_prompt', optimized_prompt)
@@ -377,16 +377,16 @@ def generate_img(request, session_id, stop_event, optimized_prompt, url_txt2img,
             return
         if stop_event.is_set(): return  # 분석 수행 전 체크
         if sd_res.status_code == 200:
-            print('1')
+            # print('1')
             # 1. 생성된 이미지(Base64) 가져오기
             base64_image = sd_res.json()['images'][0]
-            print('2')
+            # print('2')
 
             # 2. Base64를 PIL 이미지 객체로 변환 (Gemini 분석용)
             img_data = base64.b64decode(base64_image)
-            print('3')
+            # print('3')
             img_obj = PILImage.open(io.BytesIO(img_data))
-            print('4')
+            # print('4')
 
             # 3. [추가] 생성된 이미지를 Gemini 멀티모달로 정밀 분석
             # 이제 Gemini는 실제 이미지를 보고 검색 키워드를 뽑습니다.
@@ -415,11 +415,11 @@ def generate_img(request, session_id, stop_event, optimized_prompt, url_txt2img,
                 contents=[analysis_prompt, img_obj],
                 config=types.GenerateContentConfig(response_mime_type="application/json")
             )
-            print('5')
+            # print('5')
 
             # 분석된 결과
             search_data = json.loads(analysis_res.text)
-            print(search_data)
+            # print(search_data)
 
             # 4. [추가] 이제 이 키워드로 네이버/쿠팡 API를 호출하여 진짜 URL을 가져옵니다.
             # (아래 get_real_shopping_link 함수는 별도로 구현 필요)
@@ -472,14 +472,14 @@ def get_real_shopping_link(gender, query):
 
     if res.status_code == 200:
         items = res.json().get('items', [])
-        print(0)
+        # print(0)
         if items:
-            print(0)
+            # print(0)
             for item in items:
                 if gender == '남성의류' or gender == '남성신발':
-                    print(0)
+                    # print(0)
                     if item['category2'] == gender:
-                        print(item['link'])
+                        # print(item['link'])
                         if 'catalog' in item['link']:
                             return f'https://search.shopping.naver.com/ns/search?query={query}'
                         return item['link']

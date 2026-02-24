@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let mute = Number(document.getElementById('mute')?.value || 0);
     let vivid = Number(document.getElementById('vivid')?.value || 0);
     let idk = Number(document.getElementById('idk')?.value || 0);
-    console.log(currentPage)
+//    console.log(currentPage)
     function makeForm(URL, data) {
         const form = document.createElement('form');
                 form.method = 'POST';
@@ -42,8 +42,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.body.appendChild(form);
                 form.submit();
     }
-    console.log('warm: ', warm)
-    console.log('idk: ', idk)
+//    console.log('warm: ', warm)
+//    console.log('idk: ', idk)
 
 
     // 진행바 갱신 (간단 뼈대)
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     vivid: vivid,
                     idk: idk
                 };
-                console.log(currentPage)
+//                console.log(currentPage)
                 makeForm('/personalColors/check/', data);
             } else {
                 const data = {

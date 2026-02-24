@@ -2,12 +2,13 @@ import threading
 from datetime import datetime, timedelta
 import base64
 from PIL import Image as PILImage
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from requests.auth import HTTPBasicAuth
 import io
 from .service.personalColorCalc import *
-from .models import ColorHistory, RecentImages, favoriteImages
+from .models import ColorHistory, RecentImages, FavoriteImages
 import json
 import os
 import requests
@@ -39,6 +40,7 @@ system_prompt = f"""
         """ # 프롬프트
 
 # colorInfo.html 렌더링 함수
+@login_required(login_url='/accounts/login/')
 def get_color_info(request):
     color, date, mood, good_color, bad_color = None, None, None, None, None
     try:
@@ -61,6 +63,7 @@ def get_color_info(request):
                                                              'bad_color': bad_color,
                                                              'is_saved': is_saved,})
 # colorTest.html 렌더링 함수
+@login_required(login_url='/accounts/login/')
 def test_color(request):
     user = request.user
     if request.method == 'POST':
@@ -80,6 +83,7 @@ def test_color(request):
                    'dark': 0, 'mute': 0, 'vivid': 0, 'idk': 0})
 
 # 설문 결과 받아온 후 colorResult.html 렌더링 함수
+@login_required(login_url='/accounts/login/')
 def get_result_color(request):
     if request.method == 'POST':
         # 설문 결과 받아오기
@@ -90,6 +94,7 @@ def get_result_color(request):
     return redirect(request, 'personalColors/infoColor.html')
 
 # 설문 결과 저장 함수(AJAX)
+@login_required(login_url='/accounts/login/')
 def save_info(request):
     if request.method == 'POST':
         user_history = request.user.color_history.all() # 유저의 기존 퍼스널 컬러 모두 가져오기
@@ -120,11 +125,13 @@ def save_info(request):
     return JsonResponse({'status': 'fail', 'message': '저장 실패'})
 
 # 지도 화면 렌더링 함수: weatherInfo.html 렌더링 함수
+@login_required
 def get_map(request):
     KAKAO_MAP_API_KEY = os.getenv('KAKAO_MAP_API_KEY') # 카카오 맵 API KEY
     return render(request, 'personalColors/weatherInfo.html', {'KAKAO_MAP_API_KEY': KAKAO_MAP_API_KEY})
 
 # 기상청 API 통한 날씨 데이터 받아오는 AJAX용 함수
+@login_required(login_url='/accounts/login/')
 def get_weather(request):
     # print('도착 완료!')
     if request.method == 'POST':
@@ -210,6 +217,7 @@ def get_weather(request):
         return JsonResponse(jsonRes, safe=False)
 
 # 멀티스레드 작업 시작 및 finalResult.html 렌더링 함수
+@login_required(login_url='/accounts/login/')
 def generate_start(request):
     if request.method == 'POST':
         temp = request.POST['temp'] # 기온
@@ -245,6 +253,7 @@ def generate_start(request):
         return redirect('/personalColors/map')
 
 # livepreview 기능 활용 위한 주기적인 이미지 상태 확인 함수
+@login_required(login_url='/accounts/login/')
 def check_status(request):
     session_id = request.session.session_key
     auth = HTTPBasicAuth(os.getenv("SD_API_USER"), os.getenv("SD_API_PASSWORD")) # SD_API 인증용 변수
@@ -443,17 +452,23 @@ def get_real_shopping_link(gender, query):
 
     if res.status_code == 200:
         items = res.json().get('items', [])
+        print(0)
         if items:
+            print(0)
             for item in items:
                 if gender == '남성의류' or gender == '남성신발':
+                    print(0)
                     if item['category2'] == gender:
                         print(item['link'])
-                        print(item)
+                        if 'catalog' in item['link']:
+                            return f'https://search.shopping.naver.com/ns/search?query={query}'
                         return item['link']
                 elif gender == '여성의류' or gender == '여성신발':
                     if item['category2'] == gender:
+                        if 'catalog' in item['link']:
+                            return f'https://search.shopping.naver.com/ns/search?query={query}'
                         return item['link']
-    return "연결 가능한 상품을 찾지 못했습니다."
+    return f'https://search.shopping.naver.com/ns/search?query={query}'
 
 # 이미지 저장 로직
 def save_image(request, image_url):
@@ -473,20 +488,16 @@ def save_image(request, image_url):
     result_instance.result_image.save(file_name, image_data, save=True) # 저장
 
 # 즐겨찾기 저장 로직(AJAX)
+@login_required(login_url='/accounts/login/')
 def save_favorite(request):
     session_id = request.session.session_key
     img = temp_storage[session_id]['image']
     file_name = f'{uuid.uuid4()}.png'  # 파일명은 중복 방지를 위해 UUID 사용
 
 
-    favorite_instance = favoriteImages(
+    favorite_instance = FavoriteImages(
         user = request.user,
     )
-
-    result = temp_storage.get(session_id)
-
-    if result and result['status'] == 'completed':
-        temp_storage.pop(session_id)
 
 
     favorite_instance.favorite_image.save(file_name, ContentFile(base64.b64decode(img), name=file_name), save=True)

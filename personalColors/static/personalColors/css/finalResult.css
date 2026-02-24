@@ -1,8 +1,8 @@
-/* 퍼스널 컬러 계절별 색상 정의 */
-.result-name.spring { color: #e68070; }
-.result-name.summer { color: #3baaae; }
-.result-name.autumn { color: #aa4a44; }
-.result-name.winter { color: #760c0c; }
+/*!* 퍼스널 컬러 계절별 색상 정의 *!*/
+/*.result-name.spring { color: #e68070; }*/
+/*.result-name.summer { color: #3baaae; }*/
+/*.result-name.autumn { color: #aa4a44; }*/
+/*.result-name.winter { color: #760c0c; }*/
 
 /* 메인 레이아웃 */
 .container {
@@ -214,7 +214,7 @@ img[src=""] {
 
 .coordi-item strong {
     width: 90px;
-    color: #555;
+    color: #444;
     font-size: 15px;
 }
 

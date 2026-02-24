@@ -5,7 +5,7 @@ body {
 /* 섹션 절반 레이아웃 */
 #personalColorSection {
     display: flex;
-    width: 1200px;           /* 지역 날씨 페이지와 동일하게 설정 */
+    width: 1300px;           /* 지역 날씨 페이지와 동일하게 설정 */
     margin: 180px auto; /* 중앙 정렬 (상단 여백 180px, 하단 180px) */
     background-color: #fff;
     border-radius: 10px;

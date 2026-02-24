@@ -3,19 +3,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // 퍼스널 컬러 결과 명칭 색상 (봄, 여름, 가을, 겨울 키워드별)
     const resultElement = document.querySelector('.result-name');
     if (resultElement) {
-        const resultText = resultElement.innerText.trim();
+        const resultText = resultElement.innerText;
 
-        console.log("퍼스널컬러 값:", resultText);
-
-        if (resultText.includes('봄')) {
-            resultElement.classList.add('spring');
-        } else if (resultText.includes('여름')) {
-            resultElement.classList.add('summer');
-        } else if (resultText.includes('가을')) {
-            resultElement.classList.add('autumn');
-        } else if (resultText.includes('겨울')) {
-            resultElement.classList.add('winter');
-        }
+        if (resultText.includes('봄')) resultElement.style.color = '#F28D8D';      // 봄 대표색
+        else if (resultText.includes('여름')) resultElement.style.color = '#7FB3D5'; // 여름 대표색
+        else if (resultText.includes('가을')) resultElement.style.color = '#B36D3E'; // 가을 대표색
+        else if (resultText.includes('겨울')) resultElement.style.color = '#8E44AD'; // 겨울 대표색
     }
 
     const pollInterval = setInterval(checkStatus, 1000); // 라이브 프리뷰를 위해 주기를 0.8~1초로 짧게 설정

@@ -25,10 +25,10 @@ document.addEventListener("DOMContentLoaded", function() {
     if (resultElement) {
         const resultText = resultElement.innerText;
 
-        if (resultText.includes('봄')) resultElement.style.color = '#e68070';      // 봄 대표색
-        else if (resultText.includes('여름')) resultElement.style.color = '#3baaae'; // 여름 대표색
-        else if (resultText.includes('가을')) resultElement.style.color = '#aa4a44'; // 가을 대표색
-        else if (resultText.includes('겨울')) resultElement.style.color = '#760c0c'; // 겨울 대표색
+        if (resultText.includes('봄')) resultElement.style.color = '#F28D8D';      // 봄 대표색
+        else if (resultText.includes('여름')) resultElement.style.color = '#7FB3D5'; // 여름 대표색
+        else if (resultText.includes('가을')) resultElement.style.color = '#B36D3E'; // 가을 대표색
+        else if (resultText.includes('겨울')) resultElement.style.color = '#8E44AD'; // 겨울 대표색
     }
 
     colors.forEach(color => {

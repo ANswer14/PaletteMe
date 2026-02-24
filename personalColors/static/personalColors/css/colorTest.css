@@ -86,26 +86,41 @@
 
 /* NEXT 버튼 */
 .next-button {
-    text-align: right;
-    margin-top: 40px;
+    display: flex !important;       /* flex 모드 활성화 */
+    justify-content: flex-end !important; /* [핵심] 가로 정렬을 오른쪽 끝으로! */
+    width: 100% !important;         /* 부모 너비를 꽉 채워야 끝으로 보낼 수 있음 */
+    margin-top: 40px !important;
+    padding-right: 0 !important;    /* 혹시 모를 패딩 간섭 제거 */
 }
 
 .next-button button {
-    padding: 10px 30px;
-    background-color: #535252;
-    color: white;
-    border: none;
-    border-radius: 6px; /* 둥근 버튼 형태 */
-    font-size: 0.9rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    /* 1. 크기와 폰트 */
+    padding: 12px 28px !important;
+    font-size: 15px !important;
+    font-weight: bold !important;
+
+    /* 2. 모양과 색상 */
+    border-radius: 6px !important;
+    background-color: #535252 !important;
+    color: white !important;
+    border: none !important;
+    cursor: pointer !important;
+
+    /* 3. 애니메이션 및 효과 */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
+
+    /* 혹시 모를 폰트 간격 설정 제거 */
+    letter-spacing: normal !important;
 }
 
+/* 호버 효과 통일 */
 .next-button button:hover {
-    background-color: #333;
-    transform: translateY(-2px); /* 살짝 떠오르는 효과 */
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    background-color: #333 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
 }

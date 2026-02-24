@@ -5,7 +5,7 @@ body {
 }
 
 .board-container {
-    width: 80%;
+    width: 1200px;
     margin: 40px auto;
     background: white;
     padding: 30px;
@@ -16,9 +16,10 @@ body {
 .board-container h2,
 .board-detail-container h2,
 .board-write-container h2 {
+    color: #C87941;
     font-size: 26px;
     margin-bottom: 20px;
-    border-left: 5px solid #535252;
+    border-left: 5px solid #C87941;
     padding-left: 15px;
 }
 

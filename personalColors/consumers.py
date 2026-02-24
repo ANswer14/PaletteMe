@@ -39,9 +39,9 @@ class GenerationConsumer(JsonWebsocketConsumer):
                     print(f"--- ✅ SD 인터럽트 성공 (Status: {response.status_code})")
                 else:
                     print(f"--- ❌ SD 인터럽트 실패 (Status: {response.status_code}, Response: {response.text})")
-                del temp_storage[self.session_id]
+                # del temp_storage[self.session_id]
             except Exception as e:
                 print(f"--- ❌ SD 인터럽트 중 예외 발생: {e}")
 
             # 3. 임시 저장소 삭제 (스레드 세이프를 위해 pop 권장)
-            # temp_storage.pop(self.session_id, None)
+            temp_storage.pop(self.session_id, None)

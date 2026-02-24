@@ -93,14 +93,18 @@ button {
     font-weight: bold;
 }
 .signup-submit-btn {
-    width: 100%;
-    height: 55px;
+    display: block;          /* 중앙 정렬을 위해 필요 */
+    width: 400px;            /* 100% -> 고정 너비로 축소 */
+    max-width: 100%;
+    height: 48px;            /* 55px -> 48px로 축소 */
+    margin: 30px 0 0 0;
     background-color: #535252;
     color: white;
     border: none;
-    font-size: 18px;
-    margin-top: 10px;
+    font-size: 16px;         /* 18px -> 16px로 축소 */
+    border-radius: 6px;
 }
+
 .signup-submit-btn:hover { background-color: #333; }
 
 /* 가로 정렬된 곳의 버튼은 마진 제거 */
@@ -246,14 +250,14 @@ tbody tr:hover {
 
 /* 비밀번호 변경 버튼 (정보 수정 저장 버튼과 통일) */
 #changePwBtn {
+    display: block;
     width: 100%;
-    height: 55px;           /* .signup-submit-btn과 동일한 높이 */
+    height: 48px;
     background-color: #535252; /* 동일한 메인 컬러 */
     color: white;
     border: none;
-    font-size: 16px;        /* 메인 버튼(18px)보다 아주 살짝 작게 하여 균형 유지 */
-    font-weight: bold;
-    margin-top: 10px;
+    font-size: 15px;        /* 메인 버튼(18px)보다 아주 살짝 작게 하여 균형 유지 */
+    margin: 10px 0 0 0;
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -263,9 +267,15 @@ tbody tr:hover {
     background-color: #333; /* .signup-submit-btn:hover와 동일한 효과 */
 }
 
+/* [보안 및 인증] 섹션 폼 제한 */
+.security-section form {
+    max-width: 400px; /* 전체 폼 너비를 400px로 제한 */
+}
+
 /* 보안 섹션 내 인풋 간격 정돈 */
 .security-section input[type="password"] {
-    max-width: 100%;        /* 섹션 안에서 시원하게 꽉 차도록 */
+    width: 100%;        /* 섹션 안에서 시원하게 꽉 차도록 */
+    max-width: none;
     margin-bottom: 12px;
 }
 
@@ -424,4 +434,82 @@ tbody tr:hover {
     /* 핵심 속성 */
     overflow-y: auto;   /* 세로 내용이 넘치면 자동으로 스크롤바 생성 */
     overflow-x: hidden; /* 가로 스크롤은 방지 */
+}
+
+/* 나의 활동 영역 */
+/* 컬럼 공통 너비 설정 (헤더와 행 모두에 적용) */
+.col-no { width: 60px; text-align: center; flex-shrink: 0; }
+.col-title { flex: 1; padding: 0 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.col-date { width: 100px; text-align: center; flex-shrink: 0; }
+.col-view { width: 70px; text-align: center; flex-shrink: 0; }
+.col-type { width: 100px; text-align: center; flex-shrink: 0; }
+
+/* 행 디자인 */
+.board-row {
+    display: flex;
+    padding: 12px 15px;
+    border-bottom: 1px solid #f1f1f1;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 14px;
+    align-items: center;
+    text-align: center; /* 기본 중앙 정렬 */
+}
+
+.board-row:hover {
+    background-color: #fcfcfc;
+    color: #5A7B9A; /* 포인트 컬러 */
+}
+
+.scroll-box {
+    width: 100%;
+    height: 250px;           /* 높이 살짝 확대 */
+    padding: 0;              /* 내부 패딩 제거 (헤더와 맞추기 위함) */
+    border: 1px solid #eee;
+    background-color: #fff;
+    overflow-y: auto;
+    border-radius: 0 0 8px 8px;
+}
+
+/* 게시판 헤더 스타일 조정 */
+.board-header {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #535252;
+    padding: 12px 15px;
+    font-weight: bold;
+    font-size: 13px;
+    color: #333;
+    display: flex;
+    border-radius: 8px 8px 0 0;
+    text-align: center; /* 기본적으로 모든 헤더 텍스트 중앙 */
+}
+
+/* 제목 컬럼만 별도 정렬 적용 */
+.col-title {
+    flex: 1;
+    padding: 0 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 헤더의 제목은 중앙 정렬 유지 */
+.board-header .col-title {
+    text-align: center;
+}
+
+/* 로우의 제목은 왼쪽 정렬 */
+.board-row .col-title {
+    text-align: left;
+    font-weight: 500;
+}
+
+/* 카테고리 뱃지 스타일 추가 */
+.category-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background: #e9ecef;
+    font-size: 11px;
+    color: #666;
 }

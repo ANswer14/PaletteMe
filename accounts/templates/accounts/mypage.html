@@ -128,7 +128,9 @@
                     <span class="col-title">{{ post.title }}</span>
                     <span class="col-date">{{ post.created_at|date:"Y-m-d" }}</span>
                     <span class="col-view">{{ post.view_count }}</span>
-                    <span class="col-title">{{ post.category }}</span>
+                    <span class="col-type">
+                        <span class="category-badge">{{ post.category }}</span>
+                    </span>
                 </div>
                 {% endfor %}
             {% else %}

@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',  # 소셜 로그인 구글 공급자
     'boards',
     'personalColors',
-    'django_cleanup.apps.CleanupConfig' # DB 행 삭제 시 해당 파일도 자동 삭제
+    'django_cleanup.apps.CleanupConfig', # DB 행 삭제 시 해당 파일도 자동 삭제
 ]
 
 MIDDLEWARE = [

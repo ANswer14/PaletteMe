@@ -31,10 +31,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     imgElement.src = `data:image/png;base64,${data.image}`;
                     document.getElementById('loading').innerText = '';
                     document.getElementById('description').innerText = data.description;
-                    document.getElementById('outerItem').innerHTML = `<a href=${data.recommendations[0].url} target='blank'>${data.descriptionDetail.outer}</a>`
-                    document.getElementById('topItem').innerHTML = `<a href=${data.recommendations[1].url} target='blank'>${data.descriptionDetail.top}</a>`
-                    document.getElementById('bottomItem').innerHTML = `<a href=${data.recommendations[2].url} target='blank'>${data.descriptionDetail.pants}</a>`
-                    document.getElementById('shoesItem').innerHTML = `<a href=${data.recommendations[3].url} target='blank'>${data.descriptionDetail.shoes}</a>`
+                    document.getElementById('outerItem').innerHTML = `<a href='${data.recommendations[0].url}' target='blank'>${data.descriptionDetail.outer}</a>`
+                    document.getElementById('topItem').innerHTML = `<a href='${data.recommendations[1].url}' target='blank'>${data.descriptionDetail.top}</a>`
+                    document.getElementById('bottomItem').innerHTML = `<a href='${data.recommendations[2].url}' target='blank'>${data.descriptionDetail.pants}</a>`
+                    document.getElementById('shoesItem').innerHTML = `<a href='${data.recommendations[3].url}' target='blank'>${data.descriptionDetail.shoes}</a>`
                     favorBtn.disabled = false
                 }
             });

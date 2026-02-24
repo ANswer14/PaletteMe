@@ -452,17 +452,23 @@ def get_real_shopping_link(gender, query):
 
     if res.status_code == 200:
         items = res.json().get('items', [])
+        print(0)
         if items:
+            print(0)
             for item in items:
                 if gender == '남성의류' or gender == '남성신발':
+                    print(0)
                     if item['category2'] == gender:
                         print(item['link'])
-                        print(item)
+                        if 'catalog' in item['link']:
+                            return f'https://search.shopping.naver.com/ns/search?query={query}'
                         return item['link']
                 elif gender == '여성의류' or gender == '여성신발':
                     if item['category2'] == gender:
+                        if 'catalog' in item['link']:
+                            return f'https://search.shopping.naver.com/ns/search?query={query}'
                         return item['link']
-    return "연결 가능한 상품을 찾지 못했습니다."
+    return f'https://search.shopping.naver.com/ns/search?query={query}'
 
 # 이미지 저장 로직
 def save_image(request, image_url):
@@ -492,11 +498,6 @@ def save_favorite(request):
     favorite_instance = FavoriteImages(
         user = request.user,
     )
-
-    result = temp_storage.get(session_id)
-
-    if result and result['status'] == 'completed':
-        temp_storage.pop(session_id)
 
 
     favorite_instance.favorite_image.save(file_name, ContentFile(base64.b64decode(img), name=file_name), save=True)

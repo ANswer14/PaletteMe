@@ -2,12 +2,13 @@ import threading
 from datetime import datetime, timedelta
 import base64
 from PIL import Image as PILImage
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from requests.auth import HTTPBasicAuth
 import io
 from .service.personalColorCalc import *
-from .models import ColorHistory, RecentImages, FavoriteImages
+from .models import ColorHistory, RecentImages, favoriteImages
 import json
 import os
 import requests
@@ -21,9 +22,6 @@ from django.core.files.base import ContentFile
 import random
 from tenacity import retry, stop_after_attempt, wait_random_exponential, retry_if_exception_type
 from google.genai.errors import ServerError
-from django.contrib.auth.decorators import login_required
-from .tasks import async_generate_process
-from django.core.cache import cache
 
 load_dotenv() # .env 파일 로드
 temp_storage = {} # 스레드 정보 임시 저장소
@@ -42,7 +40,6 @@ system_prompt = f"""
         """ # 프롬프트
 
 # colorInfo.html 렌더링 함수
-
 @login_required(login_url='/accounts/login/')
 def get_color_info(request):
     color, date, mood, good_color, bad_color = None, None, None, None, None
@@ -229,19 +226,27 @@ def generate_start(request):
         address = request.POST['address'] # 주소(대략적 주소)
 
         session_id = request.session.session_key # 현재 유저 세션 id
-
-        weather_data = {'temp': temp, 'weather': weather, 'sky': sky}
         print('generateStart POST 방식')
-        # # [방어 로직] 이미 해당 세션의 작업이 진행 중인지 확인
-        # if session_id in temp_storage and temp_storage[session_id]['status'] == 'processing':
-        #     return redirect('/personalColors/map')
+        # [방어 로직] 이미 해당 세션의 작업이 진행 중인지 확인
+        if session_id in temp_storage and temp_storage[session_id]['status'] == 'processing':
+            return redirect('/personalColors/map')
+
+        # stop_event: 중단 신호용 플래그(Event 객체 저장)
+        stop_event = threading.Event()
+
+        temp_storage[session_id] = {'status': 'processing', 'image': None, 'stop_event': stop_event}
+
+        thread = threading.Thread(
+            target=generate_img_thread,
+            args=(request, session_id, temp, weather, sky, stop_event)
+        )
+        thread.daemon = True # 프로세스 종료 시 함께 종료되도록 설정
+        thread.start() # 작업 떠넘기기 시작
+        temp_storage[session_id]['thread'] = thread  # 스레드 객체 저장
+
 
         color_type = request.user.color_history.all().values('color_type').order_by('-executed_at').first()['color_type']
-        print(1)
-        task = async_generate_process.delay(request.user.id, session_id, weather_data, color_type)
-        print(2)
-        cache.set(f"result_{session_id}", {'status': 'processing'}, timeout=600)
-        print(3)
+
         return render(request, 'personalColors/finalResult.html', {'temp': temp + '°C', 'weather': weather, 'sky': sky, 'colorType': color_type, 'address': address})
     elif request.method == 'GET':
         # print('generateStart GET')
@@ -252,19 +257,20 @@ def generate_start(request):
 def check_status(request):
     session_id = request.session.session_key
     auth = HTTPBasicAuth(os.getenv("SD_API_USER"), os.getenv("SD_API_PASSWORD")) # SD_API 인증용 변수
-    data = cache.get(f"task_result_{session_id}")
+    result = temp_storage.get(session_id)
 
-    if not data:
+    if not result or (result.get('stop_event') and result['stop_event'].is_set()):
         return JsonResponse({
             'status': 'stopped',
             'message': '작업이 중단되었거나 세션이 만료되었습니다.'
         }, status=410)  # 410 Gone 또는 200으로 보내고 JS에서 처리
 
-    if data['status'] == 'completed':
-        return JsonResponse(data)
     # 1. SD 서버에 현재 진행 상황 물어보기
     prog_res = requests.get(os.getenv('SD_API_URL') + "progress", auth=auth)
     prog_data = prog_res.json()
+    if result and result['status'] == 'completed':
+        data = temp_storage.get(session_id)
+        return JsonResponse(data)
 
     # 진행 중이라면 라이브 프리뷰 데이터 반환
     return JsonResponse({'status': 'processing',
@@ -272,186 +278,225 @@ def check_status(request):
                          'current_image': prog_data['current_image'] # Base64 미리보기 이미지
                          })
 
-# # 떠넘겨진 작업
-# @retry(
-#     retry=retry_if_exception_type(ServerError),
-#     wait=wait_random_exponential(min=1, max=60),
-#     stop=stop_after_attempt(5),
-#     before_sleep=lambda retry_state: print(f"재시도 중... {retry_state.attempt_number}회차")
-# )
-# @login_required(login_url='/accounts/login/')
-# def generate_img_thread(request, session_id, temp, weather, sky, stop_event):
-#
-#
-#     url_options = os.getenv('SD_API_URL') + "options"
-#     url_txt2img = os.getenv('SD_API_URL') + "txt2img"
-#     auth = HTTPBasicAuth(os.getenv("SD_API_USER"), os.getenv("SD_API_PASSWORD"))
-#     print('generate_img_thread 진입!!')
-#
-#     color_list = request.user.color_history.all().values('color_type', 'good_color', 'bad_color').order_by('-executed_at').first()
-#     print(color_list) # 해당 유저의 퍼스널 컬러 정보 갖고오기
-#
-#     if request.user.gender == 'M':
-#         gender = '남성'
-#     else:
-#         gender = '여성'
-#     if stop_event.is_set(): return # Gemini 연동 전 중단 요청이 들어왔는지 확인
-#     response = client.models.generate_content(
-#         model=model,
-#         contents=f"{system_prompt}\n날씨 정보: 하늘의 상태 - {sky}, 체감온도 - {temp}, 강수 상태 - {weather}\n"
-#                  f"사용자 정보: 성별 - {gender}, "
-#                  f"color_type - {color_list['color_type']}, "
-#                  f"잘 어울리는 색 - {color_list['good_color']}, "
-#                  f"어울리지 않는 색 - {color_list['bad_color']}\n"
-#                  f"위 정보를 바탕으로잘 어울리는 의상을 입은 사진을 만들어줘"
-#     )
-#     print('gemini 연동!')
-#
-#     option_payload = {"sd_model_checkpoint": 'majicmixRealistic_v7.safetensors'}
-#
-#     if stop_event.is_set(): return # SD 모델 설정 전 중단 요청이 들어왔는지 확인
-#     requests.post(url_options, json=option_payload, auth=auth)
-#     print('SD 연결!! ')
-#
-#     json_text = response.text.replace('```json', '').replace('```', '').strip()
-#     data = json.loads(json_text)
-#
-#     print(data)
-#     # 2. 추출된 데이터 활용
-#     optimized_prompt = data.get('sd_prompt')
-#     description = data.get('description')
-#
-#     # --- [단계 2] 실제 이미지 생성 요청 ---
-#     generate_img(request, session_id, stop_event, optimized_prompt, url_txt2img, auth, description)
-#
-# # 실제 이미지 생성 요청 함수
-# @login_required(login_url='/accounts/login/')
-# def generate_img(request, session_id, stop_event, optimized_prompt, url_txt2img, auth, description):
-#
-#     try:
-#         payload = {
-#             "prompt": f"simple casual outfit, asian, everyday wear, full body:1.4, full body view:1.4, full body view from head to toe, {optimized_prompt}",
-#             "negative_prompt": "(worst quality:2), (low quality:2), (normal quality:2), lowres, watermark",
-#             "steps": 20,
-#             'seed': 4216575493,
-#             'cfg_scale': 7,
-#             "sampler_name": "Restart",
-#             "enable_hr": True,
-#             "hr_upscaler": "8x_NMKD-Superscale_150000_G",  # 확장자 제외, 업스케일러
-#             "hr_scale": 2,
-#             'hr_second_pass_steps': 15,
-#             "denoising_strength": 0.4,
-#             "override_settings": {"CLIP_stop_at_last_layers": 2,
-#                                   "sd_vae": 'vae-ft-mse-840000-ema-pruned.ckpt'},  # VAE
-#         }
-#
-#         if stop_event.is_set(): return # 실제 이미지 생성 요청 전 중단 요청 확인
-#         sd_res = requests.post(url_txt2img, json=payload, auth=auth, timeout=60)
-#
-#         if sd_res.status_code != 200:
-#             print("SD 작업이 외부(Interrupt)에 의해 중단되었습니다.")
-#             return
-#         if stop_event.is_set(): return  # 분석 수행 전 체크
-#         if sd_res.status_code == 200:
-#             print('1')
-#             # 1. 생성된 이미지(Base64) 가져오기
-#             base64_image = sd_res.json()['images'][0]
-#             print('2')
-#
-#             # 2. Base64를 PIL 이미지 객체로 변환 (Gemini 분석용)
-#             img_data = base64.b64decode(base64_image)
-#             print('3')
-#             img_obj = PILImage.open(io.BytesIO(img_data))
-#             print('4')
-#
-#             # 3. [추가] 생성된 이미지를 Gemini 멀티모달로 정밀 분석
-#             # 이제 Gemini는 실제 이미지를 보고 검색 키워드를 뽑습니다.
-#             analysis_prompt = """
-#                     이미지를 정밀 분석하여 다음 카테고리별로 최적의 네이버 쇼핑 검색어를 뽑아줘.
-#                     해당 아이템이 없는 경우 빈 문자열("")로 응답해.
-#
-#                     1. outer: 코트, 자켓, 가디건 등 겉에 입은 옷
-#                     2. top: 셔츠, 블라우스, 티셔츠 등 안의 상의
-#                     3. pants: 바지, 스커트 등 하의
-#                     4. shoes: 신발
-#
-#                     응답 형식(JSON):
-#                     {
-#                         "outer_query": "베이지 오버핏 핸드메이드 코트",
-#                         "top_query": "화이트 실크 리본 블라우스",
-#                         "pants_query": "세미 와이드 슬랙스",
-#                         "shoes_query": "화이트 스틸레토 힐"
-#                     }
-#                     """
-#
-#             if stop_event.is_set(): return  # 이미지 분석 전 중단 요청 확인
-#             # 이미지 분석
-#             analysis_res = client.models.generate_content(
-#                 model=model,  # 멀티모달에 최적화된 모델 권장
-#                 contents=[analysis_prompt, img_obj],
-#                 config=types.GenerateContentConfig(response_mime_type="application/json")
-#             )
-#             print('5')
-#
-#             # 분석된 결과
-#             search_data = json.loads(analysis_res.text)
-#             print(search_data)
-#
-#             # 4. [추가] 이제 이 키워드로 네이버/쿠팡 API를 호출하여 진짜 URL을 가져옵니다.
-#             # (아래 get_real_shopping_link 함수는 별도로 구현 필요)
-#             gender = ''
-#             if request.user.gender == 'M':
-#                 gender = '남성'
-#             elif request.user.gender == 'F':
-#                 gender = '여성'
-#             real_outer_url = get_real_shopping_link(gender + '의류', search_data['outer_query'])
-#             real_top_url = get_real_shopping_link(gender + '의류', search_data['top_query'])
-#             real_pants_url = get_real_shopping_link(gender + '의류', search_data['pants_query'])
-#             real_shoes_url = get_real_shopping_link(gender + '신발', search_data['shoes_query'])
-#
-#             # 결과를 전역 변수에 저장 (나중에 View가 가져갈 수 있게)
-#             temp_storage[session_id] = {
-#                 'status': 'completed',
-#                 'image': sd_res.json()['images'][0],
-#                 'description': description,
-#                 'descriptionDetail': {
-#                     'outer': search_data['outer_query'],
-#                     'top': search_data['top_query'],
-#                     'pants': search_data['pants_query'],
-#                     'shoes': search_data['shoes_query']
-#                 },
-#                 'recommendations': [
-#                     {'label': '외투', 'url': real_outer_url},
-#                     {'label': '상의', 'url': real_top_url},
-#                     {'label': '하의', 'url': real_pants_url},
-#                     {'label': '신발', 'url': real_shoes_url},
-#                 ]
-#             }
-#             # print(real_top_url)
-#             # print(real_outer_url)
-#             # print(real_shoes_url)
-#             # print(real_pants_url)
-#             save_image(request, base64_image)  # 해당 이미지 최근 이미지 테이블에 저장
-#     except Exception as e:
-#         print(f'이미지 생성 중단 혹은 에러 발생: {e}')
-#         return
+# 떠넘겨진 작업
+@retry(
+    retry=retry_if_exception_type(ServerError),
+    wait=wait_random_exponential(min=1, max=60),
+    stop=stop_after_attempt(5),
+    before_sleep=lambda retry_state: print(f"재시도 중... {retry_state.attempt_number}회차")
+)
+def generate_img_thread(request, session_id, temp, weather, sky, stop_event):
+
+
+    url_options = os.getenv('SD_API_URL') + "options"
+    url_txt2img = os.getenv('SD_API_URL') + "txt2img"
+    auth = HTTPBasicAuth(os.getenv("SD_API_USER"), os.getenv("SD_API_PASSWORD"))
+    print('generate_img_thread 진입!!')
+
+    color_list = request.user.color_history.all().values('color_type', 'good_color', 'bad_color').order_by('-executed_at').first()
+    print(color_list) # 해당 유저의 퍼스널 컬러 정보 갖고오기
+
+    if request.user.gender == 'M':
+        gender = '남성'
+    else:
+        gender = '여성'
+    if stop_event.is_set(): return # Gemini 연동 전 중단 요청이 들어왔는지 확인
+    response = client.models.generate_content(
+        model=model,
+        contents=f"{system_prompt}\n날씨 정보: 하늘의 상태 - {sky}, 체감온도 - {temp}, 강수 상태 - {weather}\n"
+                 f"사용자 정보: 성별 - {gender}, "
+                 f"color_type - {color_list['color_type']}, "
+                 f"잘 어울리는 색 - {color_list['good_color']}, "
+                 f"어울리지 않는 색 - {color_list['bad_color']}\n"
+                 f"위 정보를 바탕으로잘 어울리는 의상을 입은 사진을 만들어줘"
+    )
+    print('gemini 연동!')
+
+    option_payload = {"sd_model_checkpoint": 'majicmixRealistic_v7.safetensors'}
+
+    if stop_event.is_set(): return # SD 모델 설정 전 중단 요청이 들어왔는지 확인
+    requests.post(url_options, json=option_payload, auth=auth)
+    print('SD 연결!! ')
+
+    json_text = response.text.replace('```json', '').replace('```', '').strip()
+    data = json.loads(json_text)
+
+    print(data)
+    # 2. 추출된 데이터 활용
+    optimized_prompt = data.get('sd_prompt')
+    description = data.get('description')
+
+    # --- [단계 2] 실제 이미지 생성 요청 ---
+    generate_img(request, session_id, stop_event, optimized_prompt, url_txt2img, auth, description)
+
+# 실제 이미지 생성 요청 함수
+def generate_img(request, session_id, stop_event, optimized_prompt, url_txt2img, auth, description):
+
+    try:
+        payload = {
+            "prompt": f"simple casual outfit, asian, everyday wear, full body:1.4, full body view:1.4, full body view from head to toe, {optimized_prompt}",
+            "negative_prompt": "(worst quality:2), (low quality:2), (normal quality:2), lowres, watermark",
+            "steps": 20,
+            'seed': 4216575493,
+            'cfg_scale': 7,
+            "sampler_name": "Restart",
+            "enable_hr": True,
+            "hr_upscaler": "8x_NMKD-Superscale_150000_G",  # 확장자 제외, 업스케일러
+            "hr_scale": 2,
+            'hr_second_pass_steps': 15,
+            "denoising_strength": 0.4,
+            "override_settings": {"CLIP_stop_at_last_layers": 2,
+                                  "sd_vae": 'vae-ft-mse-840000-ema-pruned.ckpt'},  # VAE
+        }
+
+        if stop_event.is_set(): return # 실제 이미지 생성 요청 전 중단 요청 확인
+        sd_res = requests.post(url_txt2img, json=payload, auth=auth, timeout=60)
+
+        if sd_res.status_code != 200:
+            print("SD 작업이 외부(Interrupt)에 의해 중단되었습니다.")
+            return
+        if stop_event.is_set(): return  # 분석 수행 전 체크
+        if sd_res.status_code == 200:
+            print('1')
+            # 1. 생성된 이미지(Base64) 가져오기
+            base64_image = sd_res.json()['images'][0]
+            print('2')
+
+            # 2. Base64를 PIL 이미지 객체로 변환 (Gemini 분석용)
+            img_data = base64.b64decode(base64_image)
+            print('3')
+            img_obj = PILImage.open(io.BytesIO(img_data))
+            print('4')
+
+            # 3. [추가] 생성된 이미지를 Gemini 멀티모달로 정밀 분석
+            # 이제 Gemini는 실제 이미지를 보고 검색 키워드를 뽑습니다.
+            analysis_prompt = """
+                    이미지를 정밀 분석하여 다음 카테고리별로 최적의 네이버 쇼핑 검색어를 뽑아줘.
+                    해당 아이템이 없는 경우 빈 문자열("")로 응답해.
+
+                    1. outer: 코트, 자켓, 가디건 등 겉에 입은 옷
+                    2. top: 셔츠, 블라우스, 티셔츠 등 안의 상의
+                    3. pants: 바지, 스커트 등 하의
+                    4. shoes: 신발
+
+                    응답 형식(JSON):
+                    {
+                        "outer_query": "베이지 오버핏 핸드메이드 코트",
+                        "top_query": "화이트 실크 리본 블라우스",
+                        "pants_query": "세미 와이드 슬랙스",
+                        "shoes_query": "화이트 스틸레토 힐"
+                    }
+                    """
+
+            if stop_event.is_set(): return  # 이미지 분석 전 중단 요청 확인
+            # 이미지 분석
+            analysis_res = client.models.generate_content(
+                model=model,  # 멀티모달에 최적화된 모델 권장
+                contents=[analysis_prompt, img_obj],
+                config=types.GenerateContentConfig(response_mime_type="application/json")
+            )
+            print('5')
+
+            # 분석된 결과
+            search_data = json.loads(analysis_res.text)
+            print(search_data)
+
+            # 4. [추가] 이제 이 키워드로 네이버/쿠팡 API를 호출하여 진짜 URL을 가져옵니다.
+            # (아래 get_real_shopping_link 함수는 별도로 구현 필요)
+            gender = ''
+            if request.user.gender == 'M':
+                gender = '남성'
+            elif request.user.gender == 'F':
+                gender = '여성'
+            real_outer_url = get_real_shopping_link(gender + '의류', search_data['outer_query'])
+            real_top_url = get_real_shopping_link(gender + '의류', search_data['top_query'])
+            real_pants_url = get_real_shopping_link(gender + '의류', search_data['pants_query'])
+            real_shoes_url = get_real_shopping_link(gender + '신발', search_data['shoes_query'])
+
+            # 결과를 전역 변수에 저장 (나중에 View가 가져갈 수 있게)
+            temp_storage[session_id] = {
+                'status': 'completed',
+                'image': sd_res.json()['images'][0],
+                'description': description,
+                'descriptionDetail': {
+                    'outer': search_data['outer_query'],
+                    'top': search_data['top_query'],
+                    'pants': search_data['pants_query'],
+                    'shoes': search_data['shoes_query']
+                },
+                'recommendations': [
+                    {'label': '외투', 'url': real_outer_url},
+                    {'label': '상의', 'url': real_top_url},
+                    {'label': '하의', 'url': real_pants_url},
+                    {'label': '신발', 'url': real_shoes_url},
+                ]
+            }
+            # print(real_top_url)
+            # print(real_outer_url)
+            # print(real_shoes_url)
+            # print(real_pants_url)
+            save_image(request, base64_image)  # 해당 이미지 최근 이미지 테이블에 저장
+    except Exception as e:
+        print(f'이미지 생성 중단 혹은 에러 발생: {e}')
+        return
+
+# 네이버 검색 API 활용한 쇼핑 링크 반환 함수
+def get_real_shopping_link(gender, query):
+    headers = {
+        "X-Naver-Client-Id": os.getenv('NAVER_CLIENT_ID'),
+        "X-Naver-Client-Secret": os.getenv('NAVER_CLIENT_SECRET')
+    }
+    url = f"https://openapi.naver.com/v1/search/shop.json?query={gender, query}&display=30&start={random.randint(1, 900)}"
+    res = requests.get(url, headers=headers)
+    # print(res.json())
+
+    if res.status_code == 200:
+        items = res.json().get('items', [])
+        if items:
+            for item in items:
+                if gender == '남성의류' or gender == '남성신발':
+                    if item['category2'] == gender:
+                        print(item['link'])
+                        print(item)
+                        return item['link']
+                elif gender == '여성의류' or gender == '여성신발':
+                    if item['category2'] == gender:
+                        return item['link']
+    return "연결 가능한 상품을 찾지 못했습니다."
+
+# 이미지 저장 로직
+def save_image(request, image_url):
+    user_results = RecentImages.objects.filter(user=request.user).order_by('created_at') # 최근 이미지 레코드 모두 가져오기
+
+    if user_results.count() >= 5: # 개수가 5개 이상일 때
+        oldest_result = user_results.first() # 가장 예전 기록
+        oldest_result.delete() # 행 삭제 (django-cleanup이 실제 파일도 삭제함)
+
+    file_name = f'{uuid.uuid4()}.png' # 파일명은 중복 방지를 위해 UUID 사용
+    image_data = ContentFile(base64.b64decode(image_url), name=file_name) # Base64를 장고가 이해하는 파일 객체로 변환
+
+    result_instance = RecentImages(
+        user = request.user,
+    ) # 저장 객체
+
+    result_instance.result_image.save(file_name, image_data, save=True) # 저장
 
 # 즐겨찾기 저장 로직(AJAX)
 @login_required(login_url='/accounts/login/')
 def save_favorite(request):
     session_id = request.session.session_key
-    img = cache.get(f'result_{session_id}')['image']
+    img = temp_storage[session_id]['image']
     file_name = f'{uuid.uuid4()}.png'  # 파일명은 중복 방지를 위해 UUID 사용
 
 
-    favorite_instance = FavoriteImages(
+    favorite_instance = favoriteImages(
         user = request.user,
     )
 
-    result = cache.get(f'result_{session_id}')
+    result = temp_storage.get(session_id)
 
     if result and result['status'] == 'completed':
-        cache.delete(f'result_{session_id}')
+        temp_storage.pop(session_id)
 
 
     favorite_instance.favorite_image.save(file_name, ContentFile(base64.b64decode(img), name=file_name), save=True)

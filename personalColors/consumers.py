@@ -1,63 +1,47 @@
 # consumers.py
-from base64 import b64encode
-import httpx
-from channels.db import database_sync_to_async
-from channels.generic.websocket import JsonWebsocketConsumer
-from celery.worker.control import revoke
+import json
 import requests
-from django.core.cache import cache
-from requests.auth import HTTPBasicAuth
 import os
-from PaletteMe.celery import app
-from dotenv import load_dotenv
+from channels.generic.websocket import JsonWebsocketConsumer
+from .views import temp_storage
+from requests.auth import HTTPBasicAuth
 
-load_dotenv()
 
 class GenerationConsumer(JsonWebsocketConsumer):
-    async def connect(self):
+    def connect(self):
         self.session_id = self.scope["session"].session_key
-        await self.accept()
+        self.accept()
         print(f"✅ 웹소켓 연결 시도됨: {self.session_id}", flush=True)  # flush 추가
 
-    @database_sync_to_async
-    def get_stored_task_id(self):
-        session_id = self.scope["session"].session_key
-        # 캐시에서 해당 세션의 task_id를 가져옵니다.
-        return cache.get(f"task_id_{session_id}")
+    def disconnect(self, close_code):
+        print(f"⚠️ 웹소켓 연결 끊김 감지 (코드: {close_code})")
 
-    async def interrupt_sd_webui(self):
-        # 1. SD API 주소 및 인증 정보 가져오기
-        url = os.getenv('SD_API_URL') + "interrupt"
-        user = os.getenv("SD_API_USER")
-        password = os.getenv("SD_API_PASSWORD")
+        if self.session_id in temp_storage:
+            print(f"🚀 {self.session_id} 작업 중단 프로세스 시작")
 
-        # 2. Basic Auth 헤더 생성 (API-AUTH 설정이 되어있는 경우)
-        auth_str = f"{user}:{password}"
-        auth_header = b64encode(auth_str.encode()).decode()
-        headers = {"Authorization": f"Basic {auth_header}"}
+            # 1. 파이썬 스레드 플래그 중단
+            if 'stop_event' in temp_storage[self.session_id]:
+                temp_storage[self.session_id]['stop_event'].set()
+                print("--- 스레드 중단 플래그(stop_event) Set 완료")
 
-        async with httpx.AsyncClient() as client:
+            # 2. SD WebUI API 인터럽트
             try:
-                # 3. POST 요청으로 중단 신호 전송
-                response = await client.post(url, headers=headers, timeout=5.0)
+                # URL 주소 정규화 (끝에 /가 있든 없든 정확하게 생성)
+                base_url = os.getenv('SD_API_URL').rstrip('/')
+                interrupt_url = f"{base_url}/interrupt"
+
+                auth = HTTPBasicAuth(os.getenv("SD_API_USER"), os.getenv("SD_API_PASSWORD"))
+
+                print(f"--- 인터럽트 요청 시도: {interrupt_url}")
+                response = requests.post(interrupt_url, auth=auth, timeout=5)
+
                 if response.status_code == 200:
-                    print("SD_WEBUI 연산이 성공적으로 중단되었습니다.")
+                    print(f"--- ✅ SD 인터럽트 성공 (Status: {response.status_code})")
+                else:
+                    print(f"--- ❌ SD 인터럽트 실패 (Status: {response.status_code}, Response: {response.text})")
+                # del temp_storage[self.session_id]
             except Exception as e:
-                print(f"SD_WEBUI 중단 요청 중 에러 발생: {e}")
+                print(f"--- ❌ SD 인터럽트 중 예외 발생: {e}")
 
-    async def disconnect(self, close_code):
-        # 1. 저장해둔 task_id를 가져옴
-        task_id = await self.get_stored_task_id()
-
-        if task_id:
-            # 2. Celery 작업 강제 종료
-            # terminate=True: 현재 실행 중인 프로세스를 즉시 중단
-            # signal='SIGKILL': 가차없이 종료 (필요에 따라 SIGTERM 사용)
-            app.control.revoke(task_id, terminate=True, signal='SIGKILL')
-
-            # 3. SD_WEBUI에게도 중단 신호 (선택사항)
-            # A1111의 /sdapi/v1/interrupt API를 호출하여 GPU 연산 중단
-            await self.interrupt_sd_webui()
-
-            # 4. 사용이 끝난 task_id 삭제
-            cache.delete(f"task_id_{self.scope['session'].session_key}")
+            # 3. 임시 저장소 삭제 (스레드 세이프를 위해 pop 권장)
+            temp_storage.pop(self.session_id, None)

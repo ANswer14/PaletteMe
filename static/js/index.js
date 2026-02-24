@@ -70,12 +70,7 @@ function openImagePopup(imgUrl) {
 // 소셜 로그인 성공 시 index.html에서 새로고침
 window.addEventListener('storage',(e) => {
     if (e.key === 'refreshParent' && e.newValue === 'true') {
+        localStorage.removeItem('refreshParent');
         location.href="/";
     }
 });
-
-window.onload = function() {
-    if (localStorage.getItem('refreshParent')) {
-        localStorage.removeItem('refreshParent')
-    }
-};

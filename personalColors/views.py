@@ -45,14 +45,15 @@ def get_color_info(request):
     color, date, mood, good_color, bad_color = None, None, None, None, None
     try:
         # executed_at 필드를 기준으로 가장 최신 데이터 1건 가져오기
-        latest_history = request.user.color_history.latest('executed_at')
+        selected_history = request.user.color_history.filter(user=request.user, is_enabled=True).first()
+        print(selected_history)
 
         # 데이터 받아오기
-        color = latest_history.color_type
-        date = latest_history.executed_at
-        mood = latest_history.mood
-        good_color = latest_history.good_color
-        bad_color = latest_history.bad_color
+        color = selected_history.color_type
+        date = selected_history.executed_at
+        mood = selected_history.mood
+        good_color = selected_history.good_color
+        bad_color = selected_history.bad_color
         is_saved = True # 데이터 있는지 없는지 판별용 변수
     except ColorHistory.DoesNotExist:
         # 아직 진단 기록이 없는 경우에 대한 예외 처리
@@ -116,11 +117,14 @@ def save_info(request):
             color_type=color_type,
             mood=mood,
             good_color=good_color,
-            bad_color=bad_color
+            bad_color=bad_color,
         )
 
         # DB에 저장
         new_history.save()
+        prior_history = user_history.order_by('-executed_at')[1]
+        prior_history.is_enabled = False
+        prior_history.save()
         return JsonResponse({'status': 'success', 'message': f'{color_type} 저장 완료!'})
     return JsonResponse({'status': 'fail', 'message': '저장 실패'})
 

@@ -11,7 +11,7 @@ var marker = new kakao.maps.Marker({
 });
 var lat = 37.566826
 var lng = 126.9786567
-var infowindow = new kakao.maps.InfoWindow({
+var infoWindow = new kakao.maps.InfoWindow({
     zIndex: 1
 });
 
@@ -20,6 +20,7 @@ function searchDetailAddrFromCoords(coords, callback) {
     geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
 }
 
+// csrf token 받아오는 함수
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -51,6 +52,7 @@ function searchAddress() {
     });
 }
 
+// 지도 시간대별 날씨 클릭 시 발동 함수(데이터 텍스트로 출력 함수)
 function handleRowClick(element) {
     // 1. tr에 숨겨둔 데이터 가져오기
     const temp = element.getAttribute('data-temp'); // 기온
@@ -92,25 +94,28 @@ function handleRowClick(element) {
     document.querySelector('input[name=sky]').value = getSKYText(sky)
 }
 
- function getPTYText(code) {
-     const ptyMap = {
-         '0': '없음',
-         '1': '비',
-         '2': '비/눈',
-         '3': '눈',
-         '4': '소나기',
-         '5': '빗방울',
-         '6': '빗방울눈날림',
-         '7': '눈날림',
-     };
-     return ptyMap[code] || '알 수 없음';
- }
+// 강수 상태 변환 함수
+function getPTYText(code) {
+ const ptyMap = {
+     '0': '없음',
+     '1': '비',
+     '2': '비/눈',
+     '3': '눈',
+     '4': '소나기',
+     '5': '빗방울',
+     '6': '빗방울눈날림',
+     '7': '눈날림',
+ };
+ return ptyMap[code] || '알 수 없음';
+}
 
+// 하늘 상태 변환 함수
 function getSKYText(code) {
     const skyMap = { '1': '☀️ 맑음', '3': '☁️ 구름많음', '4': '☁️ 흐림' };
     return skyMap[code] || '데이터 없음';
 }
 
+// 시간대별 날씨 받아오는 함수
 async function fetchWeather(lat, lng) {
     const requestData = {
         latitude: lat,
@@ -194,9 +199,10 @@ async function fetchWeather(lat, lng) {
                         * 스크롤하여 더보기
                     </div>
                 </div>`;
-
-            infowindow.setContent(listHtml);
-            infowindow.open(map, marker);
+            // 날씨 데이터 창 적재
+            infoWindow.setContent(listHtml);
+            // 날씨 데이터 창 띄워주기
+            infoWindow.open(map, marker);
         }
     } catch (error) {
         console.error("AJAX 통신 실패:", error);
@@ -209,7 +215,7 @@ marker.setMap(map); // 지도 위에 마커 표시
 // [기능 1] 지도를 클릭했을 때 마커를 해당 위치로 이동
 // ---------------------------------------------------------
 kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
-    infowindow.close();
+    infoWindow.close();
     // 클릭한 위도, 경도 정보를 가져옵니다
     latlng = mouseEvent.latLng;
     lat = latlng.getLat();

@@ -300,6 +300,7 @@ def generate_img_thread(request, session_id, temp, weather, sky, stop_event):
         gender = '남성'
     else:
         gender = '여성'
+    print(gender)
     if stop_event.is_set(): return # Gemini 연동 전 중단 요청이 들어왔는지 확인
     response = client.models.generate_content(
         model=model,
@@ -324,6 +325,7 @@ def generate_img_thread(request, session_id, temp, weather, sky, stop_event):
     # print(data)
     # 2. 추출된 데이터 활용
     optimized_prompt = data.get('sd_prompt')
+    print('sd_prompt', optimized_prompt)
     description = data.get('description')
 
     # --- [단계 2] 실제 이미지 생성 요청 ---
@@ -333,21 +335,39 @@ def generate_img_thread(request, session_id, temp, weather, sky, stop_event):
 def generate_img(request, session_id, stop_event, optimized_prompt, url_txt2img, auth, description):
 
     try:
-        payload = {
-            "prompt": f"simple casual outfit, asian, everyday wear, full body:1.4, full body view:1.4, full body view from head to toe, {optimized_prompt}",
-            "negative_prompt": "(worst quality:2), (low quality:2), (normal quality:2), lowres, watermark",
-            "steps": 20,
-            'seed': 4216575493,
-            'cfg_scale': 7,
-            "sampler_name": "Restart",
-            "enable_hr": True,
-            "hr_upscaler": "8x_NMKD-Superscale_150000_G",  # 확장자 제외, 업스케일러
-            "hr_scale": 2,
-            'hr_second_pass_steps': 15,
-            "denoising_strength": 0.4,
-            "override_settings": {"CLIP_stop_at_last_layers": 2,
-                                  "sd_vae": 'vae-ft-mse-840000-ema-pruned.ckpt'},  # VAE
-        }
+        if request.user.gender == 'F':
+            payload = {
+                "prompt": f"simple casual outfit, asian, everyday wear, full body:1.4, full body view:1.4, full body view from head to toe, {optimized_prompt}",
+                "negative_prompt": "(worst quality:2), (low quality:2), (normal quality:2), lowres, watermark",
+                "steps": 20,
+                'seed': 4216575493,
+                'cfg_scale': 7,
+                "sampler_name": "Restart",
+                "enable_hr": True,
+                "hr_upscaler": "8x_NMKD-Superscale_150000_G",  # 확장자 제외, 업스케일러
+                "hr_scale": 2,
+                'hr_second_pass_steps': 15,
+                "denoising_strength": 0.4,
+                "override_settings": {"CLIP_stop_at_last_layers": 2,
+                                      "sd_vae": 'vae-ft-mse-840000-ema-pruned.ckpt'},  # VAE
+            }
+        else:
+            print('남성')
+            payload = {
+                "prompt": f"simple casual outfit, 1boy, handsome male, asian, everyday wear, full body:1.4, full body view:1.4, full body view from head to toe, {optimized_prompt}",
+                "negative_prompt": "(worst quality:2), (low quality:2), (normal quality:2), lowres, watermark",
+                "steps": 20,
+                'seed': 3550513535,
+                'cfg_scale': 7,
+                "sampler_name": "Restart",
+                "enable_hr": True,
+                "hr_upscaler": "8x_NMKD-Superscale_150000_G",  # 확장자 제외, 업스케일러
+                "hr_scale": 2,
+                'hr_second_pass_steps': 15,
+                "denoising_strength": 0.4,
+                "override_settings": {"CLIP_stop_at_last_layers": 2,
+                                      "sd_vae": 'vae-ft-mse-840000-ema-pruned.ckpt'},  # VAE
+            }
 
         if stop_event.is_set(): return # 실제 이미지 생성 요청 전 중단 요청 확인
         sd_res = requests.post(url_txt2img, json=payload, auth=auth, timeout=60)

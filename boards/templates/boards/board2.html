@@ -23,9 +23,10 @@
             <span id="detailNo">{{ post.id }}</span>
             <span id="detailTitle">{{ post.title }}</span>
 
-            {% if post.writer %}
-            <span id="detailWriter">{{ post.writer }}</span>
-            {% endif %}
+<!--            {% if post.writer %}-->
+<!--            <span id="detailWriter">{{ post.writer }}</span>-->
+<!--            {% endif %}-->
+            <span id="detailWriter">{{ post.writer|default:"익명" }}</span>
 
             <span id="detailDate">{{ post.created_at|date:"Y-m-d" }}</span>
             <span id="detailView">{{ post.views }}</span>
@@ -68,9 +69,11 @@
             <button id="deleteBtn" onclick="goDelete()" style="display:none;">삭제</button>
 
             <!-- 이전글|글목록|다음글 -->
-            <span id="prevBtn" onclick="goPrev()">이전글</span> |
-            <span onclick="goList()">글목록</span> |
-            <span id="nextBtn" onclick="goNext()">다음글</span>
+            <span class="nav-item" onclick="goPrev()">이전글</span>
+            <span class="divider">|</span>
+            <span class="nav-item" onclick="goList()">글목록</span>
+            <span class="divider">|</span>
+            <span class="nav-item" onclick="goNext()">다음글</span>
         </div>
 
     </div>

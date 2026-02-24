@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
+
     const retryBtn = document.getElementById("retryBtn");
     const nextBtn = document.getElementById("nextBtn");
     const savePopup = document.getElementById("savePopup");
@@ -18,6 +19,17 @@ document.addEventListener("DOMContentLoaded", function() {
     colors = colors.replace('[[', '').replace(']]', '').replace(/'/g, "").split(', ')
 //    console.log(colors[1])
 //    console.log(colors)
+
+    // 퍼스널 컬러 결과 명칭 색상 (봄, 여름, 가을, 겨울 키워드별)
+    const resultElement = document.querySelector('.result-name');
+    if (resultElement) {
+        const resultText = resultElement.innerText;
+
+        if (resultText.includes('봄')) resultElement.style.color = '#F28D8D';      // 봄 대표색
+        else if (resultText.includes('여름')) resultElement.style.color = '#7FB3D5'; // 여름 대표색
+        else if (resultText.includes('가을')) resultElement.style.color = '#B36D3E'; // 가을 대표색
+        else if (resultText.includes('겨울')) resultElement.style.color = '#8E44AD'; // 겨울 대표색
+    }
 
     colors.forEach(color => {
         const circle = document.createElement("div");

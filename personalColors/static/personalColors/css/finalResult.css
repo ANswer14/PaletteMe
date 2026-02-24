@@ -1,72 +1,248 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-}
+/*!* 퍼스널 컬러 계절별 색상 정의 *!*/
+/*.result-name.spring { color: #e68070; }*/
+/*.result-name.summer { color: #3baaae; }*/
+/*.result-name.autumn { color: #aa4a44; }*/
+/*.result-name.winter { color: #760c0c; }*/
 
 /* 메인 레이아웃 */
 .container {
+    margin: 100px auto;
+    width: 1350px;
     display: flex;
-    padding: 40px;
-    gap: 50px;
+    padding: 30px 40px;
+    gap: 100px;
+    align-items: flex-start; /* 좌측 이미지와 우측 텍스트 상단 높이를 맞춤 */
+}
+
+/* 진행 바 컨테이너 */
+#progress-container {
+    width: 100%;
+    background-color: #f0f0f0;
+    height: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px; /* 바와 글자 사이 간격 */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* 진행 바 실제 채워지는 부분 */
+#progress-bar-fill {
+    width: 0%;
+    height: 100%;
+    /* 세련된 퍼플-블루 그라데이션 (팔레트미 컨셉) */
+    background: linear-gradient(90deg, #a1887f, #7986cb, #81c784);
+    background-size: 200% 100%;
+    animation: gradientMove 2s linear infinite;
+    transition: width 0.4s ease-out;
+    border-radius: 10px;
+}
+
+/* 진행 바 배경 흐르는 애니메이션 */
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* '이미지를 생성하고 있습니다' 메시지 */
+#loading {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 60px; /* ★ 글자와 이미지 사이 간격을 여기서 조절하세요 */
+    text-align: center;
+    font-weight: 500;
+}
+
+/* 이미지 컨테이너 및 이미지 */
+#result-container {
+    width: 100%;
+    /*max-width: 400px;*/
+    height: 550px;
+    margin: 0 auto;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    background-color: #f8f9fa;
+
+    /* [중요] 중앙 정렬을 위한 필수 코드 */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/*!* 이미지가 없을 때 보여줄 텍스트나 로고가 있다면 추가 가능 *!*/
+/*#result-container::before {*/
+/*    content: "PaletteMe AI";*/
+/*    color: #ccc;*/
+/*    font-weight: bold;*/
+/*    font-size: 20px;*/
+/*}*/
+
+/* 로고: 컨테이너 한복판에 고정 */
+#placeholder-logo {
+    position: absolute;
+    width: 140px; /* 로고 크기 조절 */
+    height: auto;
+    object-fit: contain !important; /* 짤림 방지 */
+    opacity: 0.4; /* 은은하게 보이도록 */
+    z-index: 1;   /* 아래쪽에 위치 */
+}
+
+/* src가 비어있는 이미지 태그는 화면에 아예 렌더링하지 않음 */
+img:not([src]),
+img[src=""] {
+    opacity: 0 !important;
+}
+
+/* 실제 생성되는 이미지 : 로고 완전히 덮음 */
+#output-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지가 비율대로 꽉 차게 */
+    /*display: block;*/
+    position: relative;
+    z-index: 2; /* 로고보다 위에 오도록 */
+    /*opacity: 0;        !* 처음엔 숨김 *!*/
+    transition:  opacity 0.5s ease; /* 이미지가 나타날 때 부드럽게 */
+    background-color: transparent;  /* 이미지가 로드되기 전까지는 영역만 차지하고 숨김 */
 }
 
 .image-section {
-    width: 400px;
-    height: 500px;
+    width: 40%;
 }
 
-/* 왼쪽 이미지 */
-.image-section img {
-    width: 400px;
-    height: 500px;
-    object-fit: cover;
-    border-radius: 10px;
+/* "이미지는 예시입니다" - 박스 없음 */
+.image-desc {
+    margin-top: 35px;
+    font-size: 14px;
+    color: #888;
+    text-align: center;
+    line-height: 1.6;
+    word-break: keep-all; /* 단어 단위 줄바꿈으로 깔끔하게 */
 }
 
 /* 오른쪽 추천 */
 .recommend-section {
-    flex: 1;
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
+    width: 60%;
+    flex-direction: column;
+    display: flex;
+    gap: 30px;
 }
 
 .recommend-section h2 {
-    margin-top: 0;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 25px;
+    color: #5A7B9A;
+    border-left: 5px solid #5A7B9A;
+    padding-left: 15px;
+    line-height: 1.2;
 }
-.recommend-section p {
+/*.recommend-section p {*/
+/*    display: flex;*/
+/*    align-items: flex-start; !* 설명이 길어질 경우 대비 *!*/
+/*    background: transparent !important;*/
+/*    margin: 12px 0;*/
+/*    padding: 15px 20px;*/
+/*    border-radius: 12px;*/
+/*    transition: all 0.3s ease;*/
+/*    border:  1px solid #eee;*/
+/*    border-bottom: 1px solid #eee !important; !* 하단 줄만 남김 *!*/
+/*}*/
+
+/*.recommend-section strong {*/
+/*    width: 100px;*/
+/*    color: #333;*/
+/*    font-weight: 700;*/
+/*    font-size: 15px;*/
+/*    letter-spacing: -0.5px;*/
+/*}*/
+
+/*!* 요약 부분 (퍼스널컬러 + 날씨) *!*/
+/*.summary {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    gap: 20px;*/
+/*    margin-bottom: 35px;*/
+/*    padding-bottom: 25px;*/
+/*    border-bottom: 1px solid #cdcbcb;*/
+/*}*/
+/*.summary-text {*/
+/*    flex: 1;*/
+/*}*/
+/*.summary p {*/
+/*    font-size: 18px;*/
+/*    line-height: 1.6;*/
+/*    !*display: flex;*!*/
+/*    !*align-items: center; !* 텍스트 베이스라인 정렬 *!*!*/
+/*    !*flex-wrap: wrap;     !* 내용 길어지면 줄바꿈 *!*!*/
+/*}*/
+
+/* 크게 묶는 공통 박스 스타일 */
+.info-group-box {
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 15px;
+    padding: 25px 30px;
+}
+
+/* 상단 요약 정보 (박스 1) */
+.summary-box {
+    border-left: 5px solid #4A90E2; /* 지역/날씨 색상과 통일감 */
+}
+
+.summary-box p {
     font-size: 17px;
     margin: 10px 0;
-}
-
-.recommend-section strong {
-    display: inline-block;
-    width: 90px;
-}
-
-/* 요약 부분 (퍼스널컬러 + 날씨) */
-.summary {
     display: flex;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #cdcbcb;
 }
-.summary-text {
-    flex: 1;
+
+/* 하단 코디 추천 (박스 2) */
+.coordi-box {
+    border-left: 5px solid #535252;
 }
-.summary p {
-    font-size: 18px;
-    line-height: 1.6;
+
+.coordi-item {
+    display: flex;
+    margin: 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #ddd;
 }
+
+.coordi-item:last-child { border-bottom: none; }
+
+.coordi-item strong {
+    width: 90px;
+    color: #444;
+    font-size: 15px;
+}
+
+/* 아이템 링크 강조 색상 */
+.coordi-item a {
+    color: #e67e22 !important; /* 오렌지/브라운 톤으로 더 잘 보이게 */
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.coordi-item a:hover {
+    text-decoration: underline;
+    color: #d35400 !important;
+}
+
 /* 강조 색상 */
 .highlight {
     font-weight: bold;
-    color: #e85a4f;
-    font-size: 20px;
+    /*color: #445f7a;*/
+    font-size: 18px;
+    margin: 0 4px;
+}
+
+#region,
+#weather,
+#temp {
+    color: #4A90E2;   /* 청량한 블루 */
 }
 
 /* 날씨 그림 */
@@ -81,16 +257,55 @@
     color: #555;
 }
 
+/* ★ 쇼핑몰 링크 스타일 (파란색 링크 제거) ★ */
+.recommend-section span a {
+    text-decoration: none;
+    color: #222;
+    font-weight: 600;
+    font-size: 17px;
+    display: inline-block;
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.recommend-section span a:hover {
+    color: #4A90E2; /* 마우스 올리면 파란색으로 살짝 강조 */
+    text-decoration: underline;
+}
+
+/* 색상 이유 섹션 */
+#description {
+    line-height: 1.6;
+    color: #555;
+    font-size: 15px;
+    display: inline-block;
+    margin-top: 5px;
+    flex: 1; /* 남은 공간을 모두 차지하게 함 */
+}
 
 /* 버튼 */
-#favorBtn {
-    margin-top: 40px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #535252;
-    color: #ffffff;
-    border: none;
-    cursor: pointer;
-    margin-left: auto;
-    display: block;
+
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
 }
+
+.buttons button {
+    width: 150px;
+    height: 50px;
+    padding: 10px 20px;
+    background-color: #535252;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.buttons button:hover {
+    background-color: #333;
+}
+

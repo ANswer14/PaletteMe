@@ -11,9 +11,12 @@
         <!-- 왼쪽: 지역 검색 -->
         <div class="left">
             <h2>지역 검색</h2>
-{#            <button id="searchBtn">검색</button>#}
-            <input type="text" id="address" placeholder="주소를 입력하세요" style="width:300px;">
-            <button onclick="searchAddress()">주소 검색</button>
+            <!-- <button id="searchBtn">검색</button> -->
+            <div class="search-box">
+                <input type="text" id="address" placeholder="주소를 입력하세요">
+                <button onclick="searchAddress()">주소 검색</button>
+            </div>
+
             <p>Tip: 지도를 클릭하면 마커가 이동하고, 마커를 클릭하면 메시지가 뜹니다.</p>
             <div id="map"></div>
             <div id="temp-display"></div>
@@ -22,16 +25,19 @@
         <!-- 오른쪽: 날씨 정보 -->
         <div class="right">
             <h1>검색하신 지역 <span id="locationName"></span>의 날씨 정보입니다.</h1>
-
-            <p>기온 : <span id="temp">-</span>
-{#            <img src="{% static 'img/main1.png' %}" alt="온도계" class="weather-icon"></p>#}
-            <p>일 최저 온도: <span id="lowestTemp"></span></p>
-            <p>일 최고 온도: <span id="highestTemp"></span></p>
-            <p>체감온도 : <span id="feelsLike">-</span></p>
-            <p>습도 : <span id="humidity">-</span></p>
-            <p>강수 : <span id="weather">-</span></p>
-            <p id="sky"></p>
-
+            <div class="weather-result">
+                <p>기온 : <span id="temp">-</span>
+                <!-- <img src="{% static 'img/main1.png' %}" alt="온도계" class="weather-icon"></p> -->
+                <p>일 최저 온도: <span id="lowestTemp"></span></p>
+                <p>일 최고 온도: <span id="highestTemp"></span></p>
+                <p>체감온도 : <span id="feelsLike">-</span></p>
+                <p>습도 : <span id="humidity">-</span></p>
+                <p>강수 : <span id="weather">-</span></p>
+                <p id="sky"></p>
+            </div>
+<!--<p class="weather-line">-->
+<!--                <span id="weatherText">날씨 상태가 여기에 표시됩니다.</span>-->
+<!--                <img src="{% static 'img/main1.png' %}" alt="날씨아이콘" class="weather-icon"></p>-->
             <div class="buttons">
                 <form id="startAI" method="post" action="/personalColors/generateImg/">
                     {% csrf_token %}

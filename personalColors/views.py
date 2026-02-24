@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from requests.auth import HTTPBasicAuth
 import io
 from .service.personalColorCalc import *
-from .models import ColorHistory, RecentImages, favoriteImages
+from .models import ColorHistory, RecentImages, FavoriteImages
 import json
 import os
 import requests
@@ -489,7 +489,7 @@ def save_favorite(request):
     file_name = f'{uuid.uuid4()}.png'  # 파일명은 중복 방지를 위해 UUID 사용
 
 
-    favorite_instance = favoriteImages(
+    favorite_instance = FavoriteImages(
         user = request.user,
     )
 

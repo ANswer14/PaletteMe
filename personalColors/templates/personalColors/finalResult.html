@@ -16,16 +16,22 @@
             </div>
             <h3 id="loading">이미지를 생성하고 있습니다...</h3>
             <div id="result-container">
-                <img id="output-image" src="{% static 'img/main1.png' %}" alt="AI 생성 중">
+<!--                <img id="output-image" src="{% static 'img/logo.png' %}" alt="AI 생성 중">-->
+<!--&lt;!&ndash;                <img id="output-image" src="" alt="AI 생성 결과">&ndash;&gt;-->
+                <img src="{% static 'img/logo.png' %}" id="placeholder-logo" alt="로딩 로고">
+                <img id="output-image" src="" alt="" style="opacity: 0;">
             </div>
+            <!-- 이미지 설명 -->
+            <p class="image-desc">위에 생성된 이미지는 오늘의 조건에 맞는 코디 예시입니다.</p>
             <h3 id="clothes-link"></h3>
         </div>
 
         <!-- 오른쪽 추천 영역 -->
         <div class="recommend-section">
+            <h2>스타일링 추천 결과</h2>
              <!-- 퍼스널컬러 + 날씨 요약 -->
-        <div class="summary">
-            <div class="summary-text">
+<!--        <div class="summary">-->
+            <div class="info-group-box summary-box">
                 <p>당신의 퍼스널컬러는
                     <span id="colorType" class="highlight result-name">{{ colorType }}</span>,</p>
                 <p>현재
@@ -35,35 +41,35 @@
                     <span class="highlight" id="temp">{{ temp }}</span> 입니다.
                 </p>
             </div>
-        </div>
+<!--        </div>-->
 
-            <!-- 이미지 설명 -->
-            <div class="image-desc">
-                <p>왼쪽에 생성된 이미지는 오늘의 조건에 맞는 코디 예시입니다.</p>
+
+
+            <div class="info-group-box coordi-box">
+
+                <h3 style="margin-bottom: 5px;">오늘의 추천 코디</h3>
+                <p style="font-size: 13px; color: #888; margin-bottom: 20px;">(상품명을 클릭하면 상세 페이지로 이동합니다)</p>
+
+                <div class="coordi-item">
+                    <strong>상의</strong> <span id="topItem">생성중...</span>
+                </div>
+                <div class="coordi-item">
+                    <strong>하의</strong> <span id="bottomItem">생성중...</span>
+                </div>
+                <div class="coordi-item">
+                    <strong>아우터</strong> <span id="outerItem">생성중...</span>
+                </div>
+                <div class="coordi-item">
+                    <strong>신발</strong> <span id="shoesItem">생성중...</span>
+                </div>
+                <div class="coordi-item" style="border-bottom: none; flex-direction: column;">
+                    <strong style="margin-bottom: 8px;">추천 이유</strong>
+                    <span id="description" style="font-size: 15px; color: #666; line-height: 1.6;"></span>
+                </div>
             </div>
 
-        <h2>오늘의 추천 코디</h2>
-        <p>
-            <strong>상의:</strong>
-            <span id="topItem">생성 중...</span>
-        </p>
-        <p>
-            <strong>하의:</strong>
-            <span id="bottomItem">생성 중...</span>
-        </p>
-        <p>
-            <strong>아우터:</strong>
-            <span id="outerItem">생성 중...</span>
-        </p>
-        <p>
-            <strong>신발:</strong>
-            <span id="shoesItem">생성 중...</span>
-        </p>
-        <p>
-            <strong>색상 이유:</strong>
-            <span id="description">생성 중...</span>
-        </p>
             {% csrf_token %}
+
             <div class="buttons">
                 <button id="favorBtn" disabled>
                     즐겨찾기에 저장

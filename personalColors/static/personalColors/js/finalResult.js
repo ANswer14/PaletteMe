@@ -30,7 +30,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 const imgElement = document.getElementById('output-image');
                 const progressFill = document.getElementById('progress-bar-fill');
 
+                // [추가] 여기서 로고를 정의해야 합니다.
+                const logoElement = document.getElementById('placeholder-logo');
+
                 if (data.status === 'processing') {
+                    // [수정] 출력 이미지의 투명도를 즉시 1로 변경하여 프리뷰가 보이게 함
+                    imgElement.style.opacity = "1";
+
                     // 1. 진행률 바 업데이트 (CSS width 조절)
                     if (data.progress) {
                         const percent = Math.round(data.progress * 100);
@@ -41,12 +47,29 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (data.current_image) {
                         // SD WebUI의 preview는 접두어 없이 올 수 있으므로 체크 후 삽입
                         imgElement.src = `data:image/png;base64,${data.current_image}`;
+
+                        // // [추가] 이미지가 한 장이라도 들어오면 투명도를 1로 올려서 로고를 덮습니다.
+                        // if (imgElement.style.opacity != 1) {
+                        //     console.log('진입')
+                        //     imgElement.style.opacity = 1;
+                        // }
+                        // [수정] 작업이 시작되면(processing) 즉시 로고를 숨깁니다.
+                        if (logoElement) {
+                            logoElement.style.display = 'none';
+                        }
                     }
                 }
                 else if (data.status === 'completed') {
+                    // [수정] 혹시 몰라 한 번 더
+                    if (logoElement) logoElement.style.display = 'none';
+
                     // 3. 최종 고화질 이미지로 교체 및 종료
                     clearInterval(pollInterval);
                     imgElement.src = `data:image/png;base64,${data.image}`;
+
+                    // [추가] 혹시 프리뷰 없이 바로 완료될 경우를 대비해 확실히 보이게 처리
+                    imgElement.style.opacity = "1";
+
                     document.getElementById('loading').innerText = '';
                     document.getElementById('description').innerText = data.description;
 

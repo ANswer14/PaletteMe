@@ -1,5 +1,5 @@
 .mypage {
-    width: 1000px;
+    width: 800px;
     margin: 50px auto;
     line-height: 1.6;
 }
@@ -7,10 +7,11 @@
 .card {
     background: white;
     border: 1px solid #ddd;
-    padding: 30px;
+    padding: 40px 40px;
     margin-bottom: 25px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    box-sizing: border-box;
 }
 
 h2 {
@@ -23,16 +24,6 @@ h3 {
     margin-bottom: 20px;
     border-left: 4px solid #535252;
     padding-left: 10px;
-}
-
-.form-group input,
-.input-group,
-.card input[type="password"] {
-    display: block;
-    max-width: 400px;
-    width: 100%;
-    margin-bottom: 10px;
-    box-sizing: border-box;
 }
 
 /* 폼 그룹 기본 (세로 배치) */
@@ -48,34 +39,34 @@ h3 {
     color: #555;
 }
 
+.form-group input,
+.input-group input,
+.card input[type="password"],
 input {
-    height: 45px;
+    height: 48px;
     padding: 10px 15px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 15px;
-
     box-sizing: border-box;
+    width: 100%;
 }
+
 /* 가로 정렬을 위한 그룹 */
 .input-group {
     display: flex;
-    gap: 8px; /* 인풋과 버튼 사이 간격 */
+    gap: 10px; /* 인풋과 버튼 사이 간격 */
+    max-width: 100%; /* 400px 제한 삭제 */
+    width: 100%;
+    align-items: stretch;
 }
 
 .input-group input {
     flex: 1;
     margin-top: 0;
-    padding: 8px;
+    /*padding: 8px;*/
 }
 
-.input-group button {
-    height: 40px;
-    white-space: nowrap; /* 버튼 글자 줄바꿈 방지 */
-    background-color: #f8f9fa;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
 input[readonly] {
     background: #eee;
 }
@@ -85,6 +76,23 @@ input[readonly] {
     margin-top: 5px;
 }
 
+/* 닉네임 중복확인 버튼 - 가로 길이 확장 */
+#nickNameCheckBtn {
+    min-width: 140px; /* 기존보다 길게 설정 */
+    height: 48px;
+    padding: 0 20px;
+    background-color: #535252;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
 button {
     cursor: pointer;
     border: 1px solid #ccc;
@@ -92,32 +100,34 @@ button {
     transition: all 0.2s;
     font-weight: bold;
 }
-.signup-submit-btn {
-    display: block;          /* 중앙 정렬을 위해 필요 */
-    width: 400px;            /* 100% -> 고정 너비로 축소 */
-    max-width: 100%;
-    height: 48px;            /* 55px -> 48px로 축소 */
-    margin: 30px 0 0 0;
+
+.signup-submit-btn,
+#changePwBtn {
+    display: block;
+    width: 100%;             /* 부모 너비(4cm 여백 제외한 나머지)를 꽉 채움 */
+    /*max-width: 300px;*/
+    height: 50px;
     background-color: #535252;
+    cursor: pointer;
     color: white;
     border: none;
-    font-size: 16px;         /* 18px -> 16px로 축소 */
     border-radius: 6px;
+    font-size: 16px;
+    margin: 30px auto 0;
+    transition: background-color 0.2s;
+    text-align: center;
 }
 
-.signup-submit-btn:hover { background-color: #333; }
-
-/* 가로 정렬된 곳의 버튼은 마진 제거 */
-.input-group button,
-.profile-main button {
-    margin-top: 0;
+.signup-submit-btn:hover,
+#changePwBtn:hover {
+    background-color: #333;
 }
 
 /* 프로필 사진 섹션 */
 .profile-main {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 40px;
     margin-bottom: 20px;
 }
 /* 공통: 이미지를 동그랗게 만들고 비율 유지 */
@@ -136,10 +146,17 @@ button {
     border: 2px solid #ddd;
 }
 .custom-file-btn {
-    background: #f8f9fa;
-    border: 1px solid #ccc;
-    padding: 10px 15px;
-    font-size: 13px; }
+    height: 48px;
+    padding: 0 25px;
+    background-color: #535252; /* 배경색 변경 */
+    color: white;             /* 글자색 변경 */
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+}
 
 /* 파일 선택창 숨기기 */
 #profileUpload {
@@ -157,6 +174,7 @@ button {
     border-radius: 50%;
     cursor: pointer;
     margin-right: 10px;
+    margin-top: 10px;
     transition: transform 0.2s; /* 살짝 커지는 효과 */
     border: 2px solid transparent;
 }
@@ -242,25 +260,13 @@ tbody tr:hover {
     color: #d9534f;
     border: 1px solid #d9534f;
     background: white;
-    padding: 10px 20px; }
+    padding: 10px 20px;
+    margin-top: 20px;
+}
+
 .danger-btn:hover {
     background: #d9534f;
     color: white;
-}
-
-/* 비밀번호 변경 버튼 (정보 수정 저장 버튼과 통일) */
-#changePwBtn {
-    display: block;
-    width: 100%;
-    height: 48px;
-    background-color: #535252; /* 동일한 메인 컬러 */
-    color: white;
-    border: none;
-    font-size: 15px;        /* 메인 버튼(18px)보다 아주 살짝 작게 하여 균형 유지 */
-    margin: 10px 0 0 0;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s;
 }
 
 #changePwBtn:hover {
@@ -269,7 +275,7 @@ tbody tr:hover {
 
 /* [보안 및 인증] 섹션 폼 제한 */
 .security-section form {
-    max-width: 400px; /* 전체 폼 너비를 400px로 제한 */
+    max-width: 100%;
 }
 
 /* 보안 섹션 내 인풋 간격 정돈 */
@@ -277,43 +283,6 @@ tbody tr:hover {
     width: 100%;        /* 섹션 안에서 시원하게 꽉 차도록 */
     max-width: none;
     margin-bottom: 12px;
-}
-
-/* 1. 공통 그룹 설정: 자식 요소들의 높이를 부모에 맞게 꽉 채움 */
-.input-group {
-    display: flex;
-    gap: 8px;
-    align-items: stretch; /* 중요: 내부 요소 높이를 동일하게 늘림 */
-    max-width: 400px;
-    width: 100%;
-}
-
-/* 2. 입력창과 버튼들의 높이/박스모델 통일 */
-.input-group input,
-.input-group button,
-.input-group a {
-    height: 45px !important;    /* 높이 강제 고정 */
-    margin: 0 !important;       /* 개별 마진 제거 */
-    box-sizing: border-box !important; /* 테두리 포함해서 45px 계산 */
-    display: flex;
-    align-items: center;        /* 수직 중앙 정렬 */
-    justify-content: center;
-}
-
-/* 닉네임 중복 확인 버튼 기본 스타일 */
-#nickNameCheckBtn {
-    height: 45px !important;
-    padding: 0 15px;
-    background-color: #535252; /* 활성화 시 짙은 회색 */
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s;
-    box-sizing: border-box !important;
 }
 
 /* 버튼이 비활성화(disabled)되었을 때의 스타일 */
@@ -330,130 +299,53 @@ tbody tr:hover {
     background-color: #333333;
 }
 
-/* 4. 구글 연동하기 버튼 (미연동 상태) */
-.google-connect-btn {
-    padding: 0 15px;
-    background-color: #535252;
-    color: white !important;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: bold;
-    text-decoration: none;
-    white-space: nowrap;
-}
-
-/* 5. 구글 연동 완료 버튼 (파란색 테마) */
+/* 구글 연동 버튼 - 높이 맞춤 및 텍스트 수직 중앙 정렬 */
+.google-connect-btn,
 .google-linked-btn {
-    padding: 0 15px;
-    background-color: #e7f0ff;
-    color: #007bff;
-    border: 1px solid #b3d7ff;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: bold;
-    white-space: nowrap;
-}
-
-/* 6. 입력창 유연하게 늘리기 */
-.input-group input {
-    flex: 1;
-    min-width: 0;
-}/* 1. 공통 그룹 설정: 자식 요소들의 높이를 부모에 맞게 꽉 채움 */
-.input-group {
-    display: flex;
-    gap: 8px;
-    align-items: stretch; /* 중요: 내부 요소 높이를 동일하게 늘림 */
-    max-width: 400px;
-    width: 100%;
-}
-
-/* 2. 입력창과 버튼들의 높이/박스모델 통일 */
-.input-group input,
-.input-group button,
-.input-group a {
-    height: 45px !important;    /* 높이 강제 고정 */
-    margin: 0 !important;       /* 개별 마진 제거 */
-    box-sizing: border-box !important; /* 테두리 포함해서 45px 계산 */
-    display: flex;
-    align-items: center;        /* 수직 중앙 정렬 */
+    min-width: 160px;
+    height: 48px; /* 입력칸과 동일하게 */
+    display: inline-flex; /* flex로 변경하여 중앙 정렬 용이하게 */
+    align-items: center;
     justify-content: center;
-}
-
-/* 3. 닉네임 중복 확인 버튼 (#535252) */
-#nickNameCheckBtn {
-    padding: 0 15px;
-    background-color: #535252;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-/* 4. 구글 연동하기 버튼 (미연동 상태) */
-.google-connect-btn {
-    padding: 0 15px;
-    background-color: #535252;
-    color: white !important;
-    border: none;
+    padding: 0 20px;
     border-radius: 6px;
     font-size: 14px;
     font-weight: bold;
     text-decoration: none;
-    white-space: nowrap;
+    box-sizing: border-box;
+    vertical-align: middle;
 }
 
-/* 5. 구글 연동 완료 버튼 (파란색 테마) */
-.google-linked-btn {
-    padding: 0 15px;
-    background-color: #e7f0ff;
-    color: #007bff;
-    border: 1px solid #b3d7ff;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: bold;
-    white-space: nowrap;
-}
-
-/* 6. 입력창 유연하게 늘리기 */
-.input-group input {
-    flex: 1;
-    min-width: 0;
-}
-
-.scroll-box {
-    width: 100%;        /* 가로 너비 */
-    height: 200px;      /* 세로 높이 고정 */
-    padding: 15px;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-
-    /* 핵심 속성 */
-    overflow-y: auto;   /* 세로 내용이 넘치면 자동으로 스크롤바 생성 */
-    overflow-x: hidden; /* 가로 스크롤은 방지 */
+.google-connect-btn {
+    background-color: #535252;
+    color: white !important;
 }
 
 /* 나의 활동 영역 */
 /* 컬럼 공통 너비 설정 (헤더와 행 모두에 적용) */
 .col-no { width: 60px; text-align: center; flex-shrink: 0; }
 .col-title { flex: 1; padding: 0 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.col-date { width: 100px; text-align: center; flex-shrink: 0; }
-.col-view { width: 70px; text-align: center; flex-shrink: 0; }
-.col-type { width: 100px; text-align: center; flex-shrink: 0; }
+.col-date { width: 130px; text-align: center; flex-shrink: 0; }
+.col-view { width: 80px; text-align: center; flex-shrink: 0; }
+.col-type { width: 80px; text-align: center; flex-shrink: 0; }
+
+/* 헤더와 로우의 패딩 구조를 완전히 일치시킴 */
+.board-header,
+.board-row {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    /*padding: 0 20px; !* 양 끝 여백 통일 *!*/
+    align-items: center;
+}
 
 /* 행 디자인 */
 .board-row {
-    display: flex;
-    padding: 12px 15px;
+    padding: 15px 20px 15px 30px;
     border-bottom: 1px solid #f1f1f1;
     cursor: pointer;
     transition: background 0.2s;
     font-size: 14px;
-    align-items: center;
-    text-align: center; /* 기본 중앙 정렬 */
 }
 
 .board-row:hover {
@@ -475,33 +367,84 @@ tbody tr:hover {
 .board-header {
     background-color: #f8f9fa;
     border-bottom: 2px solid #535252;
-    padding: 12px 15px;
+    height: 48px;
     font-weight: bold;
     font-size: 13px;
     color: #333;
-    display: flex;
     border-radius: 8px 8px 0 0;
-    text-align: center; /* 기본적으로 모든 헤더 텍스트 중앙 */
+    padding: 0 20px 0 30px;
 }
 
-/* 제목 컬럼만 별도 정렬 적용 */
-.col-title {
-    flex: 1;
-    padding: 0 20px;
+/* 2. 글 번호 (오른쪽으로 밀린 현상 수정 -> 왼쪽으로 당김) */
+.board-header .col-no {
+    position: relative;
+    left: -8px; /* 왼쪽으로 이동 */
+}
+
+/* 로우의 제목은 왼쪽 정렬 */
+.board-header .col-title {
+    text-align: left;
+    font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+/* 헤더 날짜 */
+.board-header .col-date {
+    position: relative;
+    left: 15px;
+}
+
+/* 글 유형 */
+.board-header .col-type {
+    position: relative;
+    left: 20px;
+}
+
+/* 조회수 */
+.board-header .col-view {
+    position: relative;
+    left: 2px; /* 오른쪽으로 2mm 이동 */
+}
+
 /* 헤더의 제목은 중앙 정렬 유지 */
-.board-header .col-title {
+.board-header .col-title,
+.board-header .col-date,
+.board-header .col-view,
+.board-header .col-type {
+    /* 기존 center에서 왼쪽으로 살짝 치우치게 하거나,
+       전체 패딩 조절로 인해 자연스럽게 왼쪽으로 당겨짐 */
     text-align: center;
+    position: relative;
+    margin-right: 10px;
+}
+
+/* 2. 글 번호 (오른쪽으로 밀린 현상 수정 -> 왼쪽으로 당김) */
+.board-row .col-no {
+    position: relative;
+    left: -7px; /* 왼쪽으로 5mm 정도 이동 */
 }
 
 /* 로우의 제목은 왼쪽 정렬 */
 .board-row .col-title {
     text-align: left;
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 4. 날짜 (왼쪽으로 밀린 현상 수정 -> 오른쪽으로 밀어줌) */
+.board-row .col-date {
+    position: relative;
+    left: 2px; /* 오른쪽으로 2mm 이동 */
+}
+
+/* 5. 글 유형 (오른쪽으로 밀린 현상 수정 -> 왼쪽으로 당김) */
+.board-row .col-type {
+    position: relative;
+    left: 12px;
 }
 
 /* 카테고리 뱃지 스타일 추가 */

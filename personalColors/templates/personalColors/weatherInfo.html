@@ -5,7 +5,7 @@
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'personalColors/css/weatherInfo.css' %}">
-
+    {% csrf_token %}
     <main class="container">
 
         <!-- 왼쪽: 지역 검색 -->
@@ -32,9 +32,6 @@
             <p>강수 : <span id="weather">-</span></p>
             <p id="sky"></p>
 
-<!--<p class="weather-line">-->
-<!--                <span id="weatherText">날씨 상태가 여기에 표시됩니다.</span>-->
-<!--                <img src="{% static 'img/main1.png' %}" alt="날씨아이콘" class="weather-icon"></p>-->
             <div class="buttons">
                 <form id="startAI" method="post" action="/personalColors/generateImg/">
                     {% csrf_token %}

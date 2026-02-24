@@ -4,9 +4,10 @@ from . import views
 app_name = 'boards'
 
 urlpatterns = [
-    path('boardList/', views.board1, name='board1'),
-    path('boardDetail/', views.board2, name='board2'),
-    path('boardWrite/', views.boardWrite, name='boardWrite'), # 게시글 작성/수정 페이지
+    # 목록 및 상세 페이지
+    path('freeList/', views.board1, name='board1'),
+    path('freeDetail/', views.board2, name='board2'),
+    path('boardWrite/', views.boardWrite, name='boardWrite'),
     path('noticeList/', views.notice1, name='notice1'),
     path('noticeDetail/', views.notice2, name='notice2'),
     path('qnaList/', views.qna1, name='qna1'),

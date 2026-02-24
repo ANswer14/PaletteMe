@@ -4,7 +4,7 @@
 {% block title %} QnA - PaletteMe {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'QnA/css/QnA2.css' %}">
+    <link rel="stylesheet" href="{% static 'boards/css/QnA2.css' %}">
 
     <div class="board-detail-container QnA">
         <h2>QnA</h2>
@@ -24,6 +24,7 @@
             <span id="detailDate"></span>
             <span id="detailView"></span>
         </div>
+
         <hr class="section-divider">
 
         <div class="detail-content" id="detailContent">
@@ -38,9 +39,11 @@
         </div>
 
         <div class="detail-nav">
-            <span id="prevBtn" onclick="goPrev()">이전글</span> |
-            <span onclick="goList()">글목록</span> |
-            <span id="nextBtn" onclick="goNext()">다음글</span>
+            <span class="nav-item" onclick="goPrev()">이전글</span>
+            <span class="divider">|</span>
+            <span class="nav-item" onclick="goList()">글목록</span>
+            <span class="divider">|</span>
+            <span class="nav-item" onclick="goNext()">다음글</span>
         </div>
 
     </div>

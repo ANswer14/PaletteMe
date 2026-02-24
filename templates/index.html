@@ -62,12 +62,33 @@
     {% endblock %}
 
 <!-- ===== FOOTER ===== -->
+<!-- ===== FOOTER ===== -->
 <footer class="footer">
+
     {% block footer %}
-        <a href="#">Instagram</a>
-        <a href="#">Twitter</a>
-        <a href="#">Contact</a>
+
+    <div class="footer-top">
+        <div class="sns-links">
+            <a href="https://www.instagram.com/musinsa.official" target="_blank" rel="noopener">
+                <img src="{% static 'img/InstagramIMG.png' %}" alt="Instagram">
+            </a>
+
+            <a href="https://x.com/musinsaofficial" target="_blank" rel="noopener">
+                <img src="{% static 'img/twitterIMG.png' %}" alt="Twitter">
+            </a>
+
+            <a href="mailto:juneysh83@gmail.com">
+                <img src="{% static 'img/emailImg.png' %}" alt="Contact">
+            </a>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>Copyright © 2026. PaletteMe. All rights reserved.</p>
+    </div>
+
     {% endblock %}
+
 </footer>
 
 <script>

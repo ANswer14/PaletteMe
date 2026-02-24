@@ -1,96 +1,41 @@
-const params = new URLSearchParams(window.location.search);
-const no = parseInt(params.get("no")) || 0;     // URL에서 글 번호 가져오기
-const currentPageNum = params.get("page") || 1;    // 원래 보던 페이지 불러오기 선언
-
-// HTML 요소 미리 찾아두기
-const detailNo = document.getElementById("detailNo");
-const detailTitle = document.getElementById("detailTitle");
-const detailDate = document.getElementById("detailDate");
-const detailView = document.getElementById("detailView");
-//const detailContent = document.getElementById("detailContent");
-const commentList = document.getElementById("commentList");
-
-let currentPostData = null; // 데이터를 담아둘 주머니
-
-// 백엔드 데이터 로드함수
-document.addEventListener("DOMContentLoaded", async function () {
-    // 글 번호가 없으면 목록으로 튕겨내기
-    if (no === 0) {
-        alert("잘못된 접근입니다.");
-        location.href = "boards/QnA1/";    // 실제주소 쓸것!!!!!!!!
-        return;
-    }
-
-    // 서버에서 데이터 가져오기
-    try {
-        const response = await fetch(`/api/qna/detail/${no}/`);
-        if (!response.ok) throw new Error("게시글을 찾을 수 없습니다.");
-        const data = await response.json();
-
-        currentPostData = data; // 주머니에 저장
-        renderDetail(data); // 데이터를 화면에 그리는 함수 호출
-    }
-    catch (error) {
-        alert(error.message);
-        goList();
-    }
-});
-
-// 화면에 데이터를 그려주는 로직 (기존 코드의 로직을 함수화함)
-function renderDetail(data) {
-    //detailNo.innerText = postData.id || no;
-    //detailTitle.innerText = postData.title;
-    //detailDate.innerText = postData.date || postData.created_at;
-    //detailView.innerText = postData.views;
-    //detailContent.innerText = postData.content;
-
-    // 변수 선언 대신 ID 직접 찾아서 바로 대입
-    document.getElementById("detailNo").innerText = data.id || no;
-    document.getElementById("detailTitle").innerText = data.title;
-    document.getElementById("detailDate").innerText = data.created_at || data.date;
-    document.getElementById("detailView").innerText = data.views;
-    document.getElementById("detailContent").innerText = data.content;
-
-    // 답변(댓글) 출력
-    commentList.innerHTML = ""; // 기존 내용 비우기
-    if (data.comments && data.comments.length > 0) {
-        data.comments.forEach(comment => {
-            const div = document.createElement("div");
-            div.className = "comment";
-            div.innerHTML = `<b>${comment.writer}:</b> ${comment.text}`;
-            commentList.appendChild(div);
-        });
-    } else {
-        commentList.innerHTML = "<div class='comment'>운영자가 확인 후 답변을 등록할 예정입니다.</div>";
-    }
+/* 전체 레이아웃 */
+.board-container {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
 
-// 목록으로 버튼
-function goList() {
-    //const params = new URLSearchParams(window.location.search); // params 재선언
-    //const page = params.get("page") || 1;
-    window.location.href = `QnA1.html?page=${currentPageNum}`;
-}
-function goPrev() {
-    //const params = new URLSearchParams(window.location.search); // params 재선언
-    //const page = params.get("page") || 1;
+/* 헤더 스타일 */
+.detail-header { border-bottom: 2px solid #f8f9fa; padding-bottom: 20px; margin-bottom: 30px; }
+.post-category { color: #f39898; font-weight: bold; font-size: 14px; margin-bottom: 10px; }
+.post-title { font-size: 26px; margin-bottom: 15px; color: #333; }
+.post-meta { font-size: 14px; color: #888; display: flex; gap: 10px; }
 
-    if (currentPostData && currentPostData.prev_no) {
-        // 백엔드에서 설정한 실제 상세페이지 주소 넣을것!!!
-        window.location.href = `QnA2.html?no=${currentPostData.prev_no}&page=${currentPageNum}`;
-    }
-    else {
-        alert("이전 글이 없습니다.");
-    }
-}
-function goNext() {
-    //const params = new URLSearchParams(window.location.search); // params 재선언
-    //const page = params.get("page") || 1;
-    if (currentPostData && currentPostData.next_no) {
-        // 백엔드에서 설정한 실제 상세페이지 주소 넣을것!!!
-        window.location.href = `QnA2.html?no=${currentPostData.next_no}&page=${currentPageNum}`;
-    }
-    else {
-        alert("다음 글이 없습니다.");
-    }
-}
+/* 본문 스타일 */
+.detail-content { min-height: 250px; margin-bottom: 40px; }
+.content-body { line-height: 1.8; font-size: 16px; color: #444; white-space: pre-wrap; }
+.post-images img { max-width: 100%; border-radius: 8px; margin-top: 20px; display: block; }
+
+/* 하단 버튼 */
+.detail-footer { border-top: 1px solid #eee; padding-top: 20px; margin-bottom: 50px; }
+.action-buttons { display: flex; gap: 10px; }
+.btn-list { margin-right: auto; background: #eee; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+.btn-edit { background: #f39898; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+.btn-delete { background: white; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+
+/* 댓글 섹션 디자인 */
+.comment-section { background: #fcfcfc; padding: 20px; border-radius: 10px; }
+.comment-title { font-size: 18px; margin-bottom: 20px; color: #333; }
+.comment-item { padding: 15px 0; border-bottom: 1px solid #eee; }
+.comment-author { font-weight: bold; font-size: 14px; margin-bottom: 5px; }
+.comment-text { font-size: 15px; color: #444; line-height: 1.5; }
+.comment-date { font-size: 12px; color: #bbb; margin-top: 5px; }
+#no-comment-msg { color: #aaa; text-align: center; padding: 20px 0; }
+
+/* 댓글 입력란 */
+.comment-input-wrapper { display: flex; gap: 10px; margin-top: 20px; }
+#comment-input { flex: 1; height: 80px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none; }
+#btn-comment-submit { background: #f39898; color: white; border: none; padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold; }

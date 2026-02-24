@@ -1,72 +1,166 @@
-/* --- QnA 상세페이지 최종 스타일 --- */
+/* QnA 상세 보기 전용 디자인 */
 
-.qna-upgrade-container {
-    width: 85%;
-    max-width: 1000px;
+/* 전체 컨테이너 */
+.board-container {
+    max-width: 900px;
     margin: 50px auto;
-    padding: 20px;
+    padding: 40px;
     background: #fff;
-    font-family: 'Arial', sans-serif;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    font-family: 'Pretendard', -apple-system, sans-serif;
 }
 
-/* 상단 헤더 */
-.qna-header-section {
-    border-top: 3px solid #535252;
-    padding: 35px 15px;
-    border-bottom: 1px solid #f0f0f0;
-    background: #fafafa;
+/* 상단 헤더 영역 */
+.detail-header {
+    border-bottom: 2px solid #f8f9fa;
+    padding-bottom: 25px;
+    margin-bottom: 30px;
 }
-.qna-label { color: #f39898; font-weight: bold; font-size: 14px; }
-.qna-main-title { font-size: 30px; margin: 12px 0; color: #1a1a1a; font-weight: bold; }
-.qna-meta-info { font-size: 14px; color: #999; display: flex; gap: 25px; }
-.qna-meta-info b { color: #666; margin-right: 4px; }
+
+.post-category {
+    display: inline-block;
+    background-color: #fff0f0;
+    color: #f39898;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.post-title {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    font-weight: 700;
+}
+
+.post-meta {
+    display: flex;
+    align-items: center;
+    color: #888;
+    font-size: 14px;
+    gap: 10px;
+}
+
+.divider {
+    color: #eee;
+}
 
 /* 본문 영역 */
-.qna-body-section { padding: 50px 15px; min-height: 280px; }
-.qna-text-content { line-height: 1.9; font-size: 17px; color: #333; }
-.qna-image-gallery img {
-    max-width: 100%; border-radius: 12px; margin-top: 25px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+.detail-content {
+    min-height: 350px;
 }
 
-/* 추천 버튼 */
-.qna-like-wrapper { display: flex; justify-content: flex-end; margin-top: 45px; }
-.qna-btn-like {
-    background: #fff; border: 2px solid #f39898; color: #f39898;
-    padding: 10px 28px; border-radius: 50px; font-weight: bold; cursor: pointer;
-    transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
-}
-.qna-btn-like:hover { background: #f39898; color: #fff; }
-
-.qna-divider { border: 0; height: 1px; background: #eee; margin: 40px 0; }
-
-/* 댓글 영역 */
-.qna-comments-wrapper { background: #f9f9f9; padding: 40px; border-radius: 20px; }
-.qna-comments-count { font-size: 19px; margin-bottom: 25px; font-weight: bold; }
-
-.qna-comment-item {
-    background: #fff; padding: 22px; border-radius: 12px;
-    margin-bottom: 15px; border: 1px solid #ececec;
-}
-.qna-comment-item.admin-reply { border-left: 6px solid #f39898; background: #fffafb; }
-.user-name { font-weight: bold; color: #333; display: block; margin-bottom: 8px; }
-.comment-text { color: #555; line-height: 1.6; margin-bottom: 10px; }
-.comment-date { font-size: 12px; color: #bbb; }
-
-/* 입력창 */
-.qna-comment-form-box textarea {
-    width: 100%; height: 100px; padding: 18px; border: 1px solid #ddd; border-radius: 12px;
-    resize: none; box-sizing: border-box; font-family: inherit; margin-top: 20px;
-}
-.qna-form-actions { display: flex; justify-content: flex-end; margin-top: 15px; }
-.qna-form-actions button {
-    background: #535252; color: #fff; border: none; padding: 12px 35px;
-    border-radius: 8px; font-weight: bold; cursor: pointer;
+.content-body {
+    font-size: 17px;
+    color: #444;
+    line-height: 1.8;
+    white-space: pre-wrap; /* 줄바꿈 유지 */
+    word-break: break-all;
 }
 
-/* 목록 버튼 */
-.qna-bottom-nav { text-align: center; margin-top: 60px; padding-top: 30px; border-top: 1px solid #eee; }
-.qna-list-btn {
-    background: #fff; border: 1px solid #535252; color: #535252; padding: 12px 50px;
-    border-radius: 6px; cursor: pointer; font-weight: bold;
+/* 이미지 영역 */
+.post-images {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.post-images img {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.post-images img:hover {
+    transform: scale(1.01);
+}
+
+/* 하단 버튼 영역 */
+.detail-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+/* 버튼 공통 스타일 */
+.action-buttons button {
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+/* 목록으로 버튼 */
+.btn-list {
+    background-color: #f1f3f5;
+    color: #495057;
+    margin-right: auto; /* 목록 버튼만 왼쪽으로 밀기 */
+}
+
+.btn-list:hover {
+    background-color: #e9ecef;
+}
+
+/* 수정 버튼 */
+.btn-edit {
+    background-color: #f39898;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #e88686;
+    box-shadow: 0 4px 12px rgba(243, 152, 152, 0.3);
+}
+
+/* 삭제 버튼 */
+.btn-delete {
+    background-color: #fff;
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b !important;
+}
+
+.btn-delete:hover {
+    background-color: #fff5f5;
+}
+
+/* 반응형 처리 */
+@media (max-width: 768px) {
+    .board-container {
+        margin: 20px;
+        padding: 20px;
+    }
+    .post-title {
+        font-size: 22px;
+    }
+}
+/* 댓글 영역 스타일 */
+.comment-item {
+    transition: background 0.2s;
+}
+
+.comment-form textarea:focus {
+    outline: none;
+    border-color: #f39898 !important;
+}
+
+.comment-form button:hover {
+    background-color: #e88686 !important;
+}
+
+/* 본문 줄바꿈 처리 */
+.content-body {
+    white-space: pre-wrap;
+    word-break: break-all;
 }

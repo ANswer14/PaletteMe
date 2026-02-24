@@ -1,43 +1,84 @@
 {% extends "index.html" %}
 {% load static %}
 
-{% block title %} QnA - PaletteMe {% endblock %}
+{% block title %} QnA 목록 - PaletteMe {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'boards/css/QnA1.css' %}">
+<link rel="stylesheet" href="{% static 'boards/css/QnA1.css' %}">
 
-    <div class="board-container QnA">
-        <h2>QnA</h2>
-        <div class="board-header">
-            <div class="col-no">번호</div>
-            <div class="col-title">제목</div>
-            <div class="col-date">날짜</div>
-            <div class="col-view">조회수</div>
-        </div>
+<div class="board-container QnA">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; gap: 20px; flex-wrap: wrap;">
+        <h2 style="margin: 0; font-size: 28px; color: #333;">Q&A 게시판</h2>
 
-        <div class="board-list">
-            {% if posts %}
-                {% for post in posts %}
-                <div class="board-row" onclick="location.href='{% url 'boards:qna2' %}?no={{ post.post_id }}'">
-                    <div class="col-no">{{ forloop.revcounter }}</div>
-                    <div class="col-title">
-                        {% if post.is_secret %}<span class="lock-icon">🔒</span>{% endif %}
-                        <span class="title-text">{{ post.title }}</span>
-                        {% if post.comments.count > 0 %}
-                            <span class="comment-count">[{{ post.comments.count }}]</span>
-                        {% endif %}
-                    </div>
-                    <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
-                    <div class="col-view">{{ post.view_count }}</div>
-                </div>
-                {% endfor %}
-            {% else %}
-                <div class="no-posts">게시글이 없습니다.</div>
-            {% endif %}
-        </div>
-
-        <div class="board-footer">
-            <button class="write-btn" onclick="location.href='{% url 'boards:boardWrite' %}?type=qna'">글쓰기</button>
+        <div class="search-area" style="display: flex; align-items: center;">
+            <form action="{% url 'boards:qna1' %}" method="GET" style="display: flex; gap: 8px; background: #fff; padding: 5px; border-radius: 8px; border: 1px solid #ddd;">
+                <select name="type" style="padding: 8px; border: none; border-right: 1px solid #eee; font-size: 14px; outline: none; background: transparent; cursor: pointer;">
+                    <option value="all" {% if request.GET.type == 'all' %}selected{% endif %}>전체</option>
+                    <option value="title" {% if request.GET.type == 'title' %}selected{% endif %}>제목</option>
+                    <option value="content" {% if request.GET.type == 'content' %}selected{% endif %}>내용</option>
+                    <option value="writer" {% if request.GET.type == 'writer' %}selected{% endif %}>작성자</option>
+                </select>
+                <input type="text" name="q" placeholder="검색어를 입력하세요" value="{{ request.GET.q|default:'' }}"
+                       style="padding: 8px 12px; border: none; width: 220px; font-size: 14px; outline: none;">
+                <button type="submit" style="background: #f39898; color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s;">
+                    검색
+                </button>
+            </form>
         </div>
     </div>
+
+    <div class="board-header">
+        <div class="col-no">번호</div>
+        <div class="col-title">제목</div>
+        <div class="col-date">날짜</div>
+        <div class="col-view">조회수</div>
+    </div>
+
+    <div class="board-list">
+        {% if posts %}
+            {% for post in posts %}
+            <div class="board-row"
+                 onclick="goQnADetail('{{ post.post_id }}', {{ post.is_secret|yesno:'true,false' }}, '{{ post.author.nickname }}')"
+                 style="cursor:pointer;">
+                <div class="col-no">{{ forloop.revcounter }}</div>
+                <div class="col-title">
+                    {% if post.is_secret %}<span class="lock-icon" style="margin-right: 5px;">🔒</span>{% endif %}
+                    <span class="title-text">{{ post.title }}</span>
+                    {% if post.comments.count > 0 %}
+                        <span class="comment-count" style="color: #f39898; font-size: 13px; margin-left: 5px; font-weight: bold;">[{{ post.comments.count }}]</span>
+                    {% endif %}
+                </div>
+                <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
+                <div class="col-view">{{ post.view_count }}</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-posts" style="text-align: center; padding: 80px 0; color: #bbb; background: #fafafa; border-radius: 12px; margin-top: 10px;">
+                <p style="font-size: 16px; margin: 0;">
+                    {% if request.GET.q %}
+                        🔍 '<strong>{{ request.GET.q }}</strong>'에 대한 검색 결과가 없습니다.
+                    {% else %}
+                        등록된 게시글이 없습니다.
+                    {% endif %}
+                </p>
+                {% if request.GET.q %}
+                    <a href="{% url 'boards:qna1' %}" style="display: inline-block; margin-top: 15px; color: #f39898; text-decoration: none; font-size: 14px;">전체 목록으로 돌아가기</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="board-footer" style="display: flex; justify-content: flex-end; margin-top: 30px;">
+        <button class="write-btn" onclick="location.href='{% url 'boards:boardWrite' %}?type=qna'"
+                style="background: #f39898; color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; box-shadow: 0 4px 10px rgba(243, 152, 152, 0.3);">
+            질문하기
+        </button>
+    </div>
+</div>
+
+<script src="{% static 'boards/js/QnA1.js' %}"></script>
+<script>
+    // 현재 로그인한 유저의 닉네임을 JS에서 인식하도록 설정
+    const USER_NICKNAME = "{{ request.user.nickname|default:'' }}";
+</script>
 {% endblock %}

@@ -90,24 +90,37 @@ h2 {
 }
 
 #userColorInfo h3 {
+    width: 100%;
     font-size: 18px;
     color: #4F4F4F;
     font-weight: 500;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
     border-bottom: 1px dashed #ccc; /* 점선 구분선 유지 */
     padding-bottom: 12px;
     margin: 0;
+    gap: 20px;
+}
+
+/* 왼쪽 라벨 (어울리는 색 등) */
+#userColorInfo h3 span:first-child {
+    flex-shrink: 0;   /* 절대로 찌그러지지 않게 고정 */
+    white-space: nowrap; /* 라벨 자체는 줄바꿈 금지 */
+    width: 110px;
 }
 
 .info-value {
     color: #5A7B9A;
     font-weight: 700;
-    margin-left: 20px;   /* 왼쪽 제목과 너무 붙지 않게 */
+    /*margin-left: 20px;   !* 왼쪽 제목과 너무 붙지 않게 *!*/
     padding-right: 10px; /* 오른쪽 끝에서 살짝 안으로 들여쓰기 */
-    white-space: nowrap; /* ★ 한 줄로 다 쓸 수 있게 (줄바꿈 방지) ★ */
-    flex-shrink: 0;          /* 공간이 부족해도 너비가 줄어들지 않음 */
+    /* [핵심] 줄바꿈은 허용하되, 텍스트 정렬은 오른쪽으로 */
+    white-space: normal !important;
+    word-break: keep-all;  /* 단어 중간을 자르지 마라 */
+    text-align: right; /* 양 끝 정렬 느낌을 유지하는 핵심 */
+    flex: 1;
+    letter-spacing: -0.2px;
 }
 
 /* 버튼들을 감싸는 부모 컨테이너 */

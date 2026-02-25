@@ -18,6 +18,7 @@ class ColorHistory(models.Model):
     mood = models.CharField(max_length=50) # 분위기
     good_color = models.CharField(max_length=100) # 어울리는 색감
     bad_color = models.CharField(max_length=100) # 어울리지 않는 색감
+    is_enabled = models.BooleanField(default=True)
 
     def __str__(self):
         return f"History #{self.history_id}: {self.user.username}'s {self.color_type}"

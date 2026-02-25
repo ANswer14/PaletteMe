@@ -5,45 +5,119 @@
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'boards/css/notice2.css' %}">
-    {% csrf_token %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <div class="board-detail-container notice">
         <h2>공지사항</h2>
-        <!-- 제목줄: 헤더 -->
+
         <div class="title-header">
-            <span class="col-header">No.</span>
-            <span class="col-header">제목</span>
-            <span class="col-header">작성일</span>
+            <span>No.</span>
+            <span>제목</span>
+            <span>작성일</span>
         </div>
 
-        <!-- 데이터줄: 실제 게시글 -->
-        <form method="post" action="/boards/boardWrite/">
-            {% csrf_token %}
-            <input type="hidden" name="post_id">
-            <div class="title-row">
-                <span id="detailNo"></span>
-                <span id="detailTitle"></span>
-                <span id="detailDate"></span>
-            </div>
-            <hr class="section-divider">
+        <div class="title-row">
+            <span id="detailNo">{{ post.pk }}</span>
+            <span id="detailTitle">{{ post.title }}</span>
+            <span id="detailDate">{{ post.created_at|date:"Y-m-d" }}</span>
+        </div>
 
-            <div class="detail-content" id="detailContent">
-            </div>
-            <div id="imageContainer">
-            </div>
-            {% if user.is_staff == True %}
-            <div class="staff-btns">
-                <button id="fixNotice">수정</button>
-            </div>
-            {% endif %}
-        </form>
+        <hr class="section-divider">
+
+        <div class="detail-content" id="detailContent"></div>
+
+        <div id="imageContainer">
+            {% for img in images %}
+                <img src="{{ img.image.url }}" alt="공지 이미지" style="max-width: 100%; display: block; margin-bottom: 10px; border-radius: 8px;">
+            {% endfor %}
+        </div>
+
+        {% if user.is_staff %}
+        <div class="staff-btns" style="text-align: right; margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" id="fixNotice" style="background-color: #f39898; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">수정</button>
+            <button type="button" onclick="confirmDelete('{{ post.pk }}')" style="background-color: #eee; color: #666; border: 1px solid #ddd; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">삭제</button>
+        </div>
+        {% endif %}
+
         <hr class="section-divider">
 
         <div class="detail-nav">
-            <span onclick="goPrev()">이전글</span> |
-            <span onclick="goList()">글목록</span> |
-            <span onclick="goNext()">다음글</span>
+            <div class="nav-left">
+                <span onclick="goPrev()" class="nav-btn">이전글</span>
+            </div>
+
+            <div class="nav-center">
+                <span onclick="goList()" class="nav-btn nav-list-btn">목록으로</span>
+            </div>
+
+            <div class="nav-right">
+                <span onclick="goNext()" class="nav-btn">다음글</span>
+            </div>
         </div>
     </div>
 
-<script src="{% static 'boards/js/notice2.js' %}"></script>
+    <script src="{% static 'boards/js/notice2.js' %}"></script>
+
+    <script>
+        // 서버에서 전달받은 데이터를 JS 변수로 할당
+        const prevId = "{{ prev_id|default:'' }}";
+        const nextId = "{{ next_id|default:'' }}";
+        const postBody = `{{ post.body|escapejs }}`; // 줄바꿈 보존을 위한 이스케이프 처리
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // [줄바꿈 및 공백 제거 로직 실행]
+            const contentBox = document.getElementById("detailContent");
+            if (contentBox && postBody) {
+                // 앞뒤 공백을 제거(.trim)하고 엔터를 <br>로 바꿉니다.
+                contentBox.innerHTML = postBody.trim().replace(/\n/g, '<br>');
+            }
+        });
+
+        // 네비게이션 함수
+        function goPrev() {
+            if (prevId) {
+                location.href = "{% url 'boards:notice2' %}?no=" + prevId;
+            } else {
+                alert("이전 글이 없습니다.");
+            }
+        }
+
+        function goNext() {
+            if (nextId) {
+                location.href = "{% url 'boards:notice2' %}?no=" + nextId;
+            } else {
+                alert("다음 글이 없습니다.");
+            }
+        }
+
+        function goList() {
+            location.href = "{% url 'boards:notice1' %}";
+        }
+
+        // 수정 버튼 이벤트
+        document.getElementById('fixNotice')?.addEventListener('click', function() {
+            const postId = "{{ post.pk }}";
+            location.href = `/boards/boardWrite/?no=${postId}&mode=edit&type=notice`;
+        });
+
+        // [삭제 확인 및 실행 함수 통합]
+        function confirmDelete(postId) {
+            Swal.fire({
+                title: '정말 삭제하시겠습니까?',
+                text: "삭제 후에는 공지사항을 복구할 수 없습니다.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#f39898', // PaletteMe 테마색
+                cancelButtonColor: '#eee',
+                confirmButtonText: '삭제',
+                cancelButtonText: '취소',
+                reverseButtons: true // 취소 버튼을 왼쪽으로
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // views.py의 delete 함수로 이동 (게시글 번호 전달)
+                    location.href = `{% url 'boards:delete' %}?no=${postId}`;
+                }
+            });
+        }
+    </script>
 {% endblock %}

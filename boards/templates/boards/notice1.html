@@ -17,19 +17,23 @@
         </div>
 
         <!-- 공지 목록 -->
-        <div class="board-list">
-            {% if posts %}
-                {% for post in posts %}
-                <div class="board-row" onclick="goNoticeDetail({{ post.post_id }})">
-                    <div class="col-no">{{ post.post_id }}</div>
-                    <div class="col-title">{{ post.title }}</div>
-                    <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
-                </div>
-                {% endfor %}
-            {% else %}
-                <div class="board-row" style="justify-content: center; color: #999;">등록된 공지사항이 없습니다.</div>
-            {% endif %}
+<div class="board-list">
+    {% if page_obj %}
+
+        {% for post in page_obj %}
+            <div class="board-row" onclick="goNoticeDetail({{ post.post_id }})">
+                <div class="col-no">{{ post.post_id }}</div>
+                <div class="col-title">{{ post.title }}</div>
+                <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
+            </div>
+        {% endfor %}
+
+    {% else %}
+        <div class="board-row" style="justify-content: center; color: #999;">
+            등록된 공지사항이 없습니다.
         </div>
+    {% endif %}
+</div>
 
         <!-- 페이지 번호 -->
         <div class="pagination">
@@ -51,7 +55,7 @@
         </div>
         <div class="write-btn">
             {% if user.is_staff %}
-                <button onclick="location.href='/boards/boardWrite/'">글쓰기</button>
+                <a href="{% url 'boards:boardWrite' %}?type=notice" class="btn btn-primary">공지사항 작성</a>
             {% endif %}
         </div>
     </div>

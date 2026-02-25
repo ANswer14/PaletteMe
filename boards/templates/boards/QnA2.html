@@ -1,71 +1,130 @@
 {% extends "index.html" %}
 {% load static %}
 
-{% block title %} {{ post.title }} - PaletteMe {% endblock %}
+{% block title %} QnA 상세보기 - PaletteMe {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'boards/css/QnA2.css' %}">
+    {% if post.is_secret and user != post.author and not user.is_staff %}
+        <script>
+            alert("비밀글은 작성자 본인만 확인할 수 있습니다.");
+            location.href = "{% url 'boards:qna1' %}";
+        </script>
+    {% else %}
+        {% csrf_token %}
+        <link rel="stylesheet" href="{% static 'boards/css/QnA2.css' %}">
 
-<div class="board-container">
-    <div class="detail-header">
-        <div class="post-category">Q&A 게시판</div>
-        <h2 class="post-title">{{ post.title }}</h2>
-        <div class="post-meta">
-            <span>작성자: {% if post.is_anonymous %}익명{% else %}{{ post.author.nickname }}{% endif %}</span>
-            <span class="divider">|</span>
-            <span>작성일: {{ post.created_at|date:"Y-m-d H:i" }}</span>
-            <span class="divider">|</span>
-            <span>조회수: {{ post.view_count }}</span>
-        </div>
-    </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="{% static 'boards/js/QnA2.js' %}" defer></script>
 
-    <div class="detail-content">
-        <div class="content-body">{{ post.body|linebreaksbr }}</div>
+        <div class="board-detail-container QnA">
+            <h2>Q&A 게시판</h2>
 
-        {% if images %}
-        <div class="post-images">
-            {% for img in images %}
-                <img src="{{ img.image.url }}" alt="첨부이미지">
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
-
-    <div class="detail-footer">
-        <div class="action-buttons">
-            <button type="button" class="btn-list" onclick="location.href='{% url 'boards:qna1' %}'">목록으로</button>
-
-            {% if request.user == post.author %}
-                <button type="button" class="btn-edit" onclick="location.href='{% url 'boards:boardWrite' %}?no={{ post.post_id }}&mode=edit'">수정하기</button>
-                <button type="button" class="btn-delete" onclick="if(confirm('정말 삭제하시겠습니까?')) location.href='{% url 'boards:delete' %}?no={{ post.post_id }}'">삭제하기</button>
-            {% endif %}
-        </div>
-    </div>
-
-    <div class="comment-section">
-        <h3 class="comment-title">댓글 <span id="comment-count">{{ post.comments.count }}</span>개</h3>
-
-        <div id="comment-list-container">
-            {% for comment in post.comments.all %}
-            <div class="comment-item">
-                <div class="comment-author">{{ comment.author.nickname }}</div>
-                <div class="comment-text">{{ comment.content|linebreaksbr }}</div>
-                <div class="comment-date">{{ comment.created_at|date:"Y-m-d H:i" }}</div>
+            <div class="title-header">
+                <span class="col-header">No.</span>
+                <span class="col-header">제 목</span>
+                <span class="col-header">작성자</span>
+                <span class="col-header">작성일</span>
+                <span class="col-header">조회수</span>
             </div>
-            {% empty %}
-            <p id="no-comment-msg">첫 번째 댓글을 남겨보세요!</p>
-            {% endfor %}
-        </div>
+            <div class="title-row">
+                <span class="post-id">{{ post.pk }}</span>
+                <span class="post-title">
+                    {% if post.is_secret %}🔒{% endif %} {{ post.title }}
+                </span>
+                <span class="post-author">
+                    {% if post.is_anonymous %}
+                        <span class="author-highlight">익명(글쓴이)</span>
+                    {% else %}
+                        <span>{{ post.author.nickname }}</span>
+                    {% endif %}
+                </span>
+                <span class="post-date">{{ post.created_at|date:"Y-m-d" }}</span>
+                <span class="post-views">{{ post.view_count }}</span>
+            </div>
 
-        <div class="comment-form-area">
-            {% csrf_token %}
-            <div class="comment-input-wrapper">
-                <textarea id="comment-input" placeholder="댓글을 입력해주세요..." required></textarea>
-                <button type="button" id="btn-comment-submit" onclick="submitComment('{{ post.post_id }}')">등록</button>
+            <hr class="section-divider">
+
+            <div class="detail-content">
+                <div id="detailContentText">{{ post.body|linebreaksbr }}</div>
+
+                <div class="detail-images-area">
+                    {% for img in images %}
+                        <img src="{{ img.image.url }}" alt="첨부이미지">
+                    {% endfor %}
+                </div>
+
+                <div class="like-section">
+                    <div class="like-wrapper">
+                        <button onclick="toggleLike('{{ post.pk }}')" id="like-btn"
+                                {# 1. 서버에서 받은 user_liked가 True이면 active 클래스 추가 #}
+                                class="{% if user_liked %}active{% endif %}">
+
+                            <span id="like-icon">
+                                {# 2. 이미 눌렀다면 빨간 하트, 아니면 빈 하트 표시 #}
+                                {% if user_liked %}❤️{% else %}♡{% endif %}
+                            </span>
+
+                            <span id="like-count">
+                                {# 3. 전달받은 like_count 출력 #}
+                                {{ like_count|default:0 }}
+                            </span>
+                        </button>
+                        <p class="like-help-text">도움이 되었어요</p>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="section-divider">
+
+            <div class="comment-section">
+                <h3 class="comment-title">답변 <span class="comment-count">{{ comments.count }}</span></h3>
+                <div class="comment-list">
+                    {% for comment in comments %}
+                    <div class="comment-item" id="comment-{{ comment.pk }}">
+                        <div class="comment-header">
+                            <strong class="comment-author-info">
+                                {% if post.is_anonymous and comment.author == post.author %}
+                                    <span class="author-highlight">익명(글쓴이)</span>
+                                {% else %}
+                                    <span class="comment-nickname">{{ comment.author.nickname }}</span>
+                                {% endif %}
+                            </strong>
+                            <span class="comment-date">{{ comment.created_at|date:"Y-m-d H:i" }}</span>
+                        </div>
+
+                        <div class="comment-body-text">{{ comment.body|linebreaksbr }}</div>
+
+                        {% if user.is_authenticated and user == comment.author %}
+                        <div class="comment-actions">
+                            <span onclick="showEditForm('{{ comment.pk }}', '{{ comment.body|escapejs }}')" class="edit-link">수정</span>
+                            <span onclick="deleteComment('{{ comment.pk }}')" class="delete-link">삭제</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <p class="empty-msg">아직 등록된 답변이 없습니다.</p>
+                    {% endfor %}
+                </div>
+
+                {% if user.is_authenticated and user.is_staff or user.nickname == post.author %}
+                <div class="comment-write-section">
+                    <textarea id="comment-input" placeholder="답변을 입력해 주세요."></textarea>
+                    <div class="comment-submit-wrapper">
+                        <button type="button" onclick="submitComment('{{ post.pk }}')" class="btn-comment-submit">답변 등록</button>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="detail-footer">
+                <button type="button" onclick="location.href='{% url 'boards:qna1' %}'" class="btn-list">목록으로</button>
+                {% if user.is_authenticated and user == post.author %}
+                <div class="author-actions">
+                    <button type="button" onclick="location.href='{% url 'boards:boardWrite' %}?no={{ post.pk }}'" class="btn-edit">수정하기</button>
+                    <button type="button" onclick="confirmDelete('{{ post.pk }}')" class="btn-delete">삭제하기</button>
+                </div>
+                {% endif %}
             </div>
         </div>
-    </div>
-</div>
-
-<script src="{% static 'boards/js/QnA2.js' %}"></script>
+    {% endif %}
 {% endblock %}

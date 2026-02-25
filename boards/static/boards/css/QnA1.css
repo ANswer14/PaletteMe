@@ -1,126 +1,135 @@
-/* 전체 컨테이너: 자유게시판과 동일한 여백과 패딩 */
-body .board-container.QnA {
-    width: 80% !important;
-    margin: 40px auto !important;
-    background: white !important;
-    padding: 30px !important;
-    border-radius: 10px !important;
-    display: block !important;
+:root {
+    --point-color: #f39898;
+    --dark-gray: #535252;
+    --border-color: #f1f1f1;
+    --header-bg: #fbfbfb;
 }
 
-/* 게시판 제목: 왼쪽 굵은 선 포인트 */
-body .board-container.QnA h2 {
-    font-size: 26px !important;
-    margin-bottom: 20px !important;
-    border-left: 5px solid #535252 !important;
-    padding-left: 15px !important;
-    color: #333 !important;
-    text-align: left !important;
+/* [1] 레이아웃 컨테이너 */
+.board-container.QnA {
+    width: 90%;
+    max-width: 1100px;
+    margin: 60px auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.06);
 }
 
-/* 헤더: 자유게시판의 #fcfcfc 배경과 폰트 설정 */
-body .board-container.QnA .board-header {
-    display: flex !important;
-    padding: 12px 10px !important;
-    border-top: 2px solid #535252 !important;
-    border-bottom: 1px solid #ddd !important;
-    background-color: #fcfcfc !important;
-    color: #333 !important;
-    font-weight: bold !important;
-    align-items: center !important;
+/* [2] 상단 타이틀 및 검색 */
+.board-top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
 }
 
-/* 리스트 줄: 마우스 호버 효과 포함 */
-body .board-container.QnA .board-row {
-    display: flex !important;
-    padding: 12px 10px !important;
-    border-bottom: 1px solid #ddd !important;
-    align-items: center !important;
-    transition: background-color 0.2s !important;
-    cursor: pointer !important;
-    text-decoration: none !important;
-    color: #333 !important;
+.title-area h2 {
+    font-size: 30px;
+    font-weight: 800;
+    color: #222;
+    border-left: 6px solid var(--point-color);
+    padding-left: 15px;
+    margin-bottom: 8px;
 }
 
-body .board-container.QnA .board-row:hover {
-    background-color: #f0f0f0 !important;
+.sub-title { color: #999; font-size: 14px; margin-left: 21px; }
+
+.search-form {
+    display: flex;
+    background: #f4f4f4;
+    padding: 5px 5px 5px 15px;
+    border-radius: 50px;
+    align-items: center;
+    border: 1px solid transparent;
+    transition: 0.3s;
 }
 
-/* 열 비율 조정 (자유게시판 55%에서 작성자 12%를 더해 제목을 67%로 확장) */
-body .board-container.QnA .col-no {
-    width: 7% !important;
-    text-align: center !important;
+.search-form:focus-within {
+    background: #fff;
+    border-color: var(--point-color);
+    box-shadow: 0 5px 15px rgba(243, 152, 152, 0.2);
 }
 
-body .board-container.QnA .col-title {
-    width: 67% !important; /* 자유게시판보다 제목 칸을 넓게 잡음 */
-    text-align: left !important;
-    padding-left: 20px !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    display: flex !important;
-    align-items: center !important;
+.search-select { border: none; background: none; outline: none; padding-right: 10px; font-size: 14px; }
+.divider { width: 1px; height: 14px; background: #ddd; margin: 0 10px; }
+.search-form input { border: none; background: none; outline: none; width: 180px; }
+.search-btn {
+    background: var(--point-color);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 40px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-body .board-container.QnA .col-date {
-    width: 15% !important;
-    text-align: center !important;
+/* [3] 게시판 리스트 배분 (핵심 수정) */
+.col-no { flex: 0 0 70px; text-align: center; }
+.col-title { flex: 1; padding-left: 20px; }
+.col-author { flex: 0 0 130px; text-align: center; }
+.col-date { flex: 0 0 120px; text-align: center; }
+.col-view { flex: 0 0 80px; text-align: center; }
+
+.board-header {
+    display: flex;
+    padding: 18px 10px;
+    border-top: 2px solid #333;
+    border-bottom: 1px solid #ddd;
+    background: var(--header-bg);
+    font-weight: bold;
+    color: #444;
 }
 
-body .board-container.QnA .col-view {
-    width: 11% !important;
-    text-align: center !important;
+.board-row {
+    display: flex;
+    align-items: center;
+    padding: 20px 10px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-/* 자물쇠 및 댓글 수 아이콘 스타일 */
-body .board-container.QnA .lock-icon {
-    margin-right: 8px !important;
-    font-size: 14px !important;
+.board-row:hover { background-color: #fffafa; }
+.title-text { font-weight: 500; transition: 0.2s; }
+.board-row:hover .title-text { color: var(--point-color); transform: translateX(5px); }
+.lock-icon { font-size: 12px; color: #aaa; margin-right: 5px; }
+.comment-count { font-size: 12px; color: var(--point-color); font-weight: bold; margin-left: 5px; }
+
+/* [4] 하단 버튼 및 페이지네이션 */
+.board-bottom {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
 }
 
-body .board-container.QnA .comment-count {
-    color: #e67e22 !important; /* 자유게시판과 동일한 오렌지 톤 */
-    font-size: 0.9em !important;
-    font-weight: bold !important;
-    margin-left: 5px !important;
+.pagination { display: flex; gap: 8px; margin-bottom: 20px; }
+.page-link, .current-page {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px; font-weight: 600; text-decoration: none;
 }
+.page-link { border: 1px solid #eee; color: #666; }
+.current-page { background: var(--dark-gray); color: white; }
+.page-link:hover { background: var(--point-color); color: white; border-color: var(--point-color); }
 
-/* 글쓰기 버튼 */
-body .board-container.QnA .board-footer {
-    display: flex !important;
-    justify-content: flex-end !important;
-    margin-top: 10px !important;
+.action-area { position: absolute; right: 0; bottom: 0; }
+.write-btn {
+    background: var(--point-color);
+    color: white; border: none;
+    padding: 12px 25px; border-radius: 50px;
+    font-weight: bold; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(243, 152, 152, 0.3);
+    transition: 0.3s;
 }
+.write-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(243, 152, 152, 0.4); }
 
-body .board-container.QnA .write-btn {
-    padding: 8px 16px !important;
-    background-color: #535252 !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 4px !important;
-    cursor: pointer !important;
-    font-weight: bold !important;
+/* [5] 애니메이션: 흔들기 효과 */
+@keyframes shakeRow {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
 }
-
-body .board-container.QnA .write-btn:hover {
-    background-color: #333 !important;
-}
-
-/* 페이지네이션 */
-body .board-container.QnA .pagination {
-    text-align: center !important;
-    margin-top: 30px !important;
-}
-
-body .board-container.QnA .pagination a,
-body .board-container.QnA .pagination span {
-    margin: 0 8px !important;
-    text-decoration: none !important;
-    color: #333 !important;
-}
-
-body .board-container.QnA .current-page {
-    font-weight: bold !important;
-    text-decoration: underline !important;
-}
+.shake-effect { animation: shakeRow 0.3s ease-in-out; background-color: #fff5f5 !important; }

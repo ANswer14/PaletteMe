@@ -20,4 +20,6 @@ urlpatterns = [
     path('api/comment/create/<int:post_id>/', views.comment_create_api, name='comment_create_api'),
     path('api/comment/delete/<int:comment_id>/', views.comment_delete_api, name='comment_delete_api'),
     path('api/comment/update/<int:comment_id>/', views.comment_update_api, name='comment_update_api'),
+    path('api/image/delete/<int:img_id>/', views.delete_post_image_api, name='delete_post_image_api'),
+    path('getDetail/', views.get_notice_detail, name='get_notice_detail')
 ]

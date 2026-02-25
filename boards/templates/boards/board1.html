@@ -4,53 +4,98 @@
 {% block title %} 자유게시판 - PaletteMe {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'boards/css/board1.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'boards/css/board1.css' %}">
 
-    <div class="board-container free">
-        <h2>자유게시판</h2>
-        <div class="board-header">
-            <div class="col-no">번호</div>
-            <div class="col-title">제목</div>
-            <div class="col-writer">작성자</div>
-            <div class="col-date">날짜</div>
-            <div class="col-view">조회수</div>
+<div class="board-container free">
+    <div class="board-top-section">
+        <div class="title-area">
+            <h2>자유게시판</h2>
+            <p class="sub-title">다양한 이야기를 자유롭게 나누어보세요.</p>
         </div>
 
-        <div class="board-list">
-            {% if posts %}
-                {% for post in posts %}
-                <div class="board-row" onclick="location.href='{% url 'boards:board2' %}?no={{ post.post_id }}'">
-                    <div class="col-no">{{ forloop.revcounter }}</div>
-                    <div class="col-title">
-                        {{ post.title }}
-                        {% if post.comments.count > 0 %}
-                            <span class="comment-count">[{{ post.comments.count }}]</span>
-                        {% endif %}
-                    </div>
-                    <div class="col-writer">{% if post.is_anonymous %}익명{% else %}{{ post.author.nickname }}{% endif %}</div>
-                    <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
-                    <div class="col-view">{{ post.view_count }}</div>
-                </div>
-                {% endfor %}
-            {% else %}
-                <div class="board-row" style="justify-content: center; color: #999;">게시글이 없습니다.</div>
-            {% endif %}
-        </div>
-
-        <div class="board-footer">
-            <button class="write-btn" onclick="location.href='{% url 'boards:boardWrite' %}'">글쓰기</button>
-        </div>
-
-        <div class="pagination">
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">이전</a>
-            {% endif %}
-            {% for num in page_obj.paginator.page_range %}
-                <a href="?page={{ num }}" class="{% if page_obj.number == num %}current-page{% endif %}">{{ num }}</a>
-            {% endfor %}
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">다음</a>
-            {% endif %}
+        <div class="search-area">
+            <form action="{% url 'boards:board1' %}" method="GET" class="search-form">
+                <select name="type" class="search-select">
+                    <option value="all" {% if request.GET.type == 'all' %}selected{% endif %}>전체</option>
+                    <option value="title" {% if request.GET.type == 'title' %}selected{% endif %}>제목</option>
+                    <option value="content" {% if request.GET.type == 'content' %}selected{% endif %}>내용</option>
+                    <option value="writer" {% if request.GET.type == 'writer' %}selected{% endif %}>작성자</option>
+                </select>
+                <div class="divider"></div>
+                <input type="text" name="kw" value="{{ kw|default:'' }}" placeholder="검색어를 입력하세요">
+                <button type="submit" class="search-btn">검색</button>
+            </form>
         </div>
     </div>
+
+    <div class="board-header">
+        <div class="col-no">번호</div>
+        <div class="col-title">제목</div>
+        <div class="col-writer">작성자</div>
+        <div class="col-date">날짜</div>
+        <div class="col-view">조회수</div>
+    </div>
+
+    <div class="board-list">
+        {% if posts %}
+            {% for post in posts %}
+            <div class="board-row" onclick="location.href='{% url 'boards:board2' %}?no={{ post.pk }}'">
+                <div class="col-no">{{ post.post_id }}</div>
+                <div class="col-title">
+                    <span class="title-text">{{ post.title }}</span>
+                    {% if post.comments.count > 0 %}
+                        <span class="comment-count">({{ post.comments.count }})</span>
+                    {% endif %}
+                </div>
+
+                <div class="col-writer">
+                    {% if post.is_anonymous %}
+                        <span style="color: #999; font-style: italic;">익명</span>
+                    {% else %}
+                        {{ post.author.nickname }}
+                    {% endif %}
+                </div>
+
+                <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
+                <div class="col-view">{{ post.view_count }}</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-posts">
+                <i class="fas fa-ghost"></i>
+                <p>등록된 게시글이 없습니다.</p>
+                <a href="{% url 'boards:board1' %}">전체 보기</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="board-bottom">
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}&kw={{ kw }}&type={{ request.GET.type }}" class="page-link"><i class="fas fa-chevron-left"></i></a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="current-page">{{ num }}</span>
+                {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+                    <a href="?page={{ num }}&kw={{ kw }}&type={{ request.GET.type }}" class="page-link">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&kw={{ kw }}&type={{ request.GET.type }}" class="page-link"><i class="fas fa-chevron-right"></i></a>
+            {% endif %}
+        </div>
+
+        <div class="action-area">
+            <button class="write-btn" onclick="location.href='{% url 'boards:boardWrite' %}?type=free'">
+                <i class="fas fa-pen-nib"></i> 글쓰기
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'boards/js/board1.js' %}"></script>
 {% endblock %}

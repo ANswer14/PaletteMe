@@ -1,105 +1,155 @@
+/* [1] 전체 컨테이너 및 기본 배경 */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: white;
+    font-family: 'Pretendard', 'Apple SD Gothic Neo', Arial, sans-serif;
+    background: #fdfdfd;
 }
 
-.board-detail-container {
-    width: 80%;
-    margin: 40px auto;
+.board-detail-container.notice {
+    width: 85%;
+    max-width: 900px;
+    margin: 50px auto;
     background: white;
-    padding: 30px;
-    border-radius: 10px;
+    padding: 50px;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05); /* 연한 그림자 */
 }
 
-/* 모든 게시판 제목 공통 스타일 */
-.board-container h2,
-.board-detail-container h2,
-.board-write-container h2 {
-    font-size: 26px;
+/* [2] 상단 제목 */
+.board-detail-container h2 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 35px;
+    border-left: 6px solid #f39898; /* 브랜드 핑크 */
+    padding-left: 20px;
+    color: #333;
+}
+
+/* [3] 제목 정보 헤더 및 데이터 로우 */
+.title-header, .title-row {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.title-header {
+    background-color: #f8f9fa;
+    padding: 12px 0;
+    border-top: 2px solid #333;
+    font-weight: bold;
+    color: #666;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.title-row {
+    padding: 25px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* 내부 요소 너비 고정 및 정렬 */
+.title-header span, .title-row span {
+    display: block;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.board-detail-container span:nth-child(1) { flex: 0 0 10%; text-align: center; color: #999; }
+.board-detail-container span:nth-child(2) { flex: 0 0 70%; text-align: left !important; padding-left: 20px; font-size: 20px; font-weight: 700; color: #222; }
+.board-detail-container span:nth-child(3) { flex: 0 0 20%; text-align: center; color: #888; font-size: 14px; }
+
+/* [4] 본문 내용 영역 (연하고 깔끔하게 보정) */
+#detailContent, #detailContentText, .detail-content {
+    min-height: 200px;
+    padding: 20px 10px 40px 10px; /* 상단 여백을 줄여 공백 문제 해결 */
+    line-height: 1.8;              /* 읽기 편한 줄 간격 */
+    font-size: 16px;
+    color: #444;                   /* 부드러운 다크 그레이 */
+    word-break: break-all;         /* 영역 밖 탈출 방지 */
+    white-space: normal;           /* JS에서 <br>로 처리하므로 normal 설정 */
+}
+
+/* 구분선 스타일 */
+.section-divider {
+    border: 0;
+    height: 1px;
+    background: #eee;
+    margin: 30px 0;
+}
+
+/* [5] 이미지 영역 스타일 */
+#imageContainer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#imageContainer img {
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* 아주 연한 그림자 */
+    transition: transform 0.3s ease;
     margin-bottom: 20px;
-    border-left: 5px solid #535252;
-    padding-left: 15px;
+    display: inline-block;
 }
 
-/* 제목줄 헤더 */
-.board-detail-container .title-header,
-.board-detail-container .title-row {
+#imageContainer img:hover {
+    transform: translateY(-5px); /* 호버 시 살짝 떠오르는 효과 */
+}
+
+/* [6] 관리자 전용 수정 버튼 */
+.staff-btns {
+    text-align: right;
+    margin: 40px 0;
+}
+
+#fixNotice {
+    background: #f39898 !important; /* 브랜드 핑크 */
+    color: white !important;
+    border: none;
+    padding: 12px 35px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(243, 152, 152, 0.2);
+}
+
+#fixNotice:hover {
+    background: #ee8686 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(243, 152, 152, 0.3);
+}
+
+/* [7] 하단 네비게이션 영역 */
+.detail-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 15px 30px;
+    border-radius: 12px;
+    margin-top: 50px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.detail-nav span, .detail-nav .nav-btn {
+    font-size: 15px;
+    color: #666;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
     display: flex;
     align-items: center;
 }
 
-.board-detail-container .title-header {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #555;
-    font-size: 14px;
+.detail-nav span:hover, .detail-nav .nav-btn:hover {
+    color: #f39898;
+    font-weight: 700;
 }
 
-.board-detail-container .title-row {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-/* 제목줄 헤더와 데이터줄 안의 모든 span들 */
-.board-detail-container .title-header span,
-.board-detail-container .title-row span {
-    display: inline-block; /* 너비 값을 확실히 먹이기 위한 안전장치 */
-    vertical-align: middle; /* 텍스트 높낮이 정렬 */
-}
-
-/* 각 열 폭 지정 */
-/* No */
-.board-detail-container span:nth-child(1) {
-    width: 10%;
-    text-align: center;
-}
-
-/* 제목 */
-.board-detail-container span:nth-child(2) {
-    width: 70%;
-    text-align: left;
-    padding-left: 10px;
-}
-
- /* 작성일 */
-.board-detail-container span:nth-child(3) {
-    width: 20%;
-    text-align: center;
-}
-
-/* 구분선 */
-.section-divider {
-    border: 0;
-    border-top: 1px solid #eee;
-    margin: 20px 0;
-}
-
-.detail-content {
-    line-height: 1.8;
-    min-height: 300px;
-    padding: 20px 10px;
-    font-size: 16px;
+.detail-nav .nav-list-btn {
+    font-weight: 600;
     color: #444;
-}
-
-/* 이전글 | 글목록 | 다음글 중앙정렬 */
-.detail-nav {
-    text-align: center;
-    margin-top: 30px;
-    color: #888;
-}
-
-.detail-nav span {
-    cursor: pointer;
-    margin: 0 10px;
-    color: #333;
-    font-size: 15px;
-}
-
-.detail-nav span:hover {
-    text-decoration: underline;
-    color: #535252; /* 버튼과 동일한 강조색 */
 }

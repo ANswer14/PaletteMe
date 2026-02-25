@@ -1,12 +1,19 @@
+body {
+    background-color: #FAF9F6 !important;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
 /* 본문 섹션 */
 #colorTestSection {
     width: 90%;
     max-width: 1300px;
     margin: 75px auto 50px auto; /* 헤더 고려 */
     padding: 45px 60px;
-    background-color: #fff;
+    background: #FCFBF9;
+    border: 1px solid #F1F0ED;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
 /* 진행바 */

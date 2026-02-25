@@ -1,14 +1,15 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: white;
+    background: #FAF9F6;
 }
 
 .board-detail-container {
     width: 1200px;
-    width: 80%;
     margin: 40px auto;
-    background: white;
+    background: #FCFBF9;
+    border: 1px solid #F1F0ED;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     padding: 30px;
     border-radius: 10px;
 }

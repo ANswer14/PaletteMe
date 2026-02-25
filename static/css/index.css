@@ -8,7 +8,7 @@
 /* ===== HEADER ===== */
 body .header {
     width: 100% !important;
-    background-color: #fff !important;
+    background-color: #FAF9F6 !important;
     border-bottom: 1px solid #cdcbcb !important;
     padding: 35px 0 !important; /* 위아래 여백 */
     align-items: center !important;
@@ -121,6 +121,7 @@ body .auth a:hover {
     border-top: 1px solid #ddd;
     margin: 0 auto;
     width: 100% !important;
+    background-color: #FAF9F6 !important;
 }
 
 .footer-content {

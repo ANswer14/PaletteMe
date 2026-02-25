@@ -4,14 +4,19 @@
     margin-top: 10px;
     border: 1px solid #ccc;
 }
+body {
+    background-color: #FAF9F6 !important;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
 
 .container {
     display: flex;
     width: 1300px;
     margin: 130px auto;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background: #FCFBF9;
+    border: 1px solid #F1F0ED;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 
     min-width: 1200px;
 }

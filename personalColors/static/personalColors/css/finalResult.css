@@ -4,6 +4,12 @@
 /*.result-name.autumn { color: #aa4a44; }*/
 /*.result-name.winter { color: #760c0c; }*/
 
+body {
+    background-color: #FAF9F6 !important;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
 /* 메인 레이아웃 */
 .container {
     margin: 100px auto;
@@ -12,12 +18,15 @@
     padding: 30px 40px;
     gap: 100px;
     align-items: flex-start; /* 좌측 이미지와 우측 텍스트 상단 높이를 맞춤 */
+    background: #FCFBF9;
+    border: 1px solid #F1F0ED;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
 /* 진행 바 컨테이너 */
 #progress-container {
     width: 100%;
-    background-color: #f0f0f0;
+    background-color: #FCFBF9;
     height: 12px;
     border-radius: 10px;
     overflow: hidden;
@@ -61,7 +70,7 @@
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    background-color: #f8f9fa;
+    background-color: #FCFBF9;
 
     /* [중요] 중앙 정렬을 위한 필수 코드 */
     position: relative;

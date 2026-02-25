@@ -1,3 +1,7 @@
+body {
+    background-color: #FAF9F6 !important;
+}
+
 .mypage {
     width: 800px;
     margin: 50px auto;
@@ -5,12 +9,12 @@
 }
 
 .card {
-    background: white;
-    border: 1px solid #ddd;
+    background: #FCFBF9;
+    border: 1px solid #F1F0ED;
     padding: 40px 40px;
     margin-bottom: 25px;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     box-sizing: border-box;
 }
 

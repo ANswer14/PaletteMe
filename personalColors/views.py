@@ -63,6 +63,21 @@ def get_color_info(request):
                                                              'good_color': good_color,
                                                              'bad_color': bad_color,
                                                              'is_saved': is_saved,})
+
+@login_required(login_url='/accounts/login/')
+def enable_color_info(request):
+    history_id = request.GET.get('history_id')
+    true_history = request.user.color_history.filter(user=request.user, is_enabled=True).first()
+    true_history.is_enabled = False
+    true_history.save()
+
+    selected_history = request.user.color_history.filter(history_id=history_id).first()
+    selected_history.is_enabled = True
+    selected_history.save()
+
+    return JsonResponse({'data': 'success'})
+
+
 # colorTest.html 렌더링 함수
 @login_required(login_url='/accounts/login/')
 def test_color(request):

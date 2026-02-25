@@ -162,9 +162,9 @@
             </thead>
             <tbody>
                 {% for record in histories %}
-                <tr>
+                <tr onclick="enableHistory(this);" data-history_id="{{ record.history_id }}">
                     <td>{{ record.date|date:"Y-m-d" }}</td>
-                    <td>{{ record.color_type }}</td>
+                    <td>{{ record.color_type }}{% if record.is_enabled %} {% endif %}</td>
                 </tr>
                 {% empty %}
                 <tr>

@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(data => {
                     const exists = data.exists || data.isDuplicate;
                     if (nickNameStatus) {
-                        nickNameStatus.innerText = exists ? "이미 사용 중인 닉네임입니다." : "사용 가능한 닉네임입니다.";
+                        nickNameStatus.innerText = exists ? "❌ 이미 사용 중인 닉네임입니다." : "✅ 사용 가능한 닉네임입니다.";
                         nickNameStatus.style.color = exists ? "red" : "green";
                     }
                     isNickNameChecked = !exists;

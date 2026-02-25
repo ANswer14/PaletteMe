@@ -9,7 +9,7 @@ function loginRequired() {
 // 팝업창 열기 함수 (모니터길이/2 - 팝업창길이/2)
 function openLoginPopup(url) {
     const width = 450;
-    const height = 600;
+    const height = 650;
 
     // 화면 중앙 계산
     const left = (window.screen.width / 2) - (width / 2);

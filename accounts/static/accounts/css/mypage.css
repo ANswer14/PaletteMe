@@ -1,3 +1,7 @@
+body {
+    background-color: #FAF9F6 !important;
+}
+
 .mypage {
     width: 800px;
     margin: 50px auto;
@@ -5,12 +9,12 @@
 }
 
 .card {
-    background: white;
-    border: 1px solid #ddd;
+    background: #FCFBF9;
+    border: 1px solid #F1F0ED;
     padding: 40px 40px;
     margin-bottom: 25px;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     box-sizing: border-box;
 }
 
@@ -250,7 +254,7 @@ tbody tr:active {
 
 /* "기록이 없습니다" 문구 스타일 */
 .no-data {
-    padding: 50px 0; /* 위아래 여백을 넉넉히 줘서 기록 없음을 강조 */
+    vertical-align: middle; /* 테이블 셀일 경우 세로 중앙 */
     color: #bbb;     /* 글자색을 흐리게 */
     font-size: 15px;
     text-align: center;
@@ -362,13 +366,14 @@ tbody tr:active {
 
 /* 행 디자인 */
 .board-row {
-    padding: 18px 20px 18px 30px;
+    padding: 18px 0;
     border-bottom: 1px solid #f1f1f1;
     cursor: pointer;
     background-color: transparent; /* 배경색 고정 */
     transition: color 0.2s ease;
     font-size: 15px;
     color: #333;
+    display: flex;
 }
 
 .board-row:hover {
@@ -478,4 +483,44 @@ tbody tr:active {
     background: #e9ecef;
     font-size: 11px;
     color: #666;
+}
+/* 1. 나의 활동 - '게시글이 없습니다' 정렬 */
+/* HTML에서 style을 지웠으므로, 클래스명으로만 타겟팅합니다. */
+.scroll-box .board-row:only-child,
+.scroll-box .no-data {
+    display: flex !important;
+    justify-content: center !important; /* 가로 중앙 */
+    align-items: center !important;     /* 세로 중앙 */
+    padding: 0 !important;              /* 왼쪽 30px 패딩 강제 제거 */
+    height: 100% !important;            /* 부모 높이 꽉 채우기 */
+    min-height: 240px !important;       /* 글자가 없을 때의 영역 확보 */
+    color: #AAA !important;
+    border-bottom: none !important;
+    cursor: default !important;
+}
+
+/* 2. 최근 생성 이미지 - 문구 정렬 */
+.empty-msg {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 150px !important;
+    color: #AAA !important;
+}
+
+/* 3. 진단 히스토리 테이블 - 문구 정렬 */
+#diagnosisTable td.no-data {
+    display: table-cell !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    height: 150px !important;
+    color: #AAA !important;
+    border-bottom: none !important;
+}
+
+/* [추가] 이미지 박스 비었을 때 레이아웃 깨짐 방지 */
+.image-box:has(.empty-msg) {
+    display: block !important;
+    grid-template-columns: none !important;
 }

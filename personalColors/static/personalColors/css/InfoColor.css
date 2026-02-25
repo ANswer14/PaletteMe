@@ -1,5 +1,8 @@
 body {
     min-width: 1200px; /* 섹션 너비와 동일하게 설정 */
+    background-color: #FAF9F6 !important;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
 }
 
 /* 섹션 절반 레이아웃 */
@@ -7,9 +10,10 @@ body {
     display: flex;
     width: 1300px;           /* 지역 날씨 페이지와 동일하게 설정 */
     margin: 180px auto; /* 중앙 정렬 (상단 여백 180px, 하단 180px) */
-    background-color: #fff;
+    background: #FCFBF9;
+    border: 1px solid #F1F0ED;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     overflow: hidden;    /* 내부 요소가 삐져나오지 않게 */
     box-sizing: border-box;
 
@@ -70,7 +74,7 @@ h2 {
 .right {
     width: 40%;
     padding: 50px;
-    background-color: #fcfcfc;
+    background-color: #FCFBF9;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;

@@ -1,15 +1,17 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: white;
+    background: #FAF9F6;
 }
 
 .board-detail-container {
     width: 1200px;
     margin: 40px auto;
-    background: white;
+    background: #FCFBF9;
+    border: 1px solid #F1F0ED;
     padding: 30px;
     border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
 /* 모든 게시판 제목 공통 스타일 */

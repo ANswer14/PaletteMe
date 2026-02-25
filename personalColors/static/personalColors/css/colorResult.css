@@ -1,6 +1,12 @@
 /* 1. 최상단에 폰트 불러오기 (이게 없으면 손글씨가 안 나와요!) */
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap');
 
+body {
+    background-color: #FAF9F6 !important;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
 /* 결과 화면 섹션 */
 #resultSection {
     display: flex;
@@ -9,9 +15,10 @@
     width: 95%;
     align-items: center;
     padding: 60px;
-    background-color: #fff;
+    background: #FCFBF9;
+    border: 1px solid #F1F0ED;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
 .left {
@@ -85,10 +92,10 @@
 /*}*/
 
 .description-row, .palette-row {
-    background-color: #fcfcfc;
+    background-color: #FCFBF9;
     padding: 20px 25px;
     border-radius: 12px;
-    border: 1px solid #f0f0f0;
+    border: 1px solid #F1F0ED;
     display: flex;
     flex-direction: column; /* 세로로 배치해서 더 전문적으로 보이게 함 */
     gap: 12px;
@@ -147,22 +154,26 @@
 
 /* 굿/배드 컬러 정보 */
 #goodColor, #badColor {
-    font-size: 16px;
-    padding: 12px 18px;
-    border-radius: 8px;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 20px 25px;
+    border-radius: 12px;
+    background-color: #FCFBF9;
+    border: 1px solid #F1F0ED;
+    letter-spacing: -0.5px;
+    line-height: 1.4;
+    transition: all 0.3s ease;
+    color: #555;
 }
 
 #goodColor {
-    background-color: #f8f9fa;
-    color: #2d3436;
-    border-left: 4px solid #ff8a8a;
+    border-left: 5px solid #FF8A8A;
     margin-bottom: 15px;
 }
 
 #badColor {
-    background-color: #f8f9fa;
-    color: #2d3436;
-    border-left: 4px solid #5A7B9A;
+    border-left: 5px solid #A0B2C6;
     margin-bottom: 30px;
 }
 

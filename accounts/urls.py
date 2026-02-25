@@ -17,7 +17,8 @@ urlpatterns = [
     # 회원정보 페이지 관련 url
     path("profile/", views.profile_view, name="profile"),  # 회원정보 페이지
     path('delete/', views.delete_account, name='delete_account'),  # 회원탈퇴 (탬플릿 없이 바로 메인페이지로)
-    path('change-password/', views.change_password_custom, name='change_password_custom'), # 회원정보 페이지 비밀번호 변경 로직용
+    path('check-password-ajax/', views.check_password_ajax, name='check_password_ajax'),  # 현재 비밀번호 확인 AJAX 로직
+    path('change-password/', views.change_password_custom, name='change_password_custom'), # 회원정보 페이지 비밀번호 변경 저장 로직
 
     # --- 비밀번호 재설정 (allauth 로직 + 커스텀 템플릿 연결) ---
     path("password/reset/",  # 이메일 입력 페이지

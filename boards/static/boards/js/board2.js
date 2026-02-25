@@ -31,6 +31,7 @@ async function toggleLike(postId) {
         const data = await response.json();
         if (response.ok) {
             document.getElementById('likeIcon').innerText = data.liked ? '❤️' : '♡';
+            console.log(data.like_count)
             document.getElementById('likeCount').innerText = data.like_count;
         } else {
             Swal.fire({ icon: 'warning', text: '로그인이 필요합니다.', confirmButtonColor: '#f39898' });

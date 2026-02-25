@@ -52,7 +52,6 @@
 }
 
 .search-select { border: none; background: none; outline: none; padding-right: 10px; font-size: 14px; }
-.divider { width: 1px; height: 14px; background: #ddd; margin: 0 10px; }
 .search-form input { border: none; background: none; outline: none; width: 180px; }
 .search-btn {
     background: var(--point-color);

@@ -1,99 +1,115 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #FAF9F6;
-}
-
-.board-container {
-    width: 1200px;
+/* [1] 전체 컨테이너 스타일 */
+.board-container.notice {
+    width: 85%;
+    max-width: 1000px;
     margin: 40px auto;
-    background: #FCFBF9;
-    border: 1px solid #F1F0ED;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    padding: 30px;
-    border-radius: 10px;
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* 은은한 그림자 추가 */
 }
 
-/* 모든 게시판 제목 공통 스타일 */
-.board-container h2,
-.board-detail-container h2,
-.board-write-container h2 {
-    color: #C87941;
+/* [2] 제목 스타일 보강 */
+.board-container h2 {
     font-size: 26px;
-    margin-bottom: 20px;
-    border-left: 5px solid #C87941;
+    font-weight: 800;
+    margin-bottom: 30px;
+    border-left: 5px solid #f39898; /* 포인트 컬러(핑크) 적용 */
     padding-left: 15px;
+    color: #333;
 }
 
+/* [3] 목록 헤더 (No, 제목, 날짜) */
 .board-header {
     display: flex;
-    padding: 12px 10px;
-    border-top: 2px solid #535252;
-    border-bottom: 1px solid #ddd;
-    background-color: #fcfcfc;
+    padding: 15px 10px;
+    border-top: 2px solid #333;
+    border-bottom: 1px solid #eee;
+    background-color: #f8f9fa;
     color: #333;
     font-weight: bold;
     align-items: center;
 }
 
+/* [4] 목록 로우 (게시글 리스트) */
 .board-row {
     display: flex;
-    padding: 12px 10px;
-    border-bottom: 1px solid #ddd;
+    padding: 18px 10px;
+    border-bottom: 1px solid #eee;
     align-items: center;
-    transition: background-color 0.2s; /*배경색 전환 천천히*/
+    transition: all 0.2s ease;
+    background-color: #fff;
 }
 
+/* 마우스 올렸을 때 효과 */
 .board-row:hover {
-    background-color: #f0f0f0;
+    background-color: #fffafa; /* 연한 핑크빛 배경 */
     cursor: pointer;
+    transform: translateX(5px); /* 우측으로 살짝 이동하는 애니메이션 */
 }
 
-/* 열 너비 비율 */
-.col-no {
-    width: 10%;
-}
-
+/* 열 너비 비율 고정 */
+.col-no { width: 10%; text-align: center; color: #999; font-size: 14px; }
 .col-title {
     width: 70%;
-    white-space: nowrap;      /* 줄바꿈 금지 */
-    overflow: hidden;         /* 넘치는 부분 숨김 */
-    text-overflow: ellipsis;  /* 말줄임표(...) 표시 */
-}
-
-.col-date {
-    width: 20%;
-}
-
-/* 정렬: 헤더는 전부 중앙 */
-.board-header > div {
-    text-align: center;
-}
-
-/* 정렬: 본문은 번호/날짜만 중앙, 제목은 왼쪽 */
-.board-row .col-no,
-.board-row .col-date {
-    text-align: center;
-}
-
-.board-row .col-title {
-    text-align: left;
     padding-left: 20px;
+    font-weight: 500;
+    color: #444;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+.col-date { width: 20%; text-align: center; color: #999; font-size: 14px; }
 
-/* 페이지네이션 */
+/* [5] 페이지네이션 디자인 개선 */
 .pagination {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
 }
 
-.pagination span {
-    margin: 0 8px;
-    cursor: pointer;
+.pagination a, .pagination .current-page {
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    color: #666;
+    transition: all 0.2s;
 }
 
-/* 페이지네이션 현재 페이지 강조 */
-.pagination span:first-child {
+.pagination a:hover {
+    background-color: #eee;
+    color: #333;
+}
+
+/* 현재 페이지 강조 */
+.pagination .current-page {
+    background-color: #f39898;
+    color: #fff;
     font-weight: bold;
-    text-decoration: underline;
+}
+
+/* [6] 글쓰기 버튼 (관리자용) */
+.write-btn {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.write-btn .btn-primary {
+    display: inline-block;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.write-btn .btn-primary:hover {
+    background-color: #555;
 }

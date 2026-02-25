@@ -1,164 +1,135 @@
-/* ===== QnA 게시판 (자유게시판 양식 계승) ===== */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #FAF9F6;
+:root {
+    --point-color: #f39898;
+    --dark-gray: #535252;
+    --border-color: #f1f1f1;
+    --header-bg: #fbfbfb;
 }
 
-.board-container {
-    width: 1200px;
-    margin: 40px auto;
-    padding: 30px;
-    border-radius: 10px;
-    background: #FCFBF9;
-    border: 1px solid #F1F0ED;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+/* [1] 레이아웃 컨테이너 */
+.board-container.QnA {
+    width: 90%;
+    max-width: 1100px;
+    margin: 60px auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.06);
 }
 
-/* 모든 게시판 제목 공통 스타일 */
-.board-container h2,
-.board-detail-container h2,
-.board-write-container h2 {
-    color: #C87941;
-    font-size: 28px;
-    margin-bottom: 20px;
-    border-left: 5px solid #C87941;
+/* [2] 상단 타이틀 및 검색 */
+.board-top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.title-area h2 {
+    font-size: 30px;
+    font-weight: 800;
+    color: #222;
+    border-left: 6px solid var(--point-color);
     padding-left: 15px;
+    margin-bottom: 8px;
 }
 
-/* 2. 열 비율 (작성자 제외 버전) */
-.QnA .col-no {
-    width: 7%;
-    text-align: center;
-}
+.sub-title { color: #999; font-size: 14px; margin-left: 21px; }
 
-.QnA .col-title {
-    width: 67%; /* 작성자 12%를 흡수하여 확장 */
-    text-align: left;
-    padding-left: 20px;
+.search-form {
     display: flex;
+    background: #f4f4f4;
+    padding: 5px 5px 5px 15px;
+    border-radius: 50px;
     align-items: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    border: 1px solid transparent;
+    transition: 0.3s;
 }
 
-.QnA .col-date {
-    width: 15%;
-    text-align: center;
+.search-form:focus-within {
+    background: #fff;
+    border-color: var(--point-color);
+    box-shadow: 0 5px 15px rgba(243, 152, 152, 0.2);
 }
 
-.QnA .col-view {
-    width: 11%;
-    text-align: center;
-}
-
-/* 3. 헤더 설정 (자유게시판 양식 통일) */
-.QnA .board-header {
-    display: flex;
-    padding: 12px 10px;
-    border-top: 2px solid #535252;
-    border-bottom: 1px solid #ddd;
-    background-color: #fcfcfc;
-    color: #333;
-    font-weight: bold;
-    align-items: center;
-}
-
-/* 헤더 텍스트는 모두 중앙 정렬 */
-.QnA .board-header > div {
-    text-align: center !important;
-    padding-left: 0 !important;
-    justify-content: center;
-}
-
-/* 4. 로우 설정 (자유게시판 양식 통일) */
-.QnA .board-row {
-    display: flex;
-    padding: 12px 10px;
-    border-bottom: 1px solid #ddd;
-    align-items: center;
-    transition: background-color 0.2s;
-    cursor: pointer;
-    text-decoration: none;
-    color: #333;
-}
-
-.QnA .board-row:hover {
-    background-color: #f0f0f0;
-}
-
-/* 5. QnA 전용 아이콘 스타일 */
-.QnA .lock-icon {
-    margin-right: 8px;
-    font-size: 14px;
-    color: #888;
-}
-
-.QnA .comment-count {
-    color: #e67e22;
-    font-size: 0.9em;
-    font-weight: bold;
-    margin-left: 5px;
-}
-
-/* 글쓰기 버튼 (자유게시판 & QnA 공통 적용) */
-.write-btn {
-    /* 크기 대폭 상향 */
-    padding: 12px 28px;
-    font-size: 15px;
-    font-weight: bold;
-
-    /* 가로폭을 좀 더 확보하고 둥근 모서리로 세련미 추가 */
-    border-radius: 6px;
-    background-color: #535252;
+.search-select { border: none; background: none; outline: none; padding-right: 10px; font-size: 14px; }
+.divider { width: 1px; height: 14px; background: #ddd; margin: 0 10px; }
+.search-form input { border: none; background: none; outline: none; width: 180px; }
+.search-btn {
+    background: var(--point-color);
     color: white;
     border: none;
+    padding: 8px 18px;
+    border-radius: 40px;
+    font-weight: bold;
     cursor: pointer;
-
-    /* 부드러운 전환 효과 */
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 살짝 입체감 추가 */
-
-    /* 아이콘이 있다면 정렬을 돕기 위해 추가 */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
 }
 
-/* 마우스를 올렸을 때 효과 */
-.write-btn:hover {
-    background-color: #333;
-    transform: translateY(-2px); /* 살짝 떠오르는 효과 */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* 그림자 더 깊게 */
-}
+/* [3] 게시판 리스트 배분 (핵심 수정) */
+.col-no { flex: 0 0 70px; text-align: center; }
+.col-title { flex: 1; padding-left: 20px; }
+.col-author { flex: 0 0 130px; text-align: center; }
+.col-date { flex: 0 0 120px; text-align: center; }
+.col-view { flex: 0 0 80px; text-align: center; }
 
-/* 버튼을 감싸는 푸터 영역 여백 조정 */
-.board-footer {
+.board-header {
     display: flex;
-    justify-content: flex-end;
-    margin-top: 25px; /* 게시판 리스트와의 간격을 더 확보 */
+    padding: 18px 10px;
+    border-top: 2px solid #333;
+    border-bottom: 1px solid #ddd;
+    background: var(--header-bg);
+    font-weight: bold;
+    color: #444;
 }
 
-/* 페이지네이션 */
-.pagination {
-    text-align: center;
-    margin-top: 30px;
-}
-
-.pagination span {
-    margin: 0 8px;
+.board-row {
+    display: flex;
+    align-items: center;
+    padding: 20px 10px;
+    border-bottom: 1px solid var(--border-color);
     cursor: pointer;
+    transition: 0.2s;
 }
 
-/* 페이지네이션 현재 페이지 강조 */
-.pagination span:first-child {
-    font-weight: bold;
-    text-decoration: underline;
+.board-row:hover { background-color: #fffafa; }
+.title-text { font-weight: 500; transition: 0.2s; }
+.board-row:hover .title-text { color: var(--point-color); transform: translateX(5px); }
+.lock-icon { font-size: 12px; color: #aaa; margin-right: 5px; }
+.comment-count { font-size: 12px; color: var(--point-color); font-weight: bold; margin-left: 5px; }
+
+/* [4] 하단 버튼 및 페이지네이션 */
+.board-bottom {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
 }
 
-.current-page {
-    font-weight: bold;
-    text-decoration: underline;
+.pagination { display: flex; gap: 8px; margin-bottom: 20px; }
+.page-link, .current-page {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px; font-weight: 600; text-decoration: none;
 }
+.page-link { border: 1px solid #eee; color: #666; }
+.current-page { background: var(--dark-gray); color: white; }
+.page-link:hover { background: var(--point-color); color: white; border-color: var(--point-color); }
+
+.action-area { position: absolute; right: 0; bottom: 0; }
+.write-btn {
+    background: var(--point-color);
+    color: white; border: none;
+    padding: 12px 25px; border-radius: 50px;
+    font-weight: bold; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(243, 152, 152, 0.3);
+    transition: 0.3s;
+}
+.write-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(243, 152, 152, 0.4); }
+
+/* [5] 애니메이션: 흔들기 효과 */
+@keyframes shakeRow {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+.shake-effect { animation: shakeRow 0.3s ease-in-out; background-color: #fff5f5 !important; }

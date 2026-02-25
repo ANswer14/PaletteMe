@@ -1,82 +1,258 @@
 {% extends "index.html" %}
 {% load static %}
 
-{% block title %} 자유게시판 - PaletteMe {% endblock %}
+{% block title %} 자유게시판 상세보기 - PaletteMe {% endblock %}
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'boards/css/board2.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <div class="board-detail-container free">
+    <div class="board-detail-container">
         <h2>자유게시판</h2>
 
-        <!-- 제목줄: 헤더 -->
         <div class="title-header">
-            <span class="col-header">No.</span>
-            <span class="col-header">제 목</span>
-            <span class="col-header">작성자</span>
-            <span class="col-header">작성일</span>
-            <span class="col-header">조회수</span>
+            <span>No.</span>
+            <span>제 목</span>
+            <span>작성자</span>
+            <span>작성일</span>
+            <span>조회수</span>
         </div>
-
-        <!-- 데이터줄: 실제 게시글 -->
         <div class="title-row">
-            <span id="detailNo">{{ post.id }}</span>
-            <span id="detailTitle">{{ post.title }}</span>
-
-<!--            {% if post.writer %}-->
-<!--            <span id="detailWriter">{{ post.writer }}</span>-->
-<!--            {% endif %}-->
-            <span id="detailWriter">{{ post.writer|default:"익명" }}</span>
-
-            <span id="detailDate">{{ post.created_at|date:"Y-m-d" }}</span>
-            <span id="detailView">{{ post.views }}</span>
+            <span class="post-id">{{ post.pk }}</span>
+            <span class="post-title">{{ post.title }}</span>
+            <span class="post-author">
+                {% if post.is_anonymous %}
+                    <span class="author-tag">익명(글쓴이)</span>
+                {% else %}
+                    {{ post.author.nickname }}
+                {% endif %}
+            </span>
+            <span class="post-date">{{ post.created_at|date:"Y-m-d" }}</span>
+            <span class="post-views">{{ post.view_count }}</span>
         </div>
+
         <hr class="section-divider">
 
         <div class="detail-content">
-            <!-- 작성된 텍스트 자리 -->
-            <div id="detailContentText">{{ post.content|linebreaksbr }}</div>
-            <!-- 첨부된 이미지가 보여지는 자리  -->
-            <div id="detailImages" class="detail-images-area">
-                {% for image in post.images.all %}
-                    <img src="{{ image.url }}" alt="첨부이미지">
+            <div id="detailContentText">{{ post.body|linebreaksbr }}</div>
+
+            <div class="detail-images-area">
+                {% for img in images %}
+                    <img src="{{ img.image.url }}" alt="첨부이미지">
                 {% endfor %}
             </div>
-        </div>
-        <hr class="section-divider">
 
-        <!-- 댓글 영역 -->
-        <div class="comment-section">
-            <h3>댓글</h3>
-            <div id="commentList"></div>
-            <div class="comment-input">
-                <!-- 좋아요 -->
-                <div class="like-area">
-                    <button class="like-btn" id="likeBtn">❤️ 좋아요</button>
-                    <!--임시-->
-                    <span class="like-count" id="likeCount">0</span>
-                </div>
-                <div class="comment-write">
-                    <input type="text" id="commentText" placeholder="댓글을 입력하세요">
-                    <button onclick="addComment()">등록</button>
+            <div class="like-section">
+                <div class="like-wrapper">
+                    <button onclick="toggleLike('{{ post.pk }}')" id="like-btn"
+                            class="{% if user_liked %}active{% endif %}">
+                        <span id="like-icon">
+                            {% if user_liked %}❤️{% else %}♡{% endif %}
+                        </span>
+                        <span id="like-count">{{ post.likes.count|default:0 }}</span>
+                    </button>
+                    <p class="like-help-text">도움이 되었어요</p>
                 </div>
             </div>
         </div>
 
-        <div class="detail-nav">
-            <!-- 작성자 본인일 경우 수정, 삭제 버튼 -->
-            <button id="editBtn" onclick="goEdit()" style="display:none;">수정</button>
-            <button id="deleteBtn" onclick="goDelete()" style="display:none;">삭제</button>
+        <hr class="section-divider">
 
-            <!-- 이전글|글목록|다음글 -->
-            <span class="nav-item" onclick="goPrev()">이전글</span>
-            <span class="divider">|</span>
-            <span class="nav-item" onclick="goList()">글목록</span>
-            <span class="divider">|</span>
-            <span class="nav-item" onclick="goNext()">다음글</span>
+        <div class="comment-section">
+            <h3>댓글 <span class="comment-count">{{ comments.count }}</span></h3>
+
+            <div class="comment-list">
+                {% for comment in comments %}
+                <div class="comment-item" id="comment-{{ comment.pk }}">
+                    <div class="comment-info">
+                        <div class="author-wrapper">
+                            <span class="comment-author">
+                                {% if post.is_anonymous and comment.author == post.author %}
+                                    익명(글쓴이)
+                                {% else %}
+                                    {{ comment.author.nickname }}
+                                {% endif %}
+                            </span>
+
+                            {% if comment.author.is_staff %}
+                                <span class="admin-badge">관리자</span>
+                            {% endif %}
+
+                            {% if not post.is_anonymous and comment.author == post.author %}
+                                <span class="author-badge">작성자</span>
+                            {% endif %}
+
+                            <span class="comment-date">{{ comment.created_at|date:"Y-m-d H:i" }}</span>
+                        </div>
+
+                        <div class="comment-actions">
+                            {% if user == comment.author %}
+                                <span onclick="editComment('{{ comment.pk }}')">수정</span>
+                                <span onclick="deleteComment('{{ comment.pk }}')">삭제</span>
+                            {% elif user.is_staff %}
+                                <span onclick="deleteComment('{{ comment.pk }}')">삭제</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="comment-body" id="comment-body-{{ comment.pk }}">
+                        {{ comment.body|linebreaksbr }}
+                    </div>
+                </div>
+                {% empty %}
+                <p class="empty-msg" style="text-align:center; color:#bbb; padding:30px 0;">첫 번째 댓글을 남겨보세요.</p>
+                {% endfor %}
+            </div>
+
+            {% if user.is_authenticated %}
+            <div class="comment-write-area">
+                <textarea id="comment-input" placeholder="비방이나 욕설은 삼가주세요."></textarea>
+                <div class="submit-btn-wrapper">
+                    <button type="button" onclick="submitComment('{{ post.pk }}')">댓글 등록</button>
+                </div>
+            </div>
+            {% endif %}
         </div>
 
+        <div class="detail-footer">
+            <button class="btn-list" onclick="location.href='{% url 'boards:board1' %}'">목록으로</button>
+
+            {% if user == post.author %}
+            <div class="author-btns">
+                <button class="btn-edit" onclick="location.href='{% url 'boards:boardWrite' %}?no={{ post.pk }}'">수정</button>
+                <button class="btn-delete" onclick="confirmDelete('{{ post.pk }}')">삭제</button>
+            </div>
+            {% endif %}
+        </div>
     </div>
 
-    <script src="{% static 'boards/js/board2.js' %}" defer></script>
+    <script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // 좋아요 기능
+    async function toggleLike(postId) {
+        try {
+            const response = await fetch(`/boards/api/board/like/${postId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            if (response.status === 403) {
+                Swal.fire({ icon: 'warning', text: '로그인이 필요한 서비스입니다.', confirmButtonColor: '#f39898' });
+                return;
+            }
+            const data = await response.json();
+            if (response.ok) {
+                document.getElementById('like-icon').innerText = data.liked ? '❤️' : '♡';
+                document.getElementById('like-count').innerText = data.like_count;
+                const btn = document.getElementById('like-btn');
+                data.liked ? btn.classList.add('active') : btn.classList.remove('active');
+            }
+        } catch (e) { console.error(e); }
+    }
+
+    // 댓글 등록
+    async function submitComment(postId) {
+        const content = document.getElementById('comment-input').value;
+        if (!content.trim()) {
+            Swal.fire({ icon: 'warning', text: '댓글 내용을 입력해주세요.', confirmButtonColor: '#f39898' });
+            return;
+        }
+        try {
+            const response = await fetch(`/boards/api/comment/create/${postId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ 'body': content })
+            });
+            if (response.ok) location.reload();
+        } catch (e) { console.error(e); }
+    }
+
+    // 댓글 삭제
+    async function deleteComment(commentId) {
+        const result = await Swal.fire({
+            title: '댓글을 삭제하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#f39898',
+            cancelButtonColor: '#eee',
+            confirmButtonText: '삭제',
+            cancelButtonText: '취소'
+        });
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`/boards/api/comment/delete/${commentId}/`, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') }
+                });
+                if (response.ok) location.reload();
+            } catch (e) { console.error(e); }
+        }
+    }
+
+    // 댓글 수정 모드 전환
+    function editComment(commentId) {
+        const bodyDiv = document.getElementById(`comment-body-${commentId}`);
+        const currentText = bodyDiv.innerText;
+        bodyDiv.innerHTML = `
+            <textarea id="edit-input-${commentId}" class="edit-textarea" style="width:100%; height:70px; padding:10px; border:1px solid #ddd; border-radius:8px; margin-top:10px; font-family: inherit;">${currentText}</textarea>
+            <div style="text-align:right; margin-top:5px;">
+                <button onclick="updateComment('${commentId}')" style="background:#f39898; color:white; border:none; padding:5px 12px; border-radius:4px; cursor:pointer; font-weight:bold;">저장</button>
+                <button onclick="location.reload()" style="background:#eee; border:none; padding:5px 12px; border-radius:4px; cursor:pointer; margin-left:5px;">취소</button>
+            </div>
+        `;
+    }
+
+    // 댓글 수정 실행
+    async function updateComment(commentId) {
+        const newText = document.getElementById(`edit-input-${commentId}`).value;
+        try {
+            const response = await fetch(`/boards/api/comment/update/${commentId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ 'body': newText })
+            });
+            if (response.ok) location.reload();
+        } catch (e) { console.error(e); }
+    }
+
+    // 게시글 삭제 확인
+    function confirmDelete(postId) {
+        Swal.fire({
+            title: '정말 삭제하시겠습니까?',
+            text: "삭제 후 복구할 수 없습니다.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#f39898',
+            cancelButtonColor: '#eee',
+            confirmButtonText: '삭제',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                location.href = `{% url 'boards:delete' %}?no=${postId}`;
+            }
+        });
+    }
+    </script>
 {% endblock %}

@@ -1,6 +1,4 @@
 from django.contrib import admin
-# models.py에 정의된 클래스명과 대소문자를 일치시켜야 합니다.
-# 만약 models.py에 QnA라고 되어 있다면 아래처럼 QnA로 수정하세요.
 from .models import Post, PostImage, Like, Comment
 
 @admin.register(Post)
@@ -12,7 +10,7 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(PostImage)
 class PostImageAdmin(admin.ModelAdmin):
-    list_display = ("post_img_id", "post", "image")
+    list_display = ("post_img_id", "post", "image") # models.py와 동일하게 수정
     ordering = ("-post_img_id",)
 
 @admin.register(Like)
@@ -24,4 +22,3 @@ class LikeAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = ("comment_id", "author", "post", "created_at")
     ordering = ("-comment_id",)
-

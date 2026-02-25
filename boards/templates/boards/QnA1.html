@@ -1,50 +1,143 @@
 {% extends "index.html" %}
 {% load static %}
 
-{% block title %} QnA - PaletteMe {% endblock %}
+{% block title %} QnA 목록 - PaletteMe {% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'boards/css/QnA1.css' %}">
 
-    <link rel="stylesheet" href="{% static 'boards/css/QnA1.css' %}?v=1.1">
-
-    <div class="board-container QnA">
-        <h2>QnA</h2>
-        <div class="board-header">
-            <div class="col-no">번호</div>
-            <div class="col-title">제목</div>
-            <div class="col-date">날짜</div>
-            <div class="col-view">조회수</div>
+<div class="board-container QnA">
+    <div class="board-top-section">
+        <div class="title-area">
+            <h2>Q&A 게시판</h2>
+            <p class="sub-title">궁금한 점을 자유롭게 물어보세요.</p>
         </div>
 
-        <div class="board-list">
-            {% if posts %}
-                {% for post in posts %}
-                <div class="board-row" onclick="goQnADetail({{ post.id }}, {{ post.is_private|yesno:'true,false' }}, '{{ post.writer.nickname }}')">
-                    <div class="col-no">{{ forloop.revcounter }}</div>
-                    <div class="col-title">
-                        {% if post.is_private %}
-                            <span class="lock-icon">🔒</span>
-                        {% endif %}
-                        <span class="title-text">{{ post.title }}</span>
-                        {% if post.comment_count > 0 %}
-                            <span class="comment-count">[{{ post.comment_count }}]</span>
+        <div class="search-area">
+            <form action="{% url 'boards:qna1' %}" method="GET" class="search-form">
+                <select name="type" class="search-select">
+                    <option value="all" {% if request.GET.type == 'all' %}selected{% endif %}>전체</option>
+                    <option value="title" {% if request.GET.type == 'title' %}selected{% endif %}>제목</option>
+                    <option value="content" {% if request.GET.type == 'content' %}selected{% endif %}>내용</option>
+                    <option value="writer" {% if request.GET.type == 'writer' %}selected{% endif %}>작성자</option>
+                </select>
+                <div class="divider"></div>
+                <input type="text" name="q" placeholder="검색어를 입력하세요" value="{{ q|default:'' }}">
+                <button type="submit" class="search-btn">검색</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="board-header">
+        <div class="col-no">번호</div>
+        <div class="col-title">제목</div>
+        <div class="col-author">작성자</div>
+        <div class="col-date">날짜</div>
+        <div class="col-view">조회수</div>
+    </div>
+
+    <div class="board-list">
+        {% if posts %}
+            {% for post in posts %}
+            {# 게시글 클릭 시 이동 함수 호출 #}
+            <div class="board-row" onclick="goQnADetail(event, '{{ post.pk }}', {{ post.is_secret|yesno:'true,false' }}, '{{ post.author.nickname }}')">
+                <div class="col-no">{{ post.post_id }}</div>
+                <div class="col-title">
+                    <div class="title-wrapper">
+                        <span class="title-text">
+                            {% if post.is_secret and user != post.author and not user.is_staff %}
+                                <i class="fas fa-lock lock-icon"></i> 비밀글입니다.
+                            {% else %}
+                                {% if post.is_secret %}<i class="fas fa-lock lock-icon"></i>{% endif %}
+                                {{ post.title }}
+                            {% endif %}
+                        </span>
+
+                        {% if post.comments.count > 0 %}
+                            <span class="comment-count">({{ post.comments.count }})</span>
                         {% endif %}
                     </div>
-                    <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
-                    <div class="col-view">{{ post.views }}</div>
                 </div>
-                {% endfor %}
-            {% else %}
-                <div class="no-posts">게시글이 없습니다.</div>
+                <div class="col-author">{{ post.author.nickname }}</div>
+                <div class="col-date">{{ post.created_at|date:"Y-m-d" }}</div>
+                <div class="col-view">{{ post.view_count }}</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-results">
+                <i class="fas fa-search"></i>
+                <p>작성된 게시글이 없습니다.</p>
+                <a href="{% url 'boards:qna1' %}">목록으로 돌아가기</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="board-bottom">
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}&q={{ q }}&type={{ type }}" class="page-link"><i class="fas fa-chevron-left"></i></a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="current-page">{{ num }}</span>
+                {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+                    <a href="?page={{ num }}&q={{ q }}&type={{ type }}" class="page-link">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&q={{ q }}&type={{ type }}" class="page-link"><i class="fas fa-chevron-right"></i></a>
             {% endif %}
         </div>
 
-        <div class="board-footer">
-            <button class="write-btn" onclick="location.href='{% url 'boards:boardWrite' %}?type=qna'">글쓰기</button>
+        <div class="action-area">
+            <button class="write-btn" onclick="location.href='{% url 'boards:boardWrite' %}?type=qna'">
+                <i class="fas fa-pen"></i> 질문하기
+            </button>
         </div>
+    </div>
+</div>
 
-        </div>
+<script>
+/**
+ * QnA 상세 페이지 이동 함수
+ */
+function goQnADetail(event, postId, isSecret, authorNickname) {
+    const params = new URLSearchParams(window.location.search);
+    const currentPage = params.get("page") || 1;
 
-    <script>const USER_NICKNAME = "{{ user.nickname|escapejs }}";</script>
-    <script src="{% static 'QnA/js/QnA1.js' %}" defer></script>
+    // Django 템플릿 변수를 JS 변수로 할당 (백엔드 데이터 연결)
+    const currentUserNickname = "{{ user.nickname|default:'' }}";
+    const isStaff = "{{ user.is_staff|yesno:'true,false' }}" === "true";
+    const targetRow = event.currentTarget;
+
+    // 1. 비밀글 권한 체크 (비밀글이면서 + 본인이 아니고 + 운영자도 아닌 경우)
+    if (isSecret && !isStaff && currentUserNickname !== authorNickname) {
+        targetRow.classList.add('shake-effect');
+        Swal.fire({
+            icon: 'lock',
+            iconColor: '#f39898',
+            title: '잠겨있는 글입니다',
+            text: '비밀글은 작성자 본인만 확인할 수 있습니다.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39898',
+        });
+        setTimeout(() => { targetRow.classList.remove('shake-effect'); }, 500);
+        return;
+    }
+
+    // 2. 권한 통과 시 상세 페이지로 이동
+    targetRow.style.backgroundColor = "#fff0f0";
+    setTimeout(() => {
+        location.href = `/boards/qnaDetail/?no=${postId}&page=${currentPage}`;
+    }, 150);
+}
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'boards/js/QnA1.js' %}"></script>
 {% endblock %}

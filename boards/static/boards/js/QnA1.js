@@ -1,23 +1,40 @@
-// 꼭 변수이름 확인하기!!!!!!
-
-function goQnADetail(postId, is_private, postWriter) {
+/**
+ * QnA 상세 페이지 이동 함수 (통합본)
+ */
+function goQnADetail(event, postId, isSecret, authorNickname) {
     const params = new URLSearchParams(window.location.search);
     const currentPage = params.get("page") || 1;
-    //const currentUserNickname = "{{ user.nickname }}"; // 서버에서 넣어준 현재 유저 이름
-    const currentUserNickname = USER_NICKNAME;
 
-    // 공개글은 누구나 통과!
-    if (!is_private) {
-        location.href = `QnA2.html?no=${postId}&page=${currentPage}`;  // 백엔드에서 설정한 실제 상세페이지 주소 넣을것!!!
+    // 1. Django 템플릿 변수를 통해 현재 사용자 정보 가져오기
+    const currentUserNickname = "{{ user.nickname|default:'' }}";
+    const isStaff = "{{ user.is_staff|yesno:'true,false' }}" === "true";
+    const targetRow = event.currentTarget;
+
+    // 2. 비밀글 권한 체크 (비밀글이면서 + 관리자가 아니고 + 작성자 본인도 아닌 경우)
+    if (isSecret && !isStaff && currentUserNickname !== authorNickname) {
+        // 시각적 피드백: 행 흔들기 효과 추가
+        targetRow.classList.add('shake-effect');
+
+        Swal.fire({
+            icon: 'lock',
+            iconColor: '#f39898',
+            title: '잠겨있는 글입니다',
+            text: '비밀글은 작성자 본인만 확인할 수 있습니다.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f39898',
+        });
+
+        // 0.5초 후 흔들기 효과 제거
+        setTimeout(() => {
+            targetRow.classList.remove('shake-effect');
+        }, 500);
         return;
     }
 
-    // 비공개글인데, 내가 작성자가 아니라면? (이건 프론트엔드에서의 1차 필터링)
-    // ※ 실제 보안은 상세페이지 접속 시 서버에서 다시 체크합니다.
-    if (is_private && currentUserNickname !== postWriter) {
-        alert("🔒 비공개 글은 작성자만 볼 수 있습니다.");
-        return;
-    }
-
-    location.href = `QnA2.html?no=${postId}&page=${currentPage}`;  // 백엔드에서 설정한 실제 상세페이지 주소 넣을것!!!
+    // 3. 권한 통과 시 시각적 강조 후 상세 페이지로 이동
+    targetRow.style.backgroundColor = "#fff0f0";
+    setTimeout(() => {
+        // urls.py에 정의된 /boards/qnaDetail/ 경로로 이동
+        location.href = `/boards/qnaDetail/?no=${postId}&page=${currentPage}`;
+    }, 150);
 }

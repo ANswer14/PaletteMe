@@ -1,96 +1,202 @@
-const params = new URLSearchParams(window.location.search);
-const no = parseInt(params.get("no")) || 0;     // URL에서 글 번호 가져오기
-const currentPageNum = params.get("page") || 1;    // 원래 보던 페이지 불러오기 선언
+/**
+ * PaletteMe QnA 통합 스크립트
+ * (실시간 좋아요 애니메이션 + 답변 등록/수정/삭제 + SweetAlert2)
+ */
 
-// HTML 요소 미리 찾아두기
-const detailNo = document.getElementById("detailNo");
-const detailTitle = document.getElementById("detailTitle");
-const detailDate = document.getElementById("detailDate");
-const detailView = document.getElementById("detailView");
-//const detailContent = document.getElementById("detailContent");
-const commentList = document.getElementById("commentList");
-
-let currentPostData = null; // 데이터를 담아둘 주머니
-
-// 백엔드 데이터 로드함수
-document.addEventListener("DOMContentLoaded", async function () {
-    // 글 번호가 없으면 목록으로 튕겨내기
-    if (no === 0) {
-        alert("잘못된 접근입니다.");
-        location.href = "boards/QnA1/";    // 실제주소 쓸것!!!!!!!!
-        return;
+// 1. CSRF 토큰 획득 함수 (Django 보안 필수)
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
     }
+    return cookieValue;
+}
 
-    // 서버에서 데이터 가져오기
+// 2. [통합 완성형] 좋아요 토글 함수 (숫자 업데이트 + active 클래스 토글 + 애니메이션)
+async function toggleLike(postId) {
     try {
-        const response = await fetch(`/api/qna/detail/${no}/`);
-        if (!response.ok) throw new Error("게시글을 찾을 수 없습니다.");
+        const response = await fetch(`/boards/api/board/like/${postId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        // 로그인이 안 된 경우 (403 에러 처리)
+        if (response.status === 403) {
+            Swal.fire({ icon: 'warning', text: '로그인이 필요합니다.', confirmButtonColor: '#f39898' });
+            return;
+        }
+
         const data = await response.json();
 
-        currentPostData = data; // 주머니에 저장
-        renderDetail(data); // 데이터를 화면에 그리는 함수 호출
+        if (response.ok) {
+            const btnElement = document.getElementById('like-btn');
+            const iconElement = document.getElementById('like-icon');
+            const countElement = document.getElementById('like-count');
+
+            // 1) 아이콘 텍스트 및 누적 숫자 업데이트 (서버 데이터 기준)
+            if (iconElement) iconElement.innerText = data.liked ? '❤️' : '♡';
+            if (countElement) countElement.innerText = data.like_count;
+
+            // 2) 버튼의 활성화(active) 클래스 토글 (색상 변경용)
+            if (btnElement) {
+                if (data.liked) {
+                    btnElement.classList.add('active'); // CSS에서 설정한 분홍 배경 적용
+                } else {
+                    btnElement.classList.remove('active'); // 기본 하얀 배경으로 복구
+                }
+            }
+
+            // 3) 클릭 애니메이션 효과 (스케일 업 시각 피드백)
+            if (iconElement && countElement) {
+                iconElement.style.transform = "scale(1.4)";
+                countElement.style.transform = "scale(1.2)";
+                setTimeout(() => {
+                    iconElement.style.transform = "scale(1)";
+                    countElement.style.transform = "scale(1)";
+                }, 200);
+            }
+        }
+    } catch (e) {
+        console.error("좋아요 처리 실패:", e);
     }
-    catch (error) {
-        alert(error.message);
-        goList();
-    }
-});
+}
 
-// 화면에 데이터를 그려주는 로직 (기존 코드의 로직을 함수화함)
-function renderDetail(data) {
-    //detailNo.innerText = postData.id || no;
-    //detailTitle.innerText = postData.title;
-    //detailDate.innerText = postData.date || postData.created_at;
-    //detailView.innerText = postData.views;
-    //detailContent.innerText = postData.content;
+// 3. 답변(댓글) 등록 함수
+async function submitComment(postId) {
+    const contentInput = document.getElementById('comment-input');
+    const content = contentInput.value;
 
-    // 변수 선언 대신 ID 직접 찾아서 바로 대입
-    document.getElementById("detailNo").innerText = data.id || no;
-    document.getElementById("detailTitle").innerText = data.title;
-    document.getElementById("detailDate").innerText = data.created_at || data.date;
-    document.getElementById("detailView").innerText = data.views;
-    document.getElementById("detailContent").innerText = data.content;
-
-    // 답변(댓글) 출력
-    commentList.innerHTML = ""; // 기존 내용 비우기
-    if (data.comments && data.comments.length > 0) {
-        data.comments.forEach(comment => {
-            const div = document.createElement("div");
-            div.className = "comment";
-            div.innerHTML = `<b>${comment.writer}:</b> ${comment.text}`;
-            commentList.appendChild(div);
+    if (!content.trim()) {
+        return Swal.fire({
+            icon: 'warning',
+            text: '답변 내용을 입력해주세요.',
+            confirmButtonColor: '#f39898'
         });
-    } else {
-        commentList.innerHTML = "<div class='comment'>운영자가 확인 후 답변을 등록할 예정입니다.</div>";
+    }
+
+    try {
+        const response = await fetch(`/boards/api/comment/create/${postId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ 'body': content })
+        });
+
+        if (response.ok) {
+            contentInput.value = '';
+            location.reload();
+        } else {
+            const data = await response.json();
+            Swal.fire({
+                icon: 'error',
+                text: data.message || '답변 등록에 실패했습니다.',
+                confirmButtonColor: '#f39898'
+            });
+        }
+    } catch (error) {
+        console.error("Error:", error);
     }
 }
 
-// 목록으로 버튼
-function goList() {
-    //const params = new URLSearchParams(window.location.search); // params 재선언
-    //const page = params.get("page") || 1;
-    window.location.href = `QnA1.html?page=${currentPageNum}`;
-}
-function goPrev() {
-    //const params = new URLSearchParams(window.location.search); // params 재선언
-    //const page = params.get("page") || 1;
+// 4. 댓글 삭제 함수
+async function deleteComment(commentId) {
+    const { isConfirmed } = await Swal.fire({
+        title: '삭제하시겠습니까?',
+        text: "삭제된 답변은 복구할 수 없습니다.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#f39898',
+        cancelButtonColor: '#eee',
+        confirmButtonText: '삭제',
+        cancelButtonText: '취소'
+    });
 
-    if (currentPostData && currentPostData.prev_no) {
-        // 백엔드에서 설정한 실제 상세페이지 주소 넣을것!!!
-        window.location.href = `QnA2.html?no=${currentPostData.prev_no}&page=${currentPageNum}`;
-    }
-    else {
-        alert("이전 글이 없습니다.");
+    if (isConfirmed) {
+        try {
+            const response = await fetch(`/boards/api/comment/delete/${commentId}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') }
+            });
+            if (response.ok) {
+                location.reload();
+            }
+        } catch (e) { console.error(e); }
     }
 }
-function goNext() {
-    //const params = new URLSearchParams(window.location.search); // params 재선언
-    //const page = params.get("page") || 1;
-    if (currentPostData && currentPostData.next_no) {
-        // 백엔드에서 설정한 실제 상세페이지 주소 넣을것!!!
-        window.location.href = `QnA2.html?no=${currentPostData.next_no}&page=${currentPageNum}`;
+
+// 5. 게시글 삭제 확인 함수
+function confirmDelete(postId) {
+    Swal.fire({
+        title: '정말 삭제하시겠습니까?',
+        text: "삭제된 질문은 복구할 수 없습니다.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#f39898',
+        cancelButtonColor: '#eee',
+        confirmButtonText: '삭제',
+        cancelButtonText: '취소'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            location.href = `/boards/delete/?no=${postId}`;
+        }
+    });
+}
+
+// 6. 댓글 수정 UI 전환 함수
+function showEditForm(commentId, currentBody) {
+    const commentItem = document.getElementById(`comment-${commentId}`);
+    const textDiv = commentItem.querySelector('.comment-body-text');
+
+    textDiv.innerHTML = `
+        <div class="edit-area" style="margin-top:10px;">
+            <textarea id="edit-input-${commentId}" 
+                      style="width:100%; height:80px; padding:12px; border:1px solid #ddd; border-radius:8px; resize:none; font-family:inherit;">${currentBody}</textarea>
+            <div style="text-align:right; margin-top:8px;">
+                <button type="button" onclick="updateComment('${commentId}')" 
+                        style="background:#f39898; color:white; border:none; padding:6px 16px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:13px;">저장</button>
+                <button type="button" onclick="location.reload()" 
+                        style="background:#eee; color:#666; border:none; padding:6px 16px; border-radius:6px; cursor:pointer; font-size:13px; margin-left:5px;">취소</button>
+            </div>
+        </div>
+    `;
+}
+
+// 7. 댓글 수정 저장 함수
+async function updateComment(commentId) {
+    const newContent = document.getElementById(`edit-input-${commentId}`).value;
+
+    if (!newContent.trim()) {
+        return Swal.fire({ icon: 'warning', text: '내용을 입력해주세요.', confirmButtonColor: '#f39898' });
     }
-    else {
-        alert("다음 글이 없습니다.");
+
+    try {
+        const response = await fetch(`/boards/api/comment/update/${commentId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ 'body': newContent })
+        });
+
+        if (response.ok) {
+            location.reload();
+        }
+    } catch (e) {
+        console.error(e);
     }
 }

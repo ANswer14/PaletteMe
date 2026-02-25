@@ -1,24 +1,39 @@
+body {
+    background-color: #FAF9F6 !important;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
 /* 본문 섹션 */
 #colorTestSection {
-    width: 80%;
-    margin: 150px auto 50px auto; /* 헤더 고려 */
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 1300px;
+    margin: 75px auto 50px auto; /* 헤더 고려 */
+    padding: 45px 60px;
+    background: #FCFBF9;
+    border: 1px solid #F1F0ED;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border-radius: 12px;
 }
 
 /* 진행바 */
 .progress-container {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 50px;
+    padding-bottom: 15px;
+}
+
+#progress-text {
+    font-size: 1rem;
+    color: #333;
+    font-weight: bold;
 }
 
 .progress-bar {
     flex-grow: 1;
-    height: 20px;
+    height: 8px;
     background-color: #ddd;
     border-radius: 10px;
     overflow: hidden;
@@ -28,46 +43,91 @@
     height: 100%;
     background-color: #333333;
     width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* 섹션 제목(h2) 간격 */
+#colorTestSection h2 {
+    margin-bottom: 30px;
+    font-size: 1.5rem;
+    color: #5A7B9A;
+    border-left: 4px solid #5A7B9A;
+    padding-left: 15px;
+    padding-top: 5px;
 }
 
 /* 질문 */
 .questions .question {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
+    padding-top: 10px;
+    padding-bottom: 15px;
 }
 
 .questions p {
-    margin: 0 0 5px 0;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #333;
 }
 
 /* 옵션들을 한 줄이 아니라 세로로 배치 */
 .options {
-    margin-left: 20px; /* 약간 들여쓰기 */
-    margin-bottom: 5px; /* 옵션 간격 */
+    margin-left: 10px; /* 약간 들여쓰기 */
+    margin-bottom: 2px; /* 옵션 간격 */
+    padding: 6px;
+    border-radius: 8px;
+    transition: background 0.2s;
 }
 
 /* label 안의 radio와 텍스트 간격 */
 .options label {
     display: flex;
     align-items: center;
-    gap: 5px; /* 라디오와 텍스트 사이 */
+    gap: 8px; /* 라디오와 텍스트 사이 */
+    font-size: 0.9rem;     /* 선택지 글씨 크기 줄임 */
+    color: #444;
+    cursor: pointer;
+    width: 100%;
+    line-height: 1.4;
 }
 
 /* NEXT 버튼 */
 .next-button {
-    text-align: right;
-    margin-top: 20px;
+    display: flex !important;       /* flex 모드 활성화 */
+    justify-content: flex-end !important; /* [핵심] 가로 정렬을 오른쪽 끝으로! */
+    width: 100% !important;         /* 부모 너비를 꽉 채워야 끝으로 보낼 수 있음 */
+    margin-top: 40px !important;
+    padding-right: 0 !important;    /* 혹시 모를 패딩 간섭 제거 */
 }
 
 .next-button button {
-    padding: 10px 20px;
-    background-color: #535252;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
+    /* 1. 크기와 폰트 */
+    padding: 12px 28px !important;
+    font-size: 15px !important;
+    font-weight: bold !important;
+
+    /* 2. 모양과 색상 */
+    border-radius: 6px !important;
+    background-color: #535252 !important;
+    color: white !important;
+    border: none !important;
+    cursor: pointer !important;
+
+    /* 3. 애니메이션 및 효과 */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
+
+    /* 혹시 모를 폰트 간격 설정 제거 */
+    letter-spacing: normal !important;
 }
 
+/* 호버 효과 통일 */
 .next-button button:hover {
-    background-color: #333333;
+    background-color: #333 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
 }

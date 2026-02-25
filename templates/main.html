@@ -9,12 +9,22 @@
     </div>
 
     <div class="main-right">
-        <h1>날씨와 퍼스널컬러로<br>오늘의 옷을 추천해드려요</h1>
-        {% if user.is_authenticated %}
-            <button class="start-btn fade-delay" onclick="location.href='/personalColors/'">시작하기</button>
-        {% else %}
-            <button class="start-btn fade-delay" onclick="loginRequired()">시작하기</button>
-        {% endif %}
+        <h1 class="main-title">
+            오늘의 날씨에,<br>
+            <span class="point-color">당신만의 색</span>을 입히다
+        </h1>
+
+        <p class="main-subtext fade-delay">
+            팔레트미가 제안하는 기온별 퍼스널 컬러 룩북
+        </p>
+
+        <div class="main-content-wrap">
+            {% if user.is_authenticated %}
+                <button class="start-btn fade-delay" onclick="location.href='/personalColors/'">지금 시작하기</button>
+            {% else %}
+                <button class="start-btn fade-delay" onclick="loginRequired()">지금 시작하기</button>
+            {% endif %}
+            </div>
     </div>
 </main>
 

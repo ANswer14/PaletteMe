@@ -9,12 +9,15 @@
     <section id="personalColorSection">
         <div class="left">
             <div class="intro-header">
-                <img src="{% static 'img/main1.png' %}" alt="퍼스널컬러" class="intro-img">
+                <img src="{% static 'img/InfoColor2_2.png' %}" alt="퍼스널컬러" class="intro-img">
                 <div class="intro-text">
-                    <h1>퍼스널컬러 소개</h1>
+                    <h2>퍼스널컬러 소개</h2>
+                    <br><br>
                     <p>
-                    퍼스널컬러란 자신의 피부톤, 눈동자, 머리카락 색 등을 기준으로
-                    어울리는 색상을 찾아주는 컬러 분석 방법입니다.
+                        <strong>퍼스널 컬러(Personal Color)</strong>란 개인이 가진 고유의 신체 색상(피부, 머리카락, 눈동자 등)과
+            가장 조화를 이루어 생기가 돌고 활기차 보이게 만들어주는 최적의 색상을 의미합니다. <br><br>
+            자신에게 맞는 컬러를 활용하면 얼굴의 결점을 보완하고 이미지를 더욱 화사하게 연출할 수 있습니다.
+            단순히 유행하는 색상이 아닌, <strong>'나를 가장 나답게'</strong> 만들어주는 빛나는 컬러를 직접 확인해 보세요.
                     </p>
                 </div>
             </div>
@@ -25,14 +28,14 @@
             <!-- 저장된 정보가 있으면 렌더링 -->
             {% if is_saved == True %}
                 <div id="userColorInfo">
-                    <h3>{{ color }}</h3>
-                    <h3>시행 날짜:{{ date }}</h3>
-                    <h3>{{ mood }}</h3>
-                    <h3>{{ good_color }}</h3>
-                    <h3>{{ bad_color }}</h3>
+                    <h3>퍼스널컬러 : <span class="info-value result-name">{{ color }}</span></h3>
+                    <h3>시행 날짜 : <span class="info-value">{{ date }}</span></h3>
+                    <h3>분위기 : <span class="info-value">{{ mood }}</span></h3>
+                    <h3>어울리는 색 : <span class="info-value color-target">{{ good_color }}</span></h3>
+                    <h3>피해야하는 색 : <span class="info-value">{{ bad_color }}</span></h3>
                 </div>
                 <div class="buttons">
-                    <button id="proceedBtn">진행</button>
+                    <button id="proceedBtn">진행하기</button>
                     <button id="retryBtn">다시하기</button>
                 </div>
             {% endif %}

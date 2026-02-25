@@ -6,8 +6,8 @@ body {
 }
 
 .board-detail-container.notice {
-    width: 85%;
-    max-width: 900px;
+    /*width: 85%;*/
+    max-width: 1000px;
     margin: 50px auto;
     background: white;
     padding: 50px;

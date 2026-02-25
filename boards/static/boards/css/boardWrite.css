@@ -1,4 +1,7 @@
 /* boardWrite.css - Modern PaletteMe Theme */
+body {
+    background-color: #FAF9F6 !important;
+}
 
 :root {
     --primary-color: #3b82f6;

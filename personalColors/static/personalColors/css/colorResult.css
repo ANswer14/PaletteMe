@@ -1,88 +1,214 @@
+/* 1. 최상단에 폰트 불러오기 (이게 없으면 손글씨가 안 나와요!) */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap');
+
+body {
+    background-color: #FAF9F6 !important;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
 /* 결과 화면 섹션 */
 #resultSection {
     display: flex;
-    margin-top: 150px;
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin: 100px auto;
+    max-width: 1200px;
+    width: 95%;
+    align-items: center;
+    padding: 60px;
+    background: #FCFBF9;
+    border: 1px solid #F1F0ED;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border-radius: 20px;
 }
 
 .left {
-    width: 30%;
-    padding-right: 20px;
+    flex: 0 0 40%;
+    display: flex;
+    justify-content: center;
+    /*align-items: center;*/
 }
 
 .result-img {
     width: 100%;
+    max-width: 320px;
     height: auto;
-    border-radius: 10px;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+.result-name {
+    font-family: 'Nanum Pen Script', cursive !important;
+    font-size: 72px !important;
+    font-weight: 400 !important;
+    margin-bottom: 20px;
+    display: block;
+    line-height: 1;
+    animation: fadeInResult 1.5s ease-out;
+}
+
+@keyframes fadeInResult {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .right {
-    width: 70%;
-    color: #675f5f;
-    font-size: 25px;
+    flex: 0 0 60%;
+    /*width: 55%;*/
+    /*height: 100%;*/
+    /*color: #675f5f;*/
+    /*font-size: 25px;*/
+    text-align: left;
+    padding-left: 80px;
+    display: flex;
+    flex-direction: column;   /* 세로 배치 */
 }
 
 .right h1 {
-    font-size: 40px;
+    font-size: 20px;
+    color: #555;
+    font-weight: 600;
     margin-bottom: 10px;
 }
 
 #personalColorResult {
-    font-size: 80px;
-    font-weight: bold;
-    color: #e37e7e;
-    margin-bottom: 40px;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 58px; /* 크기 대폭 확대 */
+    font-weight: 800;
+    color: #2D3436;
+    margin-bottom: 25px;
+    letter-spacing: -1px;
 }
 
-.right p {
-    margin: 5px 0;
+#description {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #636e72;
+    margin-bottom: 30px;
+}
+
+/*.right p {*/
+/*    margin: 5px 0;*/
+/*    margin-bottom: 15px;*/
+/*}*/
+
+.description-row, .palette-row {
+    background-color: #FCFBF9;
+    padding: 20px 25px;
+    border-radius: 12px;
+    border: 1px solid #F1F0ED;
+    display: flex;
+    flex-direction: column; /* 세로로 배치해서 더 전문적으로 보이게 함 */
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
     margin-bottom: 15px;
 }
 
-.palette-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.description-row p, .palette-row p {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+    /*text-transform: uppercase;*/
+    letter-spacing: 0.5px;
 }
 
+/* 실제 분위기 설명 텍스트 */
+#description {
+    font-size: 17px;
+    line-height: 1.6;
+    color: #636e72;
+    margin: 0;
+    padding-left: 5px;
+}
+
+/* 팔레트들의 컨테이너 */
 #palette {
     display: flex;
-    gap: 8px;
+    gap: 15px; /* 팔레트 사이 간격 */
+    padding-left: 5px; /* 들여쓰기 */
 }
 
 .color-circle {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;   /* 동그라미 */
-    border: 1px solid #ccc;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.08);
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+/* 원 아래에 그림자를 주어 바닥에 붙어 있는 느낌 부여 */
+.color-circle::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 10%;
+    width: 80%;
+    height: 10px;
+    background: rgba(0,0,0,0.03);
+    filter: blur(4px);
+    z-index: -1;
+}
+
+/* 굿/배드 컬러 정보 */
+#goodColor, #badColor {
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 20px 25px;
+    border-radius: 12px;
+    background-color: #FCFBF9;
+    border: 1px solid #F1F0ED;
+    letter-spacing: -0.5px;
+    line-height: 1.4;
+    transition: all 0.3s ease;
+    color: #555;
+}
+
+#goodColor {
+    border-left: 5px solid #FF8A8A;
+    margin-bottom: 15px;
+}
+
+#badColor {
+    border-left: 5px solid #A0B2C6;
+    margin-bottom: 30px;
 }
 
 .buttons {
-    margin-top: 80px;
-    margin-bottom: 80px;
+    margin-top: 60px;
     display: flex;
-    gap: 50px;
+    gap: 20px;
+    justify-content: center;
+
+    /* 혹시 남아있을 수 있는 왼쪽 여백 강제 제거 */
+    margin-left: 0 !important;
+    padding-left: 0 !important;
 }
 
 .buttons button {
-    width: 130px;
-    padding: 10px 20px;
+    width: 140px !important;
+    height: 52px !important;
+    padding: 0 !important; /* 안쪽 여백 때문에 달라 보일 수 있어 제거 */
+
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 8px;
     background-color: #535252;
     color: white;
     border: none;
-    border-radius: 3px;
-    font-weight: bold;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
 }
 
 .buttons button:hover {
-    background-color: #333333;
+    background-color: #333;
+    transform: translateY(-2px);
 }
 
 /* 팝업 전체 배경 (어둡게 처리) */
@@ -133,15 +259,15 @@
     background-color: #333;
 }
 
-/* '아니오' 버튼 커스텀 (구분하기 쉽게 회색으로) */
-#noBtn {
-    background-color: #ccc;
-    color: #333;
-}
+/*!* '아니오' 버튼 커스텀 (구분하기 쉽게 회색으로) *!*/
+/*#noBtn {*/
+/*    background-color: #ccc;*/
+/*    color: #333;*/
+/*}*/
 
-#noBtn:hover {
-    background-color: #bbb;
-}
+/*#noBtn:hover {*/
+/*    background-color: #bbb;*/
+/*}*/
 
 /* 1. 진단 실패 시 (응답 부족) 스타일 */
 #failedResult {

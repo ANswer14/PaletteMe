@@ -75,7 +75,7 @@
                 <input type="file" id="profileUpload" name="profile_image" accept="image/*" onchange="previewFile()" style="display:none;">
 
                 <div class="default-images">
-                    <p>기본 이미지 선택</p>
+                    <label>기본 이미지 선택</label>
                     <div class="img-list">
                         <img src="{% static 'img/profileImg1.png' %}" class="selectable-img" onclick="selectImage('profileImg1.png')">
                         <img src="{% static 'img/profileImg2.png' %}" class="selectable-img" onclick="selectImage('profileImg2.png')">
@@ -118,7 +118,7 @@
             <span class="col-title">제목</span>
             <span class="col-date">날짜</span>
             <span class="col-view">조회수</span>
-            <span class="col-view">글 유형</span>
+            <span class="col-view">게시판</span>
         </div>
         <div class="scroll-box">
             {% if posts %}
@@ -128,11 +128,13 @@
                     <span class="col-title">{{ post.title }}</span>
                     <span class="col-date">{{ post.created_at|date:"Y-m-d" }}</span>
                     <span class="col-view">{{ post.view_count }}</span>
-                    <span class="col-title">{{ post.category }}</span>
+                    <span class="col-type">
+                        <span class="category-badge">{{ post.category }}</span>
+                    </span>
                 </div>
                 {% endfor %}
             {% else %}
-                <div class="board-row" style="justify-content: center; color: #999;">게시글이 없습니다.</div>
+                <div class="board-row">게시글이 없습니다.</div>
             {% endif %}
         </div>
     </section>
@@ -154,19 +156,21 @@
         <table id="diagnosisTable">
             <thead>
                 <tr>
+                    <th>선택</th>
                     <th>날짜</th>
                     <th>결과</th>
                 </tr>
             </thead>
             <tbody>
                 {% for record in histories %}
-                <tr>
+                <tr onclick="enableHistory(this);" data-history_id="{{ record.history_id }}">
+                    <td>{% if record.is_enabled %} ✔️{% endif %}</td>
                     <td>{{ record.date|date:"Y-m-d" }}</td>
                     <td>{{ record.color_type }}</td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="2" class="no-data">기록이 없습니다.</td>
+                    <td colspan="3" class="no-data">기록이 없습니다.</td>
                 </tr>
                 {% endfor %}
             </tbody>

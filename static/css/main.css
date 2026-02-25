@@ -1,59 +1,158 @@
+/* 폰트추가 */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap');
+
+body {
+    background-color: #FAF9F6 !important;
+}
 
 /* ===== MAIN ===== */
 .main {
     display: flex;
-    height: 70vh; /* 화면의 대부분 차지 */
-    padding: 40px;
+    max-width: 1300px !important;
+    width: 100%;
+    /* 중앙 정렬을 강제 */
+    margin-left: auto !important;
+    margin-right: auto !important;
+    height: 600px;
+    align-items: center;
+    /*overflow: hidden;*/
+    background-color: #FAF9F6;
+
+    /* 혹시 모를 float 속성 제거 */
+    float: none !important;
+    clear: both !important;
 }
 
 .main-left {
-    width: 50%;
+    flex: 0 0 60%; /* 너비를 65%로 고정 */
+    height: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    padding-left: 20px
 }
 
 .main-left img {
-    width: 70%;
-    max-width: 400px;
-    height: auto;
+    max-width: 100%;
+    max-height: 90%; /* 이미지 높이도 메인 높이에 맞춰 제한 */
+    object-fit: contain;
+    /* 이미지의 흰색 배경을 투명하게 만들어 배경색(#FAF9F6)과 합성합니다 */
+    mix-blend-mode: multiply;
+    /* 만약 multiply로 이미지가 너무 어두워진다면 아래 필터를 살짝 섞으세요 */
+    /* filter: brightness(1.02); */
 }
 
 .main-right {
-    width: 50%;
+    flex: 0 0 40%; /* 너비를 35%로 고정 */
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    /* 텍스트와 버튼을 오른쪽으로 보내기 위해 오른쪽 패딩 적용 */
+    padding-left: 80px; /* 왼쪽 패딩 제거 */
+    padding-right: 20px;
+    box-sizing: border-box;
+    /*text-align: left; !* 내부 텍스트 및 인라인 요소 오른쪽 정렬 *!*/
+}
+
+.main-title {
+    /* 폰트를 불러왔다면 이 이름을 써야 적용됩니다 */
+    font-family: 'Nanum Pen Script', cursive !important;
+    font-size: 68px !important; /* 손글씨는 글자 선이 얇아 보통 크게 쓰는 게 예뻐요 */
+    font-weight: 400;
+    line-height: 1.1;
+    color: #434343;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    text-align: left;
+    word-break: keep-all;
+    display: block !important;
+}
+
+.point-color {
+    font-family: 'Nanum Pen Script', cursive !important;
+    font-size: 65px !important; /* 손글씨는 고딕보다 크게 해야 밸런스가 맞아요 */
+    color: #E27474; /* 화사하고 산뜻한 코랄 핑크 */
+    font-weight: 400;
+    text-shadow: 1px 1px 2px rgba(226, 116, 116, 0.1);
+    vertical-align: middle; /* 고딕과 높낮이를 맞춤 */
+    margin: 0 8px; /* 양옆 미세한 간격 */
+}
+
+.main-subtext {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 18px;
+    color: #999;
+    margin-bottom: 35px;
+    /*letter-spacing: -0.5px;*/
+    font-weight: 400;
+    display: block !important;
+}
+
+/* 텍스트와 버튼을 감싸는 박스 */
+.main-content-wrap {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: -20px;
 }
 
 .main-right h1 {
-    font-size: clamp(30px, 5vw, 50px); /* 화면 크기에 따라 30px~50px 사이로 조절됨 */
-    line-height: 1.5; /* 줄간격 */
-    margin-bottom: 30px; /* 시작하기 버튼과의 간격을 벌려줌 */
-    color: #675f5f; /* 제목 색상 */
+    font-family: 'Pretendard', sans-serif;
+    font-size: 42px;
+    line-height: 1.4; /* 줄간격 */
+    margin-bottom: 25px; /* 시작하기 버튼과의 간격을 벌려줌 */
+    color: #3D3D3D; /* 제목 색상 */
+    font-weight: 700;
+    text-align: left;
     animation: floatUp 1.3s ease-out forwards; /* 글자 스르륵 효과 */
     word-break: keep-all; /* 한글 단어가 중간에 끊기지 않게 함 */
+    white-space: normal;  /* 공백(Space) 처리는 평범하게 해라 */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 최대 2줄까지만 노출 (넘칠 경우 대비) */
+    -webkit-box-orient: vertical; /* 정렬방향 세로(수직)으로 잡음 */
+    overflow: hidden;  /* 박스를 넘기는 건 다 숨김 */
 }
 
 @keyframes floatUp {
     0% {
         opacity: 0;
+        transform: translateY(20px); /* 아래에서 위로 올라오는 느낌 */
         filter: blur(4px);
     }
     100% {
         opacity: 1;
+        transform: translateY(0);
         filter: blur(0);
     }
 }
 
 .start-btn {
+    width: 180px;
+    height: 50px;
+
+    /* 정렬: 버튼만 오른쪽으로 밀기 */
     align-self: flex-end;
-    padding: 12px 30px;
-    font-size: 16px;
+    margin-left: 0;
+    margin-top: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     background-color: #535252;
-    color: #ffffff;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
     border: none;
+    border-radius: 30px;
     cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.start-btn:hover {
+    background-color: #333;
+    transform: translateY(-3px);
 }
 
 .fade-delay {
@@ -65,9 +164,10 @@
 /* 다른 CSS 간섭을 무시하고 강제로 중앙 정렬 */
 body .main-bottom-sections {
     display: flex !important;
-    width: 80% !important;
-    max-width: 1200px !important;
+    width: 100% !important;
+    max-width: 1300px !important;
     margin: 80px auto !important; /* 상단 배너와 80px 띄우고 가로 중앙 */
+    padding: 0 40px !important;
     gap: 30px !important;
     justify-content: space-between !important;
     align-items: flex-start !important;
@@ -78,13 +178,21 @@ body .main-bottom-sections {
 /* 개별 박스 설정 */
 body .main-bottom-sections .summary-box {
     flex: 1 !important;
-    background: white !important;
+    background: #FDFDFB !important;
     padding: 25px !important;
     border-radius: 12px !important;
-    border: 1px solid #eee !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important;
-    min-height: 220px !important;
+    border: 1px solid #EBEAE7 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02) !important;
     box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 250px !important;
+}
+
+/* 마우스를 올렸을 때 살짝 반응하면 더 생동감 있어요 */
+body .main-bottom-sections .summary-box:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 15px 35px rgba(83, 82, 82, 0.06) !important;
 }
 
 /* 제목 부분 */
@@ -92,8 +200,8 @@ body .main-bottom-sections .summary-header {
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
-    margin-bottom: 15px !important;
-    border-bottom: 2px solid #535252 !important;
+    margin-bottom: 5px !important;
+    border-bottom: 2px solid #EAE9E6 !important;
     padding-bottom: 10px !important;
 }
 
@@ -107,18 +215,19 @@ body .main-bottom-sections .summary-header h3 {
 /* 리스트 스타일 */
 body .main-bottom-sections .summary-list {
     list-style: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
+    padding: 0 5px !important;
+    margin-top: 0 !important;
 }
 
 body .main-bottom-sections .summary-list li {
+    background-color: transparent !important; /* 개별 리스트 배경 투명화 */
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
     margin-bottom: 12px !important;
     font-size: 14px !important;
-    border-bottom: 1px solid #f9f9f9 !important;
-    padding-bottom: 5px !important;
+    border-bottom: 1px solid #F1F0ED !important;
+    padding: 12px 10px !important;
 }
 
 body .main-bottom-sections .summary-list li a {
@@ -145,8 +254,18 @@ body .main-bottom-sections .like-count {
 
 /* 데이터 없을 때 */
 body .main-bottom-sections .no-data {
-    color: #ccc !important;
-    text-align: center !important;
-    padding-top: 50px !important;
+    flex: 1 1 100% !important;
+    display: block !important;
+    align-items: center !important;   /* 세로 중앙 */
+    justify-content: center !important; /* 가로 중앙 */
+
     width: 100% !important;
+    height: 100% !important;
+    color: #AAA !important;
+    font-size: 14px !important;
+    text-align: center !important;
+    margin: 0 !important;
+    padding-top: 50px !important;  /* 헤더 아래 적당한 위치에 배치 */
+    padding-bottom: 50px !important;
+    background: transparent !important; /* 혹시 모를 배경 제거 */
 }

@@ -5,17 +5,18 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.1); /* 팝업 뒤를 어둡게 처리 */
+    min-height: 100vh;
+    background-color: #FAF9F6 !important;
 }
 
 /* 2. 팝업 컨테이너 (마이페이지 .card의 스타일 반영) */
 .add-info-box {
-    background: white;
+    background: #FCFBF9;
+    border: 1px solid #F1F0ED;
     width: 420px; /* 마이페이지 max-width 400px에 맞춘 적정 너비 */
     padding: 40px;
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* 마이페이지보다 조금 더 진한 그림자로 강조 */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
     text-align: center;
     box-sizing: border-box;
 }
@@ -55,13 +56,14 @@ body {
 
 /* 5. 입력창 및 버튼 (마이페이지 스타일 동일 적용) */
 input[type="text"] {
-    height: 45px;
+    height: 48px;
     padding: 10px 15px;
-    border: 1px solid #ccc;
+    border: 1px solid #E0E0E0;
     border-radius: 6px;
     font-size: 15px;
     box-sizing: border-box;
     width: 100%;
+    background-color: white;
 }
 
 .input-group {
@@ -84,7 +86,7 @@ input[type="text"] {
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background-color 0.2s ease;
 }
 
 .check-btn:hover {

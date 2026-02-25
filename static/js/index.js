@@ -9,7 +9,7 @@ function loginRequired() {
 // 팝업창 열기 함수 (모니터길이/2 - 팝업창길이/2)
 function openLoginPopup(url) {
     const width = 450;
-    const height = 600;
+    const height = 650;
 
     // 화면 중앙 계산
     const left = (window.screen.width / 2) - (width / 2);
@@ -70,7 +70,13 @@ function openImagePopup(imgUrl) {
 // 소셜 로그인 성공 시 index.html에서 새로고침
 window.addEventListener('storage',(e) => {
     if (e.key === 'refreshParent' && e.newValue === 'true') {
-        localStorage.removeItem('refreshParent');
         location.href="/";
     }
 });
+
+// index.html 이 켜질때 refreshParent가 존재하면 삭제
+window.onload = function () {
+    if (localStorage.getItem('refreshParent')){
+        localStorage.removeItem('refreshParent')
+    }
+};

@@ -98,7 +98,7 @@ def profile_view(request):  # 저장, 중복확인 버튼을 눌렀을 때 (POST
     test_histories = request.user.color_history.order_by('-executed_at')
     histories = []
     for history in test_histories:
-        histories.append({'date': history.executed_at, 'color_type': history.color_type})
+        histories.append({'date': history.executed_at, 'color_type': history.color_type, 'is_enabled': history.is_enabled, 'history_id': history.history_id})
 
     # 즐겨찾기
     favorites = request.user.favorite_images.order_by('-favorite_id')

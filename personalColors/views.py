@@ -75,7 +75,7 @@ def enable_color_info(request):
     selected_history.is_enabled = True
     selected_history.save()
 
-    return JsonResponse({'data': 'success'})
+    return JsonResponse({'status': 'success'})
 
 
 # colorTest.html 렌더링 함수

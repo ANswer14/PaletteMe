@@ -1,11 +1,14 @@
 async function enableHistory(element) {
-    fetch(`/personalColors/enable_history?history_id=${element.getAttribute('data-history_id')}`)
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success') {
-                alert('성공적으로 저장되었습니다!')
-            }
-        })
+    if (confirm('이 진단을 선택하시겠습니까?')) {
+        fetch(`/personalColors/enable_history?history_id=${element.getAttribute('data-history_id')}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('성공적으로 저장되었습니다!');
+                    window.location.reload();
+                }
+            })
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function() {

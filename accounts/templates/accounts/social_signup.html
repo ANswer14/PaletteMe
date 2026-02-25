@@ -21,7 +21,8 @@
                     <label>닉네임</label>
                     <div class="input-group">
                         <input type="text" name="nickname" id="id_nickname"
-                               value="{{ form.nickname.value|default:form.initial.nickname|default:'' }}" placeholder="닉네임을 입력하세요" required>
+                               value="{{ form.nickname.value|default:form.initial.nickname|default:'' }}"
+                               maxlength="20" minlength="2" placeholder="닉네임 입력 (최대 20자)" required>
                         <button type="button" id="nickNameCheckBtn" class="check-btn">중복 확인</button>
                     </div>
                     <span id="nickNameStatus" class="status"></span>

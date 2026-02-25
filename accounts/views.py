@@ -25,7 +25,7 @@ def agreement_view(request):
 # 약관 동의 없이 회원가입 페이지 강제이동 방지
 class MySignupView(SignupView):
     def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)  # 부모 기능(차단 로직) 실행
 
 
 # 아이디/닉네임 중복확인 로직 (1차, 2차는 forms.py에서)

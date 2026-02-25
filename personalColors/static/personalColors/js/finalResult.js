@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
         else if (resultText.includes('여름')) resultElement.style.color = '#7FB3D5'; // 여름 대표색
         else if (resultText.includes('가을')) resultElement.style.color = '#B36D3E'; // 가을 대표색
         else if (resultText.includes('겨울')) resultElement.style.color = '#8E44AD'; // 겨울 대표색
+        else if (resultText.includes('뉴트럴')) resultElement.style.color = '#8E8474'; // 뉴트럴 대표색
     }
 
     const pollInterval = setInterval(checkStatus, 1000); // 라이브 프리뷰를 위해 주기를 0.8~1초로 짧게 설정

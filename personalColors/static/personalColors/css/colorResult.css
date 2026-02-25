@@ -14,26 +14,37 @@ body {
     max-width: 1200px;
     width: 95%;
     align-items: center;
-    padding: 60px;
+    padding: 60px 60px 60px 50px;
     background: #FCFBF9;
     border: 1px solid #F1F0ED;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     border-radius: 20px;
+    box-sizing: border-box;
 }
 
 .left {
-    flex: 0 0 40%;
+    flex: 0 0 42%;
     display: flex;
     justify-content: center;
-    /*align-items: center;*/
+    align-items: center;
+    padding: 0;
 }
 
 .result-img {
     width: 100%;
-    max-width: 320px;
+    max-width: 420px;
     height: auto;
     border-radius: 15px;
     object-fit: cover;
+    /*margin-left: -2%;*/
+    margin: 0;
+
+    filter:
+        brightness(1.02)   /* 5% 정도 더 밝게 */
+        contrast(1.02)     /* 대비를 살짝 줘서 선명하게 */
+        saturate(0.85)      /* 채도를 살짝 낮춰 노란기를 중화 */
+        sepia(0.03)        /* 세피아 값을 아주 낮게 주어 따뜻함만 남기고 탁한 느낌 제거 */
+        hue-rotate(-4deg); /* 색조를 살짝 돌려 노란빛을 푸른/화이트 쪽으로 보정 */
 }
 
 .result-name {
@@ -52,20 +63,22 @@ body {
 }
 
 .right {
-    flex: 0 0 60%;
+    flex: 0 0 58%;
     /*width: 55%;*/
     /*height: 100%;*/
     /*color: #675f5f;*/
     /*font-size: 25px;*/
     text-align: left;
-    padding-left: 80px;
+    padding-left: 50px;
+    padding-right: 0;
     display: flex;
     flex-direction: column;   /* 세로 배치 */
+    box-sizing: border-box;
 }
 
 .right h1 {
     font-size: 20px;
-    color: #555;
+    color: #666;
     font-weight: 600;
     margin-bottom: 10px;
 }
@@ -115,9 +128,10 @@ body {
 
 /* 실제 분위기 설명 텍스트 */
 #description {
+    color: #777;
+    font-family: 'Pretendard', -apple-system, sans-serif;
     font-size: 17px;
-    line-height: 1.6;
-    color: #636e72;
+    font-weight: 500;
     margin: 0;
     padding-left: 5px;
 }
@@ -154,6 +168,7 @@ body {
 
 /* 굿/배드 컬러 정보 */
 #goodColor, #badColor {
+    color: #777;
     font-family: 'Pretendard', -apple-system, sans-serif;
     font-size: 17px;
     font-weight: 500;
@@ -164,7 +179,6 @@ body {
     letter-spacing: -0.5px;
     line-height: 1.4;
     transition: all 0.3s ease;
-    color: #555;
 }
 
 #goodColor {

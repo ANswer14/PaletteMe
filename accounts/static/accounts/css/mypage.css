@@ -203,35 +203,55 @@ table {
     border-collapse: collapse;
     margin-top: 15px;
     background-color: transparent; /* 배경은 투명하게 */
+    /* 설치 없이 기본 폰트 중 가장 세련된 것만 골라 쓰는 설정 */
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    letter-spacing: -0.5px;
 }
 /* 제목 행 (thead) */
 th {
+    background-color: #f8f9fa;
     padding: 12px 16px;
     text-align: center; /* 부트스트랩 특유의 정렬 방식 */
     font-weight: 600;
     font-size: 14px;
-    color: #212529; /* 부트스트랩 기본 텍스트 색상 */
-    border-bottom: 2px solid #dee2e6; /* 제목 아래는 조금 더 진한 선 */
+    color: #333; /* 부트스트랩 기본 텍스트 색상 */
+    border-bottom: 2px solid #535252; /* 제목 아래는 조금 더 진한 선 */
 }
 /* 데이터 행 (tbody td) */
 td {
     padding: 12px 16px;
     text-align: center;
-    color: #212529;
-    border-bottom: 1px solid #dee2e6; /* 기본 구분선 */
+    font-size: 15px;
+    color: #333;
+    border-bottom: 1px solid #f1f1f1; /* 기본 구분선 */
     vertical-align: middle;
+    transition: color 0.2s ease; /* 색상 변화 부드럽게 */
 }
 tbody {
     border-top: 2px solid #adb5bd; /* <body> 바로 위에 진한 선 추가 */
 }
-/* 마우스를 올렸을 때의 효과 (부트스트랩의 table-hover) */
-tbody tr:hover {
-    background-color: rgba(0, 0, 0, 0.05); /* 아주 연한 회색 */
+
+tbody tr {
+    cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경 */
     transition: background-color 0.2s ease;
 }
+
+/* 마우스를 올렸을 때의 효과 (부트스트랩의 table-hover) */
+tbody tr:hover {
+    background-color: transparent; /* 배경색 변화 제거 */
+    color: #5A7B9A; /* '나의 활동'과 동일한 포인트 컬러로 변경 */
+    font-weight: 600; /* 살짝 두껍게 해서 강조 효과 */
+}
+
+/* 클릭하는 느낌을 주기 위해 누르는 순간 살짝 어두워지게 */
+tbody tr:active {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* "기록이 없습니다" 문구 스타일 */
 .no-data {
     padding: 50px 0; /* 위아래 여백을 넉넉히 줘서 기록 없음을 강조 */
-    color: #999;     /* 글자색을 흐리게 */
+    color: #bbb;     /* 글자색을 흐리게 */
     font-size: 15px;
     text-align: center;
 }
@@ -335,22 +355,25 @@ tbody tr:hover {
     display: flex;
     width: 100%;
     box-sizing: border-box;
-    /*padding: 0 20px; !* 양 끝 여백 통일 *!*/
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    letter-spacing: -0.5px;
     align-items: center;
 }
 
 /* 행 디자인 */
 .board-row {
-    padding: 15px 20px 15px 30px;
+    padding: 18px 20px 18px 30px;
     border-bottom: 1px solid #f1f1f1;
     cursor: pointer;
-    transition: background 0.2s;
-    font-size: 14px;
+    background-color: transparent; /* 배경색 고정 */
+    transition: color 0.2s ease;
+    font-size: 15px;
+    color: #333;
 }
 
 .board-row:hover {
-    background-color: #fcfcfc;
     color: #5A7B9A; /* 포인트 컬러 */
+    background-color: transparent !important; /* 배경색 변화 제거 */
 }
 
 .scroll-box {
@@ -367,9 +390,9 @@ tbody tr:hover {
 .board-header {
     background-color: #f8f9fa;
     border-bottom: 2px solid #535252;
-    height: 48px;
-    font-weight: bold;
-    font-size: 13px;
+    height: 50px;
+    font-weight: 600;
+    font-size: 14px;
     color: #333;
     border-radius: 8px 8px 0 0;
     padding: 0 20px 0 30px;

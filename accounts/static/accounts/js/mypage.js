@@ -4,13 +4,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const nicknameInput = document.getElementById('nickname');
     const nickNameCheckBtn = document.getElementById('nickNameCheckBtn');
     const nickNameStatus = document.getElementById('nickNameStatus');
-    const saveInfoBtn = document.getElementById('saveInfoBtn');
 
     // 비밀번호 관련 요소
     const currentPw = document.getElementById('currentPw');
     const newPw = document.getElementById('newPw');
     const newPwCheck = document.getElementById('newPwCheck');
-    const changePwBtn = document.getElementById('changePwBtn');
 
     // 초기값 저장
     const initialNickname = nicknameInput ? nicknameInput.value.trim() : "";
@@ -93,41 +91,63 @@ document.addEventListener("DOMContentLoaded", function() {
     const pwForm = document.querySelector('form[action="/accounts/change-password/"]');
 
     if (pwForm) {
-        pwForm.onsubmit = function(e) {
+        // async 키워드를 붙여야 내부에서 await(기다림)을 쓸 수 있습니다.
+        pwForm.onsubmit = async function(e) {
+            e.preventDefault();  // 일단 서버 전송을 막습니다.
+
             // 1. 요소 다시 확인 (입력 시점의 값)
-            const currentPwVal = document.getElementById('currentPw').value.trim();
-            const newPwVal = document.getElementById('newPw').value.trim();
-            const newPwCheckVal = document.getElementById('newPwCheck').value.trim();
+            const currentPwVal = currentPw.value.trim();
+            const newPwVal = newPw.value.trim();
+            const newPwCheckVal = newPwCheck.value.trim();
 
             // 2. 빈 칸 검사
             if (!currentPwVal || !newPwVal || !newPwCheckVal) {
                 alert("비밀번호 필드를 모두 입력해주세요.");
-                e.preventDefault();
-                return false;
+                return;
             }
 
-            // 3. 새 비밀번호 일치 검사
+            // 3. 현재 비밀번호가 맞는지 서버에 AJAX로 물어보기
+            try {
+                // FormData를 사용하여 서버로 데이터를 보냅니다.
+                const formData = new FormData();
+                formData.append('old_password', currentPwVal);
+                formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+                const response = await fetch("/accounts/check-password-ajax/", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!data.is_correct) {
+                    alert("현재 비밀번호가 일치하지 않습니다.");
+                    currentPw.focus();
+                    return; // 함수 종료 (제출 안 됨)
+                }
+            } catch (err) {
+                console.error(err);
+                alert("비밀번호 확인 중 오류가 발생했습니다.");
+                return;
+            }
+
+            // 4. 새 비밀번호 일치 검사
             if (newPwVal !== newPwCheckVal) {
                 alert("새 비밀번호가 서로 일치하지 않습니다.");
-                document.getElementById('newPwCheck').focus();
-                e.preventDefault();
-                return false;
+                newPwCheck.focus();
+                return;
             }
 
-            // 4. 길이 검사
+            // 5. 길이 검사
             if (newPwVal.length < 8) {
                 alert("새 비밀번호는 최소 8자 이상이어야 합니다.");
-                e.preventDefault();
-                return false;
+                return;
             }
 
-            // 5. 최종 확인
-            if (!confirm("비밀번호를 변경하시겠습니까?")) {
-                e.preventDefault();
-                return false;
+            // 6. 최종 확인
+            if (confirm("비밀번호를 변경하시겠습니까?")) {
+                pwForm.submit(); // 여기서 실제 서버의 change_password_custom으로 전송
             }
-
-            // 여기까지 오면 자동으로 서버로 submit 됩니다.
         };
     }
 });

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from allauth.account.views import SignupView, PasswordResetView
 from allauth.socialaccount.views import SignupView as SocialSignupView # allauth의 소셜 회원가입을 SocialSignupView로 명시.
 from django.http import JsonResponse
@@ -13,6 +13,8 @@ from .forms import CustomSignupForm
 from allauth.account.utils import perform_login
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth import get_user_model
+from django.views.decorators.http import require_POST
+
 
 User = get_user_model()
 
@@ -25,7 +27,7 @@ def agreement_view(request):
 # 약관 동의 없이 회원가입 페이지 강제이동 방지
 class MySignupView(SignupView):
     def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)  # 부모 기능(차단 로직) 실행
 
 
 # 아이디/닉네임 중복확인 로직 (1차, 2차는 forms.py에서)
@@ -98,7 +100,7 @@ def profile_view(request):  # 저장, 중복확인 버튼을 눌렀을 때 (POST
     test_histories = request.user.color_history.order_by('-executed_at')
     histories = []
     for history in test_histories:
-        histories.append({'date': history.executed_at, 'color_type': history.color_type})
+        histories.append({'date': history.executed_at, 'color_type': history.color_type, 'is_enabled': history.is_enabled, 'history_id': history.history_id})
 
     # 즐겨찾기
     favorites = request.user.favorite_images.order_by('-favorite_id')
@@ -149,10 +151,30 @@ class MySocialSignupView(SocialSignupView):
         return redirect('login_success')
 
 
-# 소셜 로그인 시 로그인 창이 닫히지 않아 추가한 로직
-def login_success_view(request):
-    # render를 사용하여 만든 html을 띄워줍니다. 이 html 내에 새 로그인 창을 닫게하는 로직이 존재.
-    return render(request, 'accounts/login_success.html')
+# 프로필 페이지의 현재 비밀번호가 맞는지 JS에서 물어볼 때 답해주는 함수
+@require_POST
+def check_password_ajax(request):
+    old_pw = request.POST.get('old_password', '')
+    is_correct = request.user.check_password(old_pw)
+    return JsonResponse({'is_correct': is_correct})
+
+
+# 프로필 페이지의 변경된 비밀번호를 저장하는 함수
+def change_password_custom(request):
+    if request.method == 'POST':
+        user = request.user
+        pw1 = request.POST.get('password1')
+
+        # 비밀번호 변경 적용
+        user.set_password(pw1)
+        user.save()
+
+        # 중요: 비밀번호 변경 후 로그아웃되지 않도록 세션 업데이트
+        update_session_auth_hash(request, user)
+        messages.success(request, "비밀번호가 성공적으로 변경되었습니다.")
+        return redirect('profile')
+
+    return redirect('profile')
 
 
 # 프로필 페이지의 회원 탈퇴 로직 함수
@@ -169,34 +191,10 @@ def delete_account(request):
     return redirect('profile')  # GET 접근 시(취소 누르면) 프로필로 리다이렉트
 
 
-# 프로필 페이지의 비밀번호 변경 로직 함수
-def change_password_custom(request):
-    if request.method == 'POST':
-        user = request.user
-        old_pw = request.POST.get('old_password')
-        pw1 = request.POST.get('password1')
-        pw2 = request.POST.get('password2')
-
-        # 1. 현재 비밀번호 확인
-        if not user.check_password(old_pw):
-            messages.error(request, "현재 비밀번호가 일치하지 않습니다.")
-            return redirect('profile')
-
-        # 2. 새 비밀번호 일치 확인
-        if pw1 != pw2:
-            messages.error(request, "새 비밀번호가 서로 일치하지 않습니다.")
-            return redirect('profile')
-
-        # 3. 비밀번호 변경 적용
-        user.set_password(pw1)
-        user.save()
-
-        # 중요: 비밀번호 변경 후 로그아웃되지 않도록 세션 업데이트
-        update_session_auth_hash(request, user)
-        messages.success(request, "비밀번호가 성공적으로 변경되었습니다.")
-        return redirect('profile')
-
-    return redirect('profile')
+# 소셜 로그인 시 로그인 창이 닫히지 않아 추가한 로직
+def login_success_view(request):
+    # render를 사용하여 만든 html을 띄워줍니다. 이 html 내에 새 로그인 창을 닫게하는 로직이 존재.
+    return render(request, 'accounts/login_success.html')
 
 
 # 비밀번호 재설정 (비밀번호 찾기) 페이지

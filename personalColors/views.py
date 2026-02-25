@@ -45,16 +45,17 @@ def get_color_info(request):
     color, date, mood, good_color, bad_color = None, None, None, None, None
     try:
         # executed_at 필드를 기준으로 가장 최신 데이터 1건 가져오기
-        latest_history = request.user.color_history.latest('executed_at')
+        selected_history = request.user.color_history.filter(user=request.user, is_enabled=True).first()
+        print(selected_history)
 
         # 데이터 받아오기
-        color = latest_history.color_type
-        date = latest_history.executed_at
-        mood = latest_history.mood
-        good_color = latest_history.good_color
-        bad_color = latest_history.bad_color
+        color = selected_history.color_type
+        date = selected_history.executed_at
+        mood = selected_history.mood
+        good_color = selected_history.good_color
+        bad_color = selected_history.bad_color
         is_saved = True # 데이터 있는지 없는지 판별용 변수
-    except ColorHistory.DoesNotExist:
+    except AttributeError as e:
         # 아직 진단 기록이 없는 경우에 대한 예외 처리
         is_saved = False
     return render(request, 'personalColors/infoColor.html', {'color':color,
@@ -62,6 +63,22 @@ def get_color_info(request):
                                                              'good_color': good_color,
                                                              'bad_color': bad_color,
                                                              'is_saved': is_saved,})
+
+@login_required(login_url='/accounts/login/')
+def enable_color_info(request):
+    history_id = request.GET.get('history_id')
+    true_history = request.user.color_history.filter(user=request.user, is_enabled=True).first()
+    if true_history:
+        true_history.is_enabled = False
+        true_history.save()
+
+    selected_history = request.user.color_history.filter(history_id=history_id).first()
+    selected_history.is_enabled = True
+    selected_history.save()
+
+    return JsonResponse({'status': 'success'})
+
+
 # colorTest.html 렌더링 함수
 @login_required(login_url='/accounts/login/')
 def test_color(request):
@@ -105,6 +122,10 @@ def save_info(request):
             if oldest_history:
                 oldest_history.delete() # 해당 row 삭제
 
+        prior_history = user_history.filter(is_enabled=True).first()
+        if prior_history:
+            prior_history.is_enabled = False
+            prior_history.save()
         # 새로운 결과 데이터 지정
         data = json.loads(request.body)
         color_type = data.get('colorType')
@@ -116,7 +137,7 @@ def save_info(request):
             color_type=color_type,
             mood=mood,
             good_color=good_color,
-            bad_color=bad_color
+            bad_color=bad_color,
         )
 
         # DB에 저장

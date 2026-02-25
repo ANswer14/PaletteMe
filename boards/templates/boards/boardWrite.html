@@ -1,109 +1,171 @@
 {% extends "index.html" %}
 {% load static %}
 
-{% block title %} 게시글 작성 - PaletteMe {% endblock %}
-
 {% block content %}
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 <link rel="stylesheet" href="{% static 'boards/css/boardWrite.css' %}">
+
+<style>
+    /* 에디터(textarea) 스타일 */
+    #editor-outer {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fff;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    #postBody {
+        width: 100%;
+        height: 450px;
+        padding: 20px;
+        border: none;
+        outline: none;
+        resize: none;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+    #editor-outer:focus-within {
+        border-color: #f39898;
+        box-shadow: 0 0 0 2px rgba(243, 152, 152, 0.1);
+    }
+    .option-box { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px; display: none; }
+
+    /* 이미지 미리보기 컨테이너 */
+    .image-preview-container { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+    .preview-item { position: relative; width: 100px; height: 100px; border-radius: 5px; overflow: hidden; border: 1px solid #ddd; }
+    .preview-item img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* 삭제 버튼 스타일 */
+    .btn-remove {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #ff4d4d;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        font-size: 14px;
+        line-height: 20px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        z-index: 10;
+    }
+
+    .existing-images-container {
+        margin-bottom: 15px;
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px dashed #ccc;
+    }
+</style>
 
 <div class="board-write-wrapper">
     <div class="board-write-container">
         <header class="write-header">
-            <h2>새 게시글 작성</h2>
-            <p>당신의 소중한 이야기를 PaletteMe에 공유해 보세요.</p>
+            <h2>{% if is_edit %}게시글 수정{% else %}새 게시글 작성{% endif %}</h2>
         </header>
 
         <section class="write-section">
-            <div class="input-row">
-                <div class="input-group select-group">
-                    <label>게시판</label>
-                    <select id="boardCategory">
-                        <option value="free"{% if data.category == 'FREE' %} selected {% endif %}>자유게시판</option>
-                        <option value="qna"{% if data.category == 'QNA' %} selected {% endif %}>Q&A 게시판</option>
-                        {% if user.is_staff %}
-                            <option value="notice" {% if data.category == 'NOTICE' %} selected {% endif %}>Notice</option>
+            <div class="input-row" style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <div class="input-group" style="flex: 1;">
+                    <label for="boardCategory">카테고리</label>
+                    <select id="boardCategory" name="category" onchange="toggleOptions()" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="FREE" {% if data.category == 'FREE' or board_type == 'free' %}selected{% endif %}>자유게시판</option>
+                        <option value="QNA" {% if data.category == 'QNA' or board_type == 'qna' %}selected{% endif %}>Q&A 게시판</option>
+                        {% if user.is_staff or data.category == 'NOTICE' or board_type == 'notice' %}
+                        <option value="NOTICE" {% if data.category == 'NOTICE' or board_type == 'notice' %}selected{% endif %}>공지사항</option>
                         {% endif %}
                     </select>
                 </div>
-                <div class="input-group title-group">
+
+                <div class="input-group" style="flex: 3;">
                     <label>제목</label>
-                    <input type="text" id="postTitle" placeholder="제목을 입력하세요" maxlength="100" value="{{ data.title }}">
+                    <input type="text" id="postTitle" placeholder="제목을 입력하세요" value="{{ data.title|default:'' }}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
                 </div>
             </div>
 
             <div class="input-group">
                 <label>내용</label>
                 <div id="editor-outer">
-                    <div id="editor-container"></div>
-                </div>
-                <div class="editor-footer">
-                    <span id="contentCount">0 / 2000자</span>
+                    <textarea id="postBody" placeholder="여기에 내용을 입력하세요...">{{ data.body|default:'' }}</textarea>
                 </div>
             </div>
-            {% if data.images %}
-                <div class="image-edit-section">
-                    <h4>기존 이미지 관리 (삭제하려면 체크하세요)</h4>
-                    {% for img in data.images %}
-                    <span class="image-item">
-                        <img src="{{ img.image.url }}" width="150">
-                        <label>
-                            <input type="checkbox" name="delete_images" value="{{ img.post_img_id }}"> 삭제하기
-                        </label>
-                    </span>
-                    {% endfor %}
-                </div>
-            {% endif %}
-            <div class="upload-section">
 
-                <label class="upload-btn">
-                    <span class="icon">📷</span> 사진 추가
-                    <input type="file" id="imageInput" accept="image/*" multiple hidden>
-                </label>
+            <div class="input-group" style="margin-bottom: 20px;">
+                <label>이미지 관리 (최대 5장)</label>
 
-                <div id="previewArea" class="preview-grid"></div>
-            </div>
-
-            <div class="extra-options-area">
-                <div id="freeExtraOptions" class="option-box" style="display: none;">
-                    <span class="option-label">작성자 설정</span>
-                    <div class="toggle-group">
-                        <input type="radio" id="realname" name="is_anonymous" value="false" checked>
-                        <label for="realname">실명({{ user.nickname }})</label>
-                        <input type="radio" id="anonymous" name="is_anonymous" value="true">
-                        <label for="anonymous">익명</label>
+                {% if is_edit and images %}
+                <div class="existing-images-container">
+                    <p style="font-size: 13px; color: #666; margin-bottom: 10px; font-weight: bold;">기존 업로드 이미지 (삭제 시 X 클릭)</p>
+                    <div class="image-preview-container">
+                        {% for img in images %}
+                            <div class="preview-item" id="img-{{ img.post_img_id }}">
+                                <img src="{{ img.image.url }}">
+                                <button type="button" class="btn-remove" onclick="deleteExistingImage('{{ img.post_img_id }}')">×</button>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
-                <div id="qnaExtraOptions" class="option-box" style="display: none;">
-                    <span class="option-label">공개 여부</span>
-                    <div class="toggle-group">
-                        <input type="radio" id="public" name="is_private" value="false" checked>
-                        <label for="public">전체 공개</label>
-                        <input type="radio" id="private" name="is_private" value="true">
-                        <label for="private">비공개</label>
-                    </div>
-                </div>
-            </div>
-
-            <footer class="write-footer">
-                <button class="btn-cancel" onclick="cancelPost()">취소</button>
-                <button class="btn-submit" onclick="submitPost()">등록하기</button>
-                {% if is_edit %}
-                    <form method='post' action="/boards/delete/">
-                        {% csrf_token %}
-                        <button class="btn-delete" onclick="">삭제</button>
-                        <input type="hidden" name="post_id" value="{{ data.no }}">
-                    </form>
                 {% endif %}
+
+                <input type="file" id="imageInput" multiple accept="image/*" style="display: none;" onchange="handleImageUpload(this)">
+                <button type="button" onclick="document.getElementById('imageInput').click()" style="padding: 10px 20px; background: #fff; border: 1px solid #f39898; color: #f39898; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                    {% if is_edit %}+ 이미지 추가하기{% else %}+ 파일 선택{% endif %}
+                </button>
+                <div id="imagePreview" class="image-preview-container"></div>
+            </div>
+
+            <div id="freeOptions" class="option-box">
+                <label><input type="checkbox" id="is_anonymous" {% if data.is_anonymous %}checked{% endif %}> 익명으로 작성하기</label>
+            </div>
+            <div id="qnaOptions" class="option-box">
+                <label><input type="checkbox" id="is_private" {% if data.is_secret %}checked{% endif %}> 비공개 질문하기</label>
+            </div>
+
+            <footer class="write-footer" style="text-align: center; margin-top: 30px;">
+                <button class="btn-cancel" type="button" onclick="history.back()" style="padding: 10px 25px; margin-right: 10px; background: #eee; border: 1px solid #ddd; border-radius: 6px; cursor: pointer;">취소</button>
+
+                <button class="btn-submit" type="button" onclick="submitPost()" style="background:#f39898; color:#fff; border:none; padding:10px 40px; border-radius:6px; cursor:pointer; font-weight:bold;">
+                    {% if is_edit %}수정완료{% else %}등록하기{% endif %}
+                </button>
             </footer>
         </section>
     </div>
 </div>
 
-<input type="hidden" id="is_edit" value="{{ is_edit }}">
-<input type="hidden" id="post_id" value="{{ data.no }}">
-<input type="hidden" id="body" value="{{ data.body }}">
-<input type="hidden" id="postWriter" value="{{ user.nickname }}">
+<input type="hidden" id="post_id" value="{{ data.post_id|default:'' }}">
+
 <script src="{% static 'boards/js/boardWrite.js' %}"></script>
+<script>
+    // 기존 이미지 서버에서 삭제 처리
+    function deleteExistingImage(imgId) {
+        if (!confirm('이 이미지를 서버에서 즉시 삭제하시겠습니까?')) return;
+
+        fetch(`/boards/api/image/delete/${imgId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const imgElement = document.getElementById(`img-${imgId}`);
+                if (imgElement) imgElement.remove();
+                alert('이미지가 삭제되었습니다.');
+            } else {
+                alert('삭제 실패: ' + (data.message || '알 수 없는 오류'));
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('서버 통신 오류가 발생했습니다.');
+        });
+    }
+
+    window.onload = function() { toggleOptions(); };
+</script>
 {% endblock %}

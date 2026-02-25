@@ -156,13 +156,15 @@
         <table id="diagnosisTable">
             <thead>
                 <tr>
+                    <th>선택</th>
                     <th>날짜</th>
                     <th>결과</th>
                 </tr>
             </thead>
             <tbody>
                 {% for record in histories %}
-                <tr>
+                <tr onclick="enableHistory(this);" data-history_id="{{ record.history_id }}">
+                    <td>{% if record.is_enabled %} ✔️{% endif %}</td>
                     <td>{{ record.date|date:"Y-m-d" }}</td>
                     <td>{{ record.color_type }}</td>
                 </tr>

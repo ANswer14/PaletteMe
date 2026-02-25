@@ -55,7 +55,7 @@ def get_color_info(request):
         good_color = selected_history.good_color
         bad_color = selected_history.bad_color
         is_saved = True # 데이터 있는지 없는지 판별용 변수
-    except ColorHistory.DoesNotExist:
+    except AttributeError as e:
         # 아직 진단 기록이 없는 경우에 대한 예외 처리
         is_saved = False
     return render(request, 'personalColors/infoColor.html', {'color':color,
@@ -68,8 +68,9 @@ def get_color_info(request):
 def enable_color_info(request):
     history_id = request.GET.get('history_id')
     true_history = request.user.color_history.filter(user=request.user, is_enabled=True).first()
-    true_history.is_enabled = False
-    true_history.save()
+    if true_history:
+        true_history.is_enabled = False
+        true_history.save()
 
     selected_history = request.user.color_history.filter(history_id=history_id).first()
     selected_history.is_enabled = True
@@ -121,6 +122,10 @@ def save_info(request):
             if oldest_history:
                 oldest_history.delete() # 해당 row 삭제
 
+        prior_history = user_history.filter(is_enabled=True).first()
+        if prior_history:
+            prior_history.is_enabled = False
+            prior_history.save()
         # 새로운 결과 데이터 지정
         data = json.loads(request.body)
         color_type = data.get('colorType')
@@ -137,9 +142,6 @@ def save_info(request):
 
         # DB에 저장
         new_history.save()
-        prior_history = user_history.order_by('-executed_at')[1]
-        prior_history.is_enabled = False
-        prior_history.save()
         return JsonResponse({'status': 'success', 'message': f'{color_type} 저장 완료!'})
     return JsonResponse({'status': 'fail', 'message': '저장 실패'})
 

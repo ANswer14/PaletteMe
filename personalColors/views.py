@@ -358,7 +358,7 @@ def generate_img(request, session_id, stop_event, optimized_prompt, url_txt2img,
     try:
         if request.user.gender == 'F':
             payload = {
-                "prompt": f"simple casual outfit, asian, everyday wear, full body:1.4, full body view:1.4, full body view from head to toe, {optimized_prompt}",
+                "prompt": f"simple casual outfit, korean, everyday wear, full body:1.4, full body view:1.4, full body view from head to toe, {optimized_prompt}",
                 "negative_prompt": "(worst quality:2), (low quality:2), (normal quality:2), lowres, watermark",
                 "steps": 20,
                 'seed': 4216575493,
@@ -375,7 +375,7 @@ def generate_img(request, session_id, stop_event, optimized_prompt, url_txt2img,
         else:
             print('남성')
             payload = {
-                "prompt": f"simple casual outfit, 1boy, handsome male, asian, everyday wear, full body:1.4, full body view:1.4, full body view from head to toe, {optimized_prompt}",
+                "prompt": f"simple casual outfit, 1boy, handsome male, korean, everyday wear, full body:1.4, full body view:1.4, full body view from head to toe, {optimized_prompt}",
                 "negative_prompt": "(worst quality:2), (low quality:2), (normal quality:2), lowres, watermark",
                 "steps": 20,
                 'seed': 3550513535,

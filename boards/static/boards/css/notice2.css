@@ -1,18 +1,27 @@
 /* [1] 전체 컨테이너 및 기본 배경 */
+:root {
+    --main-dark: #535252;
+    --point-rose: #f39898;
+    --border-light: #eee;
+    --bg-light: #f9f9f6;
+}
+
+/* [추가] 전체 배경색 적용 */
 body {
+    background-color: var(--bg-light);
     margin: 0;
-    font-family: 'Pretendard', 'Apple SD Gothic Neo', Arial, sans-serif;
-    background: #fdfdfd;
+    padding: 0;
 }
 
 .board-detail-container.notice {
-    /*width: 85%;*/
-    max-width: 1000px;
+    width: 95%;
+    max-width: 1200px;
     margin: 50px auto;
-    background: white;
-    padding: 50px;
-    border-radius: 16px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.05); /* 연한 그림자 */
+    padding: 40px;
+    background: #FCFBF9;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.07);
+    box-sizing: border-box;  /* 패딩 때문에 너비가 커지는 것 방지 */
 }
 
 /* [2] 상단 제목 */

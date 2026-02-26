@@ -1,19 +1,28 @@
+/* [1] 전체 컨테이너 및 기본 배경 */
 :root {
-    --point-color: #f39898;
-    --dark-gray: #535252;
-    --border-color: #f1f1f1;
-    --header-bg: #fbfbfb;
+    --main-dark: #535252;
+    --point-rose: #f39898;
+    --border-light: #eee;
+    --bg-light: #f9f9f6;
+}
+
+/* [추가] 전체 배경색 적용 */
+body {
+    background-color: var(--bg-light);
+    margin: 0;
+    padding: 0;
 }
 
 /* [1] 레이아웃 컨테이너 */
 .board-container.QnA {
-    width: 90%;
-    max-width: 1100px;
-    margin: 60px auto;
-    background: #fff;
+    width: 95%;
+    max-width: 1200px;
+    margin: 50px auto;
     padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+    background: #FCFBF9;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.07);
+    box-sizing: border-box;  /* 패딩 때문에 너비가 커지는 것 방지 */
 }
 
 /* [2] 상단 타이틀 및 검색 */
@@ -25,12 +34,12 @@
 }
 
 .title-area h2 {
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 800;
-    color: #222;
-    border-left: 6px solid var(--point-color);
+    margin-bottom: 30px;
+    border-left: 5px solid #f39898; /* 포인트 컬러(핑크) 적용 */
     padding-left: 15px;
-    margin-bottom: 8px;
+    color: #333;
 }
 
 .sub-title { color: #999; font-size: 14px; margin-left: 21px; }
@@ -47,7 +56,7 @@
 
 .search-form:focus-within {
     background: #fff;
-    border-color: var(--point-color);
+    border-color: var(--point-rose);
     box-shadow: 0 5px 15px rgba(243, 152, 152, 0.2);
 }
 
@@ -55,7 +64,7 @@
 .divider { width: 1px; height: 14px; background: #ddd; margin: 0 10px; }
 .search-form input { border: none; background: none; outline: none; width: 180px; }
 .search-btn {
-    background: var(--point-color);
+    background: var(--point-rose);
     color: white;
     border: none;
     padding: 8px 18px;
@@ -112,19 +121,33 @@
     border-radius: 8px; font-weight: 600; text-decoration: none;
 }
 .page-link { border: 1px solid #eee; color: #666; }
-.current-page { background: var(--dark-gray); color: white; }
+
+.current-page {
+    background: var(--main-dark); /* --dark-gray 대신 --main-dark 사용 */
+    color: white;
+}
+
 .page-link:hover { background: var(--point-color); color: white; border-color: var(--point-color); }
 
 .action-area { position: absolute; right: 0; bottom: 0; }
+
 .write-btn {
-    background: var(--point-color);
-    color: white; border: none;
-    padding: 12px 25px; border-radius: 50px;
-    font-weight: bold; cursor: pointer;
+    background: var(--point-rose); /* --point-color 대신 --point-rose 사용 */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
     box-shadow: 0 4px 15px rgba(243, 152, 152, 0.3);
     transition: 0.3s;
 }
-.write-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(243, 152, 152, 0.4); }
+
+.write-btn:hover {
+    transform: translateY(-3px);
+    background: #ee8686; /* 호버 시 약간 진한 핑크 */
+    box-shadow: 0 6px 20px rgba(243, 152, 152, 0.4);
+}
 
 /* [5] 애니메이션: 흔들기 효과 */
 @keyframes shakeRow {

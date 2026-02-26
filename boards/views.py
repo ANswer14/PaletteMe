@@ -10,7 +10,7 @@ from .models import Post, PostImage, Comment, Like
 # ==========================================
 # [1. 목록 페이지 관련 로직]
 # ==========================================
-
+@login_required(login_url='/accounts/login/')
 def board1(request):
     """[자유게시판 목록]"""
     posts_list = Post.objects.filter(category='FREE').order_by('-created_at')
@@ -25,7 +25,7 @@ def board1(request):
         'board_type': 'free'
     })
 
-
+@login_required(login_url='/accounts/login/')
 def qna1(request):
     """[Q&A 게시판 목록]"""
     posts_list = Post.objects.filter(category='QNA').order_by('-created_at')
@@ -45,7 +45,6 @@ def qna1(request):
         'board_type': 'qna'
     })
 
-
 def notice1(request):
     """[공지사항 목록]"""
     posts_list = Post.objects.filter(category='NOTICE').order_by('-created_at')
@@ -57,7 +56,7 @@ def notice1(request):
 # ==========================================
 # [2. 상세 페이지 관련 로직]
 # ==========================================
-
+@login_required(login_url='/accounts/login/')
 def board_detail_common(request, template_name, board_type=None):
     """[상세페이지 공통 엔진] 좋아요 유지 로직 포함"""
     post_id = request.GET.get('no')
@@ -88,16 +87,16 @@ def board_detail_common(request, template_name, board_type=None):
         'next_id': next_post.pk if next_post else None,
     })
 
-
+@login_required(login_url='/accounts/login/')
 def board2(request): return board_detail_common(request, 'boards/board2.html', board_type='free')
 
-
+@login_required(login_url='/accounts/login/')
 def qna2(request): return board_detail_common(request, 'boards/QnA2.html', board_type='qna')
 
-
+@login_required(login_url='/accounts/login/')
 def notice2(request): return board_detail_common(request, 'boards/notice2.html', board_type='notice')
 
-
+@login_required(login_url='/accounts/login/')
 def get_notice_detail(request):
     post_id = request.GET.get('no')
     post = get_object_or_404(Post, pk=post_id)
@@ -112,7 +111,7 @@ def get_notice_detail(request):
 # [3. 게시글 작성 / 수정 / 삭제]
 # ==========================================
 
-@login_required
+@login_required(login_url='/accounts/login/')
 def boardWrite(request):
     """[게시글 작성/수정 페이지 진입] - 이미지 로드 로직 통합본"""
     post_id = request.GET.get('no')
@@ -141,7 +140,7 @@ def boardWrite(request):
     })
 
 
-@login_required
+@login_required(login_url='/accounts/login/')
 def board_create_api(request):
     """[게시글 저장 API]"""
     if request.method == 'POST':
@@ -171,7 +170,7 @@ def board_create_api(request):
     return JsonResponse({'status': 'fail'}, status=400)
 
 
-@login_required
+@login_required(login_url='/accounts/login/')
 def delete(request):
     post_id = request.GET.get('no')
     post = get_object_or_404(Post, pk=post_id)
@@ -187,7 +186,7 @@ def delete(request):
 # [4. 댓글 및 좋아요 / 이미지 관리 API]
 # ==========================================
 
-@login_required
+@login_required(login_url='/accounts/login/')
 def comment_create_api(request, post_id):
     if request.method == 'POST':
         try:
@@ -202,7 +201,7 @@ def comment_create_api(request, post_id):
     return JsonResponse({'status': 'fail'}, status=405)
 
 
-@login_required
+@login_required(login_url='/accounts/login/')
 def comment_update_api(request, comment_id):
     if request.method == 'POST':
         try:
@@ -221,7 +220,7 @@ def comment_update_api(request, comment_id):
     return JsonResponse({'status': 'fail'}, status=400)
 
 
-@login_required
+@login_required(login_url='/accounts/login/')
 def comment_delete_api(request, comment_id):
     if request.method == 'POST':
         comment = get_object_or_404(Comment, pk=comment_id)
@@ -231,7 +230,7 @@ def comment_delete_api(request, comment_id):
     return JsonResponse({'status': 'fail'}, status=400)
 
 
-@login_required
+@login_required(login_url='/accounts/login/')
 def post_like_api(request, post_id):
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=post_id)
@@ -247,7 +246,7 @@ def post_like_api(request, post_id):
     return JsonResponse({'status': 'fail'}, status=400)
 
 
-@login_required
+@login_required(login_url='/accounts/login/')
 def delete_post_image_api(request, img_id):
     if request.method == 'POST':
         image = get_object_or_404(PostImage, pk=img_id)

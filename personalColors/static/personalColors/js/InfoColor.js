@@ -89,6 +89,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // 진단 버튼 클릭
     if (checkBtn !== null) {
         checkBtn.addEventListener('click', function () {
             window.location.href = 'check/';

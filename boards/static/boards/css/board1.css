@@ -52,7 +52,6 @@ body {
 }
 
 .search-select { border: none; background: transparent; font-size: 14px; outline: none; color: #555; }
-.divider { width: 1px; height: 14px; background: #ccc; margin: 0 12px; }
 .search-form input { border: none; background: transparent; outline: none; width: 190px; }
 .search-btn {
     background: var(--main-dark);

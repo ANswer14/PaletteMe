@@ -55,7 +55,7 @@
         <div class="summary-header">
             <h3>Free Board</h3>
             <!-- [중요] 경로 확인할것!!!!!! -->
-            <a href="/boards/boardList" class="more-btn">+</a>
+            <a href="/boards/freeList" class="more-btn">+</a>
         </div>
         <ul class="summary-list">
             <!-- [이름확인!!!!] 자유게시판 최신글 3개 -->
@@ -63,11 +63,8 @@
                 {% for post in recent_free_posts %}
                 <li>
                     <!-- [중요] 경로 확인할것!!!!!! -->
-                    <a href="/boards/boardDetail/{{ post.id }}">
+                    <a href="/boards/freeDetail?no={{ post.post_id }}">
                         {{ post.title }}
-                        {% if post.comment_count > 0 %}
-                            <span class="comment-count">[{{ post.comment_count }}]</span>
-                        {% endif %}
                     </a>
                     <span class="summary-date">{{ post.created_at|date:"m-d" }}</span>
                 </li>
@@ -84,14 +81,14 @@
         </div>
         <ul class="summary-list">
             <!-- [이름확인!!!!] 좋아요 많은 순 3개 -->
-            {% if top_liked_posts %}
-                {% for post in top_liked_posts %}
+            {% if hot_free_posts %}
+                {% for hot_post in hot_free_posts %}
                 <li>
                     <!-- [중요] 경로 확인할것!!!!!! -->
-                    <a href="/boards/boardDetail/{{ post.id }}">
-                        <span class="like-icon">❤️</span> {{ post.title }}
+                    <a href="/boards/freeDetail?no={{ hot_post.post_id }}">
+                        <span class="like-icon">❤️</span> {{ hot_post.title }}
                     </a>
-                    <span class="like-count">{{ post.like_count }}</span>
+                    <span class="like-count">{{ hot_post.likes.count }}</span>
                 </li>
                 {% endfor %}
             {% else %}

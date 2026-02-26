@@ -38,13 +38,6 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # 좋아요를 누른 유저들
-    like_users = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name='like_posts',
-        blank=True
-    )
-
     def __str__(self):
         return f"[{self.category}] {self.title}"
 

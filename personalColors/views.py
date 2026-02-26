@@ -314,7 +314,7 @@ def generate_img_thread(request, session_id, temp, weather, sky, stop_event):
     auth = HTTPBasicAuth(os.getenv("SD_API_USER"), os.getenv("SD_API_PASSWORD"))
     # print('generate_img_thread 진입!!')
 
-    color_list = request.user.color_history.all().values('color_type', 'good_color', 'bad_color').order_by('-executed_at').first()
+    color_list = request.user.color_history.filter(is_enabled=True).values('color_type', 'good_color', 'bad_color').order_by('-executed_at').first()
     print(color_list) # 해당 유저의 퍼스널 컬러 정보 갖고오기
 
     if request.user.gender == 'M':

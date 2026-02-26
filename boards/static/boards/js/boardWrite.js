@@ -157,6 +157,7 @@ function toggleOptions() {
     const category = document.getElementById("boardCategory").value;
     const freeOpt = document.getElementById("freeOptions");
     const qnaOpt = document.getElementById("qnaOptions");
+    console.log(category)
 
     if (freeOpt) freeOpt.style.display = (category === "FREE") ? "block" : "none";
     if (qnaOpt) qnaOpt.style.display = (category === "QNA") ? "block" : "none";

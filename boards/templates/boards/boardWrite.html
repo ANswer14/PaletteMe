@@ -140,32 +140,31 @@
 
 <script src="{% static 'boards/js/boardWrite.js' %}"></script>
 <script>
-    // 기존 이미지 서버에서 삭제 처리
-    function deleteExistingImage(imgId) {
-        if (!confirm('이 이미지를 서버에서 즉시 삭제하시겠습니까?')) return;
+// 기존 이미지 서버에서 삭제 처리
+function deleteExistingImage(imgId) {
+    if (!confirm('이 이미지를 서버에서 즉시 삭제하시겠습니까?')) return;
 
-        fetch(`/boards/api/image/delete/${imgId}/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success') {
-                const imgElement = document.getElementById(`img-${imgId}`);
-                if (imgElement) imgElement.remove();
-                alert('이미지가 삭제되었습니다.');
-            } else {
-                alert('삭제 실패: ' + (data.message || '알 수 없는 오류'));
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert('서버 통신 오류가 발생했습니다.');
-        });
-    }
-
-    window.onload = function() { toggleOptions(); };
+    fetch(`/boards/api/image/delete/${imgId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const imgElement = document.getElementById(`img-${imgId}`);
+            if (imgElement) imgElement.remove();
+            alert('이미지가 삭제되었습니다.');
+        } else {
+            alert('삭제 실패: ' + (data.message || '알 수 없는 오류'));
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('서버 통신 오류가 발생했습니다.');
+    });
+}
+toggleOptions();
 </script>
 {% endblock %}

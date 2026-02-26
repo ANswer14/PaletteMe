@@ -146,7 +146,7 @@ def save_info(request):
     return JsonResponse({'status': 'fail', 'message': '저장 실패'})
 
 # 지도 화면 렌더링 함수: weatherInfo.html 렌더링 함수
-@login_required
+@login_required(login_url='/accounts/login/')
 def get_map(request):
     KAKAO_MAP_API_KEY = os.getenv('KAKAO_MAP_API_KEY') # 카카오 맵 API KEY
     return render(request, 'personalColors/weatherInfo.html', {'KAKAO_MAP_API_KEY': KAKAO_MAP_API_KEY})

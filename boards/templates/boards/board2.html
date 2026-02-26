@@ -159,6 +159,7 @@
             const data = await response.json();
             if (response.ok) {
                 document.getElementById('like-icon').innerText = data.liked ? '❤️' : '♡';
+                console.log(data.like_count);
                 document.getElementById('like-count').innerText = data.like_count;
                 const btn = document.getElementById('like-btn');
                 data.liked ? btn.classList.add('active') : btn.classList.remove('active');

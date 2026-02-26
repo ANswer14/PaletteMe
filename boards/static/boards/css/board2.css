@@ -2,23 +2,28 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: white;
+    background: #FAF9F6 !important;
 }
 
 .board-detail-container {
-    max-width: 1000px;
-    margin: 40px auto;
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
+    width: 95%;
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 40px;
+    background: #FCFBF9;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.07);
+    box-sizing: border-box;  /* 패딩 때문에 너비가 커지는 것 방지 */
 }
 
 /* [2. 게시판 제목 스타일] */
 .board-detail-container h2 {
-    font-size: 26px;
-    margin-bottom: 20px;
-    border-left: 5px solid #535252;
-    padding-left: 15px;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 35px;
+    border-left: 6px solid #f39898; /* 브랜드 핑크 */
+    padding-left: 20px;
+    color: #333;
 }
 
 /* [3. 상단 제목줄 정보 영역] */
@@ -79,18 +84,24 @@ body {
 }
 
 .detail-images-area {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    max-width: 100%;
+    display: flex;          /* 가로 정렬 시작 */
+    flex-wrap: wrap;        /* 공간 부족하면 다음 줄로 넘김 */
+    gap: 15px;              /* 사진 사이 간격 */
+    justify-content: center; /* 사진들을 가운데로 모음 */
+    margin: 30px 0;
+    width: 100%;
 }
 
 .detail-images-area img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    width: 350px;           /* 사진 크기 (원하는 대로 조절 가능) */
+    height: 350px;          /* 정사각형으로 고정 */
+    object-fit: cover;      /* 사진 안 깨지게 꽉 채움 (핵심!) */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+}
+.detail-images-area img:hover {
+    transform: translateY(-5px);
 }
 
 /* [5. 좋아요 섹션] */

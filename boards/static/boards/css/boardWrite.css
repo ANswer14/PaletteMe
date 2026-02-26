@@ -1,14 +1,15 @@
-/* boardWrite.css - Modern PaletteMe Theme */
-body {
-    background-color: #FAF9F6 !important;
+:root {
+    --main-dark: #535252;
+    --point-rose: #f39898;
+    --border-light: #eee;
+    --bg-light: #f9f9f6;
 }
 
-:root {
-    --primary-color: #3b82f6;
-    --text-main: #1f2937;
-    --text-sub: #6b7280;
-    --bg-gray: #f9fafb;
-    --border-color: #e5e7eb;
+/* [추가] 전체 배경색 적용 */
+body {
+    background-color: var(--bg-light);
+    margin: 0;
+    padding: 0;
 }
 
 .board-write-wrapper {
@@ -19,12 +20,14 @@ body {
 }
 
 .board-write-container {
-    max-width: 900px;
-    margin: 0 auto;
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width: 95%;
+    max-width: 1200px;
+    margin: 50px auto;
     padding: 40px;
+    background: #FCFBF9;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.07);
+    box-sizing: border-box;  /* 패딩 때문에 너비가 커지는 것 방지 */
 }
 
 .write-header { margin-bottom: 30px; text-align: center; }

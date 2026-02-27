@@ -1,12 +1,27 @@
+:root {
+    --main-dark: #535252;
+    --point-rose: #f39898;
+    --border-light: #eee;
+    --bg-light: #f9f9f6;
+}
+
+/* [추가] 전체 배경색 적용 */
+body {
+    background-color: var(--bg-light);
+    margin: 0;
+    padding: 0;
+}
+
 /* [1] 전체 컨테이너 스타일 */
 .board-container.notice {
-    width: 85%;
-    max-width: 1000px;
-    margin: 40px auto;
-    background: #fff;
+    width: 95%;
+    max-width: 1200px;
+    margin: 50px auto;
     padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* 은은한 그림자 추가 */
+    background: #FCFBF9;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.07);
+    box-sizing: border-box;  /* 패딩 때문에 너비가 커지는 것 방지 */
 }
 
 /* [2] 제목 스타일 보강 */

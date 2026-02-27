@@ -10,6 +10,7 @@
     <h2>마이페이지</h2>
 
   <section class="card">
+      <h3>내 정보 수정</h3>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
@@ -85,8 +86,8 @@
                     </div>
                 </div>
             </div>
-        <input type="hidden" id="selectedDefaultImage" name="default_image_name">
-        <button type="submit" id="saveInfoBtn" name="save_info" class="signup-submit-btn">정보 수정 저장</button>
+            <input type="hidden" id="selectedDefaultImage" name="default_image_name">
+            <button type="submit" id="saveInfoBtn" name="save_info" class="signup-submit-btn">정보 수정 저장</button>
         </form></section>
 
     {% if user.has_usable_password %}  <!-- 일반 로그인 했을 경우 비밀번호 변경탭 O -->

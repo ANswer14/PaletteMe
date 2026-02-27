@@ -82,11 +82,13 @@ body {
 .board-header {
     display: flex;
     padding: 18px 10px;
-    border-top: 2px solid #333;
+    /* 자유게시판 스타일 적용 */
+    border-top: 3px solid var(--main-dark);
     border-bottom: 1px solid #ddd;
-    background: var(--header-bg);
-    font-weight: bold;
-    color: #444;
+    background: #fbfbfb;
+    font-weight: 700;
+    color: var(--main-dark);
+    letter-spacing: -0.5px;
 }
 
 .board-row {

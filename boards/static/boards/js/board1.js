@@ -38,14 +38,32 @@ async function toggleLike(postId) {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         });
+
+        // 로그인이 안 되어 있을 때 (403 에러) 처리
+        if (response.status === 403) {
+            Swal.fire({ icon: 'warning', text: '로그인이 필요한 서비스입니다.', confirmButtonColor: '#f39898' });
+            return;
+        }
+
         const data = await response.json();
         if (response.ok) {
-            document.getElementById('likeIcon').innerText = data.liked ? '❤️' : '♡';
-            document.getElementById('likeCount').innerText = data.like_count;
-        } else {
-            alert("로그인이 필요하거나 오류가 발생했습니다.");
+            // 1. 하트 아이콘 변경 (id="like-icon"과 일치)
+            document.getElementById('like-icon').innerText = data.liked ? '❤️' : '♡';
+
+            // 2. 좋아요 숫자 변경 (id="like-count"와 일치)
+            document.getElementById('like-count').innerText = data.like_count;
+
+            // 3. 버튼의 active 클래스 제어 (색상 변경용)
+            const btn = document.getElementById('like-btn');
+            if (data.liked) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
         }
-    } catch (e) { console.error("좋아요 에러:", e); }
+    } catch (e) {
+        console.error("좋아요 에러:", e);
+    }
 }
 
 // 3. 댓글 등록 (비동기)
